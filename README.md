@@ -24,7 +24,8 @@ Ez az Android-alkalmazás lehetővé teszi a felhasználók számára, rögzíts
 - [x] GPS információk lekérése
 
 2. Alapfunkciók (Week 3-4)
-
+● First point
+  ○ Nested point
 
 
 3. Statisztikai Adatok (Week 5-6)
