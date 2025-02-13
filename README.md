@@ -20,7 +20,7 @@ Ez az Android-alkalmazás lehetővé teszi a felhasználók számára, rögzíts
 📅 Fejlesztési Ütemterv
 
 1. Alapstruktúra kialakítása (Week 1-2)
-[+] Térkép megjelenítése
+- [ ] Térkép megjelenítése
 [] GPS információk lekérése
 
 2. Alapfunkciók (Week 3-4)
