@@ -21,7 +21,7 @@ Ez az Android-alkalmazás lehetővé teszi a felhasználók számára, rögzíts
 
 1. Alapstruktúra kialakítása (Week 1-2)
 - [ ] Térkép megjelenítése
-[] GPS információk lekérése
+- [x] GPS információk lekérése
 
 2. Alapfunkciók (Week 3-4)
 
