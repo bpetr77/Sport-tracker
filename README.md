@@ -53,7 +53,7 @@
               - [ ] Grafikon készítése sebesség/idő viszonyáról
     
       - ## 4. Mentés és Visszatöltés (Week 7-8)
-           - ### 🛢 Útvonalak mentése SQLite adatbázisba
+           - ### ⛃ Útvonalak mentése SQLite adatbázisba
               - [ ] Útvonal adatok (koordináták, időbélyegek, statisztikák) elmentése
               - [ ] Adatmodell kialakítása az adatok tárolásához
            - ### 💾 Előzmények listázása
