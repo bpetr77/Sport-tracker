@@ -20,9 +20,9 @@
 
       - ## 1. Alapstruktúra kialakítása (Week 1-2)
            - ### 🗺️Térkép megjelenítése
-              - [ ] Google Maps SDK beállítása
-              - [ ] Alapértelmezett pozíció megadása
-              - [ ] Zoom és térképstílus beállítások konfigurálása
+              - [X] Google Maps SDK beállítása
+              - [X] Alapértelmezett pozíció megadása
+              - [X] Zoom és térképstílus beállítások konfigurálása
            - ### 📍 GPS információk lekérése
               - [ ] Helymeghatározási engedélyek kérése
               - [ ] Valós idejű helyzetfrissítés implementálása
