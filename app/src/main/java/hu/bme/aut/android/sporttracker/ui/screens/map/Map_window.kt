@@ -15,10 +15,15 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 
+
 @Composable
-fun MapScreen() {
+fun MapScreen(location: LatLng? = null) {
+    if(location == null) {
+        return
+    }
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(47.4979, 19.0402), 10f)
+        position =CameraPosition.fromLatLngZoom(location, 15f)
+        //position = CameraPosition.fromLatLngZoom(LatLng(47.4979, 19.0402), 10f)
     }
 
     GoogleMap(

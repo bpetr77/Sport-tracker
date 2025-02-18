@@ -74,6 +74,7 @@ dependencies {
 
     implementation("com.google.android.gms:play-services-maps:18.2.0")
     implementation("com.google.maps.android:maps-compose:2.5.3")
+    implementation(libs.play.services.location)
     //implementation("com.google.accompanist:accompanist-permissions:0.32.0") // Engedélykéréshez
 
     testImplementation(libs.junit)
