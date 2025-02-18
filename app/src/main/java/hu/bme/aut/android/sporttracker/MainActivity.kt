@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
             SportTrackerTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = "Android",
+                        name = "bpetr77",
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
