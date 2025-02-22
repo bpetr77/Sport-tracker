@@ -10,6 +10,8 @@ import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
+import hu.bme.aut.android.sporttracker.data.location.getLastKnownLocation
+import hu.bme.aut.android.sporttracker.ui.permissions.requestLocationPermission
 import hu.bme.aut.android.sporttracker.ui.screens.map.MapScreen
 
 class MainActivity : ComponentActivity() {
@@ -18,36 +20,20 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
-        } else {
-            getLastKnownLocation()
+        setContent {
+            MapScreen(this, fusedLocationClient)
         }
     }
 
-    private fun getLastKnownLocation() {
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
-        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            if (location != null) {
-                val userLocation = LatLng(location.latitude, location.longitude)
-                setContent {
-                    MapScreen(userLocation)
-                }
-            } else {
-                setContent {
-                    MapScreen()
-                }
+    suspend fun handleLocationPermission() {
+        val permissionGranted = requestLocationPermission(this, fusedLocationClient, 1)
+        if (permissionGranted) {
+            // Permission was already granted, update the map location
+            val userLocation = getLastKnownLocation(this, fusedLocationClient)
+            setContent {
+                MapScreen(this, fusedLocationClient, userLocation)
             }
         }
+
     }
 }
