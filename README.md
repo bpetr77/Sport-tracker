@@ -24,8 +24,8 @@
               - [X] Alapértelmezett pozíció megadása
               - [X] Zoom és térképstílus beállítások konfigurálása
            - ### 📍 GPS információk lekérése
-              - [ ] Helymeghatározási engedélyek kérése
-              - [ ] Valós idejű helyzetfrissítés implementálása
+              - [X] Helymeghatározási engedélyek kérése
+              - [X] Valós idejű helyzetfrissítés implementálása
            - ### 💅Alap UI elemek kialakítása
               - [ ] Gombok létrehozása
               - [ ] Különböző menük és elemek alapjai
