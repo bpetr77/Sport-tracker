@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.model.LatLng
 import android.Manifest
+import android.util.Log
 import kotlinx.coroutines.tasks.await
 
 suspend fun getLastKnownLocation(activity: ComponentActivity, fusedLocationClient: FusedLocationProviderClient): LatLng? {
@@ -16,10 +17,11 @@ suspend fun getLastKnownLocation(activity: ComponentActivity, fusedLocationClien
             activity, Manifest.permission.ACCESS_COARSE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED
     ) {
+        Log.w("Location", "Location permission not granted")
         return null
     }
 
-    val location = fusedLocationClient.lastLocation.await()  // Aszinkron várakozás
+    val location = fusedLocationClient.lastLocation.await()  // Await the asynchronous call
     return location?.let { LatLng(it.latitude, it.longitude) }
 }
 //class LocationViewModel : ViewModel() {
