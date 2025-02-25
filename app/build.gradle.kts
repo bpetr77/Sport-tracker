@@ -78,6 +78,7 @@ dependencies {
     implementation(libs.support.annotations)
     //implementation("com.google.accompanist:accompanist-permissions:0.32.0") // Engedélykéréshez
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+    implementation(libs.androidx.navigation.runtime.android)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
