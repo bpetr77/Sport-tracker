@@ -27,3 +27,4 @@ fun requestLocationPermission(activity: ComponentActivity, callback: (Boolean) -
     }
     launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
 }
+

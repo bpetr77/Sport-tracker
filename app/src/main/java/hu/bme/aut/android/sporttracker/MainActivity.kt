@@ -47,6 +47,17 @@ class MainActivity : ComponentActivity() {
     }
 
     fun handleLocationPermission() {
-        locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        when {
+            ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED -> {
+                locationPermissionGranted.value = true
+                lifecycleScope.launch {
+                    val location = getLastKnownLocation(this@MainActivity, fusedLocationClient)
+                    userLocation.value = location
+                }
+            }
+            else -> {
+                locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            }
+        }
     }
 }
