@@ -25,6 +25,8 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import hu.bme.aut.android.sporttracker.MainActivity
@@ -33,7 +35,12 @@ import hu.bme.aut.android.sporttracker.ui.permissions.requestLocationPermission
 import kotlinx.coroutines.launch
 
 @Composable
-fun MapScreen(activity: MainActivity, fusedLocationClient: FusedLocationProviderClient, userLocation: MutableState<LatLng?>) {
+fun MapScreen(
+              activity: MainActivity,
+              fusedLocationClient: FusedLocationProviderClient,
+              userLocation: MutableState<LatLng?>,
+              locationPermissionGranted: MutableState<Boolean>
+) {
     val defaultLocation = LatLng(47.497913, 19.040236) // Budapest
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(userLocation.value ?: defaultLocation, 15f)
@@ -43,17 +50,8 @@ fun MapScreen(activity: MainActivity, fusedLocationClient: FusedLocationProvider
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState,
-            uiSettings = remember {
-                com.google.maps.android.compose.MapUiSettings(
-                    zoomControlsEnabled = false,
-                    myLocationButtonEnabled = false // 🔹 "Saját helyzet" gomb bekapcsolása
-                )
-            },
-            properties = remember {
-                com.google.maps.android.compose.MapProperties(
-                    isMyLocationEnabled = true // 🔹 Kék helyzetjelző bekapcsolása
-                )
-            }
+            uiSettings = MapUiSettings(zoomControlsEnabled = false),
+            properties = MapProperties(isMyLocationEnabled = locationPermissionGranted.value)
         )
 
         FloatingActionButton(
@@ -72,7 +70,7 @@ fun MapScreen(activity: MainActivity, fusedLocationClient: FusedLocationProvider
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp),
-                containerColor = Color.White // 🔹 Set the button color
+            containerColor = Color.White // Set the button color
         ) {
             Icon(Icons.Filled.Place, contentDescription = "Location Icon")
         }
