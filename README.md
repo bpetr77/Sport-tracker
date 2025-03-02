@@ -27,8 +27,8 @@
               - [X] Helymeghatározási engedélyek kérése
               - [X] Valós idejű helyzetfrissítés implementálása
            - ### 💅Alap UI elemek kialakítása
-              - [ ] Gombok létrehozása
-              - [ ] Különböző menük és elemek alapjai
+              - [X] Gombok létrehozása
+              - [X] Különböző menük és elemek alapjai
      
       - ## 2. Alapfunkciók (Week 3-4)
            - ### 🛣️ Útvonal rögzítés
