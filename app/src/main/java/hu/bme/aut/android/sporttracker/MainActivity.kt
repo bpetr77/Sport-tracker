@@ -7,16 +7,16 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.mutableStateOf
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
-import hu.bme.aut.android.sporttracker.data.location.getLastKnownLocation
-import hu.bme.aut.android.sporttracker.ui.permissions.requestLocationPermission
+import hu.bme.aut.android.sporttracker.data.location.repository.getLastKnownLocation
 import hu.bme.aut.android.sporttracker.ui.screens.map.MapScreen
+import hu.bme.aut.android.sporttracker.ui.theme.SportTrackerTheme
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -42,7 +42,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         setContent {
-            MapScreen(this, fusedLocationClient, userLocation, locationPermissionGranted)
+            SportTrackerTheme(dynamicColor = true) {
+                Surface() {
+                    MapScreen(this, fusedLocationClient, userLocation, locationPermissionGranted)
+                }
+            }
         }
     }
 

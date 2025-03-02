@@ -1,8 +1,7 @@
-package hu.bme.aut.android.sporttracker.data.location
+package hu.bme.aut.android.sporttracker.data.location.repository
 
 import android.content.pm.PackageManager
 import androidx.activity.ComponentActivity
-import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.model.LatLng
 import android.Manifest
