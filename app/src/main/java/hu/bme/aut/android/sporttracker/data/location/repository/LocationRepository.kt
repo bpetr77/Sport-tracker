@@ -15,9 +15,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import android.Manifest
+import android.app.ActivityManager
 import android.content.Intent
 import androidx.core.content.ContextCompat
-//import hu.bme.aut.android.sporttracker.data.service.LocationService
+import hu.bme.aut.android.sporttracker.data.service.LocationService
 
 class LocationRepository(
     private val fusedLocationProviderClient: FusedLocationProviderClient,
@@ -26,6 +27,8 @@ class LocationRepository(
 
     private val _locations = MutableStateFlow<List<LatLng>>(emptyList())
     val locations: StateFlow<List<LatLng>> = _locations.asStateFlow()
+    private var isUpdating = false
+
 
     fun startLocationUpdates() {
         val request = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5000).build()
@@ -35,19 +38,28 @@ class LocationRepository(
             return
         }
 
+        if (isUpdating) {
+            Log.w("LocationRepository", "Location updates already started, skipping...")
+            return
+        }
+        isUpdating = true
+
         fusedLocationProviderClient.requestLocationUpdates(
             request,
             locationCallback,
             Looper.getMainLooper()
         )
 
-        // Start the foreground service
-//        val serviceIntent = Intent(context, LocationService::class.java)
-//        ContextCompat.startForegroundService(context, serviceIntent)
+        if (!isServiceRunning(LocationService::class.java)) {
+            val serviceIntent = Intent(context, LocationService::class.java)
+            ContextCompat.startForegroundService(context, serviceIntent)
+            Log.d("LocationRepository", "Foreground service started")
+        } else {
+            Log.d("LocationRepository", "Foreground service already running")
+        }
 
         Log.w("LocationRepository", "Location updates started")
     }
-
     fun stopLocationUpdates() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
@@ -65,5 +77,15 @@ class LocationRepository(
             Log.d("LocationRepository", "Recorded location: $location")
         }
         Log.w("LocationRepository", "Total locations: ${_locations.value.size}")
+    }
+
+    private fun isServiceRunning(serviceClass: Class<*>): Boolean {
+        val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        for (service in manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.name == service.service.className) {
+                return true
+            }
+        }
+        return false
     }
 }

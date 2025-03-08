@@ -1,7 +1,9 @@
 package hu.bme.aut.android.sporttracker
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -16,6 +18,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
 import hu.bme.aut.android.sporttracker.data.location.repository.LocationRepository
 import hu.bme.aut.android.sporttracker.data.location.repository.getLastKnownLocation
+import hu.bme.aut.android.sporttracker.data.service.LocationService
 import hu.bme.aut.android.sporttracker.ui.screens.map.MapScreen
 import hu.bme.aut.android.sporttracker.ui.theme.SportTrackerTheme
 import kotlinx.coroutines.launch
@@ -27,11 +30,22 @@ class MainActivity : ComponentActivity() {
     private val locationPermissionGranted = mutableStateOf(false)
     private lateinit var locationRepository: LocationRepository
 
+    // Engedélykérés indítása az új API-val
     private val locationPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val fineLocationGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false
+        val coarseLocationGranted = permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false
+        val foregroundServiceGranted =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                permissions[Manifest.permission.FOREGROUND_SERVICE_LOCATION] ?: false
+            } else {
+                true // Nem kell az engedély Android 14 alatt
+            }
+
+        if (fineLocationGranted && coarseLocationGranted && foregroundServiceGranted) {
             locationPermissionGranted.value = true
+            startLocationService() // Foreground service indítása
             lifecycleScope.launch {
                 val location = getLastKnownLocation(this@MainActivity, fusedLocationClient)
                 userLocation.value = location
@@ -45,28 +59,52 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         locationRepository = LocationRepository(fusedLocationClient, this)
+
         setContent {
             SportTrackerTheme(dynamicColor = true) {
-                Surface() {
-                    MapScreen(this, fusedLocationClient, userLocation, locationPermissionGranted, locationRepository)
+                Surface {
+                    MapScreen(
+                        this,
+                        fusedLocationClient,
+                        userLocation,
+                        locationPermissionGranted,
+                        locationRepository
+                    )
                 }
             }
         }
 
+        // Engedélyek kérése
+        handleLocationPermission()
     }
 
     fun handleLocationPermission() {
+        val permissions = mutableListOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            permissions.add(Manifest.permission.FOREGROUND_SERVICE_LOCATION)
+        }
+
         when {
-            ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED -> {
+            permissions.all { ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED } -> {
                 locationPermissionGranted.value = true
+                //startLocationService() // Foreground service elindítása
                 lifecycleScope.launch {
                     val location = getLastKnownLocation(this@MainActivity, fusedLocationClient)
                     userLocation.value = location
                 }
             }
             else -> {
-                locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                locationPermissionLauncher.launch(permissions.toTypedArray())
             }
         }
+    }
+
+    private fun startLocationService() {
+        val serviceIntent = Intent(this, LocationService::class.java)
+        ContextCompat.startForegroundService(this, serviceIntent)
     }
 }
