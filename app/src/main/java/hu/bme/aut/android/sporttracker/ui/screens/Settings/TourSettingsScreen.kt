@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialogDefaults.containerColor
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -22,13 +23,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import hu.bme.aut.android.sporttracker.R
+import hu.bme.aut.android.sporttracker.data.location.repository.LocationRepository
 import hu.bme.aut.android.sporttracker.ui.components.RadioButtonSingleSelection
 import hu.bme.aut.android.sporttracker.ui.components.TransportButton
 import hu.bme.aut.android.sporttracker.ui.components.UserInputTextField
 
 @Composable
-fun TourSettingsScreen(onStartTour: (String) -> Unit) {
+fun TourSettingsScreen(
+    locationRepository: LocationRepository,
+    onStartTour: (String) -> Unit,
+    onStopTour: () -> Unit
+){
     var selectedTransportMode by remember { mutableStateOf<String?>(null) }
+    var isTourStarted by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -72,20 +79,31 @@ fun TourSettingsScreen(onStartTour: (String) -> Unit) {
 
         Spacer(modifier = Modifier.height(30.dp))
 
+
         Button(
             onClick = {
-                if (selectedTransportMode != null) {
-                    onStartTour(selectedTransportMode!!)
+                if (isTourStarted) {
+                    locationRepository.stopLocationUpdates()
+                    onStopTour()
                 } else {
-                    Log.w("TourSettingsScreen", "Nem választottál közlekedési módot!")
+                    if (selectedTransportMode != null) {
+                        locationRepository.startLocationUpdates()
+                        onStartTour(selectedTransportMode!!)
+                    } else {
+                        Log.w("TourSettingsScreen", "Nem választottál közlekedési módot!")
+                    }
                 }
+                isTourStarted = !isTourStarted
             },
             modifier = Modifier.align(Alignment.End),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(red = 210, green = 210, blue = 210, alpha = 255)
+                containerColor = if (!isTourStarted) Color(red = 210, green = 210, blue = 210, alpha = 255) else Color(red = 210, green = 50, blue = 50, alpha = 255)
             )
         ) {
-            Text("Túra indítása", color = Color.Black)
+            Text(
+                text = if (isTourStarted) "Túra leállítása" else "Túra indítása",
+                color = Color.Black
+               )
         }
     }
 }

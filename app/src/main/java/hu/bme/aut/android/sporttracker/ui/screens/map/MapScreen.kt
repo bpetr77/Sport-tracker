@@ -25,6 +25,7 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
 import hu.bme.aut.android.sporttracker.MainActivity
 import hu.bme.aut.android.sporttracker.R
+import hu.bme.aut.android.sporttracker.data.location.repository.LocationRepository
 import hu.bme.aut.android.sporttracker.data.location.repository.getLastKnownLocation
 import kotlinx.coroutines.launch
 import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourSettingsScreen
@@ -36,7 +37,8 @@ fun MapScreen(
     activity: MainActivity,
     fusedLocationClient: FusedLocationProviderClient,
     userLocation: MutableState<LatLng?>,
-    locationPermissionGranted: MutableState<Boolean>
+    locationPermissionGranted: MutableState<Boolean>,
+    locationRepository: LocationRepository
 ) {
     val defaultLocation = LatLng(47.497913, 19.040236) // Budapest
     val cameraPositionState = rememberCameraPositionState {
@@ -110,17 +112,20 @@ fun MapScreen(
         }
     }
 
-    // **🔹 Alsó lap, amely csak akkor jelenik meg, ha `showBottomSheet == true`**
     if (showBottomSheet) {
         ModalBottomSheet(
             onDismissRequest = { showBottomSheet = false },
             sheetState = sheetState
         ) {
-            // **🔹 Itt szerkesztheted a túra beállításait**
-            TourSettingsScreen(onStartTour = {
-                showBottomSheet = false
-                Log.d("MapScreen", "Túra indítása...")
-            })
+            TourSettingsScreen(
+                locationRepository = locationRepository,
+                onStartTour = {
+                    Log.d("MapScreen", "Túra indítása...")
+                },
+                onStopTour = {
+                    Log.d("MapScreen", "Túra leállítása...")
+                }
+            )
         }
     }
 }

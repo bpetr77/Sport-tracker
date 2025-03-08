@@ -14,15 +14,18 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
+import hu.bme.aut.android.sporttracker.data.location.repository.LocationRepository
 import hu.bme.aut.android.sporttracker.data.location.repository.getLastKnownLocation
 import hu.bme.aut.android.sporttracker.ui.screens.map.MapScreen
 import hu.bme.aut.android.sporttracker.ui.theme.SportTrackerTheme
 import kotlinx.coroutines.launch
 
+
 class MainActivity : ComponentActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val userLocation = mutableStateOf<LatLng?>(null)
     private val locationPermissionGranted = mutableStateOf(false)
+    private lateinit var locationRepository: LocationRepository
 
     private val locationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -41,13 +44,15 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        locationRepository = LocationRepository(fusedLocationClient, this)
         setContent {
             SportTrackerTheme(dynamicColor = true) {
                 Surface() {
-                    MapScreen(this, fusedLocationClient, userLocation, locationPermissionGranted)
+                    MapScreen(this, fusedLocationClient, userLocation, locationPermissionGranted, locationRepository)
                 }
             }
         }
+
     }
 
     fun handleLocationPermission() {
