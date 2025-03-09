@@ -19,19 +19,21 @@ import android.app.ActivityManager
 import android.content.Intent
 import androidx.core.content.ContextCompat
 import hu.bme.aut.android.sporttracker.data.service.LocationService
+import hu.bme.aut.android.sporttracker.data.location.model.LocationPoint
+import hu.bme.aut.android.sporttracker.domain.location.LocationTracker
 
 class LocationRepository(
     private val fusedLocationProviderClient: FusedLocationProviderClient,
     private val context: Context
-) {
+): LocationTracker {
 
-    private val _locations = MutableStateFlow<List<LatLng>>(emptyList())
-    val locations: StateFlow<List<LatLng>> = _locations.asStateFlow()
+    private val _locations = MutableStateFlow<List<LocationPoint>>(emptyList())
+    override val locations: StateFlow<List<LocationPoint>> = _locations.asStateFlow()
     private var isUpdating = false
 
-
-    fun startLocationUpdates() {
-        val request = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5000).build()
+    override fun startLocationUpdates() {
+        _locations.value = emptyList()
+        val request = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 20000).build()
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.w("LocationRepository", "Location permission not granted")
@@ -60,13 +62,28 @@ class LocationRepository(
 
         Log.w("LocationRepository", "Location updates started")
     }
-    fun stopLocationUpdates() {
+
+    override fun stopLocationUpdates() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+        isUpdating = false
+        Log.w("LocationRepository", "Location updates stopped")
+
+
+        // TODO: Stop foreground service
+
+        // TODO: save to database
+    }
+
+    override fun pauseLocationUpdates() {
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+        isUpdating = false
     }
 
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(result: LocationResult) {
-            val newLocations = result.locations.map { LatLng(it.latitude, it.longitude) }
+            val newLocations = result.locations.map {
+                LocationPoint(it.latitude, it.longitude, it.time)
+            }
             _locations.value = _locations.value + newLocations
             logAllLocations()
         }

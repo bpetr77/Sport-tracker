@@ -22,6 +22,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
 import hu.bme.aut.android.sporttracker.MainActivity
 import hu.bme.aut.android.sporttracker.R
@@ -64,7 +65,17 @@ fun MapScreen(
             properties = MapProperties(
                 isMyLocationEnabled = locationPermissionGranted.value
             )
-        )
+        ) {
+            val locations by locationRepository.locations.collectAsState()
+
+            if (locations.isNotEmpty()) {
+                Polyline(
+                    points = locations.map { LatLng(it.latitude, it.longitude) },
+                    color = Color.Blue,
+                    width = 5f
+                )
+            }
+        }
 
         FloatingActionButton(
             onClick = {
