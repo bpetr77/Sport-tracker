@@ -32,11 +32,11 @@
      
       - ## 2. Alapfunkciók (Week 3-4)
            - ### 🛣️ Útvonal rögzítés
-              - [ ] Lokáció adatok folyamatos lekérése rögzítés közben
-              - [ ] Rögzített pontok listájának kezelése
-              - [ ] Időbélyegek tárolása minden ponthoz
+              - [X] Lokáció adatok folyamatos lekérése rögzítés közben
+              - [X] Rögzített pontok listájának kezelése
+              - [X] Időbélyegek tárolása minden ponthoz
            - ### 🔛 Útvonal megjelenítés térképen
-              - [ ] Rögzített pontok térképre rajzolása valós időben
+              - [X] Rögzített pontok térképre rajzolása valós időben
            - ### 📏 Idő és távolság mérése
               - [ ] Távolság számítása GPS koordináták alapján
               - [ ] Időmérés hozzáadása az útvonalhoz
