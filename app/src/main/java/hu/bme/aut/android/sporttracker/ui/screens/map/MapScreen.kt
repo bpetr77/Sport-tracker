@@ -30,6 +30,7 @@ import hu.bme.aut.android.sporttracker.data.location.repository.LocationReposito
 import hu.bme.aut.android.sporttracker.data.location.repository.getLastKnownLocation
 import kotlinx.coroutines.launch
 import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourSettingsScreen
+import hu.bme.aut.android.sporttracker.ui.screens.settings.TourSettingsViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,7 +40,8 @@ fun MapScreen(
     fusedLocationClient: FusedLocationProviderClient,
     userLocation: MutableState<LatLng?>,
     locationPermissionGranted: MutableState<Boolean>,
-    locationRepository: LocationRepository
+    locationRepository: LocationRepository,
+    tourSettingsViewModel: TourSettingsViewModel
 ) {
     val defaultLocation = LatLng(47.497913, 19.040236) // Budapest
     val cameraPositionState = rememberCameraPositionState {
@@ -130,6 +132,7 @@ fun MapScreen(
         ) {
             TourSettingsScreen(
                 locationRepository = locationRepository,
+                tourSettingsViewModel = tourSettingsViewModel,
                 onStartTour = {
                     Log.d("MapScreen", "Túra indítása...")
                 },

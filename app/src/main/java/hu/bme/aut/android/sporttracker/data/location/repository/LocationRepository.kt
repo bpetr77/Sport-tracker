@@ -33,7 +33,7 @@ class LocationRepository(
 
     override fun startLocationUpdates() {
         _locations.value = emptyList()
-        val request = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 20000).build()
+        val request = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5000).build()
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.w("LocationRepository", "Location permission not granted")

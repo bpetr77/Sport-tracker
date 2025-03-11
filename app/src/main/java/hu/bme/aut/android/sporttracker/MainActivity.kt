@@ -9,6 +9,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
@@ -20,6 +21,7 @@ import hu.bme.aut.android.sporttracker.data.location.repository.LocationReposito
 import hu.bme.aut.android.sporttracker.data.location.repository.getLastKnownLocation
 import hu.bme.aut.android.sporttracker.data.service.LocationService
 import hu.bme.aut.android.sporttracker.ui.screens.map.MapScreen
+import hu.bme.aut.android.sporttracker.ui.screens.settings.TourSettingsViewModel
 import hu.bme.aut.android.sporttracker.ui.theme.SportTrackerTheme
 import kotlinx.coroutines.launch
 
@@ -29,6 +31,8 @@ class MainActivity : ComponentActivity() {
     private val userLocation = mutableStateOf<LatLng?>(null)
     private val locationPermissionGranted = mutableStateOf(false)
     private lateinit var locationRepository: LocationRepository
+
+    private val tourSettingsViewModel: TourSettingsViewModel by viewModels()
 
     // Engedélykérés indítása az új API-val
     private val locationPermissionLauncher = registerForActivityResult(
@@ -45,7 +49,7 @@ class MainActivity : ComponentActivity() {
 
         if (fineLocationGranted && coarseLocationGranted && foregroundServiceGranted) {
             locationPermissionGranted.value = true
-            startLocationService() // Foreground service indítása
+            //startLocationService() // Foreground service indítása
             lifecycleScope.launch {
                 val location = getLastKnownLocation(this@MainActivity, fusedLocationClient)
                 userLocation.value = location
@@ -68,7 +72,8 @@ class MainActivity : ComponentActivity() {
                         fusedLocationClient,
                         userLocation,
                         locationPermissionGranted,
-                        locationRepository
+                        locationRepository,
+                        tourSettingsViewModel
                     )
                 }
             }
@@ -91,7 +96,8 @@ class MainActivity : ComponentActivity() {
         when {
             permissions.all { ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED } -> {
                 locationPermissionGranted.value = true
-                //startLocationService() // Foreground service elindítása
+                // TODO: delete this line
+                startLocationService() // Foreground service elindítása
                 lifecycleScope.launch {
                     val location = getLastKnownLocation(this@MainActivity, fusedLocationClient)
                     userLocation.value = location
