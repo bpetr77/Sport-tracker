@@ -30,7 +30,8 @@ import hu.bme.aut.android.sporttracker.data.location.repository.LocationReposito
 import hu.bme.aut.android.sporttracker.data.location.repository.getLastKnownLocation
 import kotlinx.coroutines.launch
 import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourSettingsScreen
-import hu.bme.aut.android.sporttracker.ui.screens.settings.TourSettingsViewModel
+import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourSettingsViewModel
+import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourStartedSettingsScreen
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -130,17 +131,22 @@ fun MapScreen(
             onDismissRequest = { showBottomSheet = false },
             sheetState = sheetState
         ) {
-            TourSettingsScreen(
-                locationRepository = locationRepository,
-                tourSettingsViewModel = tourSettingsViewModel,
-                onStartTour = {
-                    Log.d("MapScreen", "Túra indítása...")
-                },
-                onStopTour = {
-                    Log.d("MapScreen", "Túra leállítása...")
-                }
-            )
+            if (tourSettingsViewModel.isTourStarted.collectAsState().value == false) {
+                TourSettingsScreen(
+                    locationRepository = locationRepository,
+                    tourSettingsViewModel = tourSettingsViewModel,
+                    onStartTour = {
+                        Log.d("MapScreen", "Túra indítása...")
+                    },
+                    onStopTour = {
+                        Log.d("MapScreen", "Túra leállítása...")
+                    }
+                )
+            }else {
+                TourStartedSettingsScreen()
+            }
         }
     }
 }
+
 

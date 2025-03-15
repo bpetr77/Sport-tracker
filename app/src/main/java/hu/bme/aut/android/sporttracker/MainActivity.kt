@@ -21,7 +21,7 @@ import hu.bme.aut.android.sporttracker.data.location.repository.LocationReposito
 import hu.bme.aut.android.sporttracker.data.location.repository.getLastKnownLocation
 import hu.bme.aut.android.sporttracker.data.service.LocationService
 import hu.bme.aut.android.sporttracker.ui.screens.map.MapScreen
-import hu.bme.aut.android.sporttracker.ui.screens.settings.TourSettingsViewModel
+import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourSettingsViewModel
 import hu.bme.aut.android.sporttracker.ui.theme.SportTrackerTheme
 import kotlinx.coroutines.launch
 

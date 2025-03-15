@@ -1,4 +1,4 @@
-package hu.bme.aut.android.sporttracker.ui.screens.settings
+package hu.bme.aut.android.sporttracker.ui.screens.Settings
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
