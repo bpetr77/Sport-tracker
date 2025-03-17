@@ -51,6 +51,8 @@ fun MapScreen(
     val sheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
+    val isTourStarted by tourSettingsViewModel.isTourStarted.collectAsState()
+
 
     Box(modifier = Modifier.fillMaxSize()) {
         GoogleMap(
@@ -131,7 +133,7 @@ fun MapScreen(
             onDismissRequest = { showBottomSheet = false },
             sheetState = sheetState
         ) {
-            if (tourSettingsViewModel.isTourStarted.collectAsState().value == false) {
+            if (!isTourStarted) {
                 TourSettingsScreen(
                     locationRepository = locationRepository,
                     tourSettingsViewModel = tourSettingsViewModel,
@@ -143,7 +145,16 @@ fun MapScreen(
                     }
                 )
             }else {
-                TourStartedSettingsScreen()
+                TourStartedSettingsScreen(
+                    stopLocationUpdates = {
+                        locationRepository.stopLocationUpdates()
+                        tourSettingsViewModel.toggleTourState()
+                    },
+                    pauseLocationUpdates = { locationRepository.pauseLocationUpdates() },
+                    resumeLocationUpdates = { locationRepository.resumeLocationUpdates() },
+                    speed = 0.0f,
+                    distance = 0.0f
+                )
             }
         }
     }

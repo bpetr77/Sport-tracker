@@ -9,4 +9,5 @@ interface LocationTracker {
     fun startLocationUpdates()
     fun stopLocationUpdates()
     fun pauseLocationUpdates()
+    fun resumeLocationUpdates()
 }

@@ -10,9 +10,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -20,16 +24,25 @@ import androidx.compose.ui.unit.dp
 import hu.bme.aut.android.sporttracker.R
 
 
+// TODO: ViewModel implemet over this class will be
 @Composable
-fun TourStartedSettingsScreen() {
+fun TourStartedSettingsScreen(
+    stopLocationUpdates: () -> Unit,
+    pauseLocationUpdates: () -> Unit,
+    resumeLocationUpdates: () -> Unit,
+    speed: Float,
+    distance: Float
+) {
     val tourSettingsViewModel: TourSettingsViewModel = TourSettingsViewModel()
     val selectedTransportMode by tourSettingsViewModel.selectedTransportMode.collectAsState()
+    var isPaused by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
     ) {
+        // TODO: not working image selection
         selectedTransportMode?.let { mode ->
             val imageRes = when (mode) {
                 "Gyalog" -> R.drawable.baseline_hiking_24
@@ -47,7 +60,7 @@ fun TourStartedSettingsScreen() {
             modifier = Modifier.fillMaxWidth()
         ) {
             Button(
-                onClick = { /* Handle click */ },
+                onClick = { stopLocationUpdates() },
                 shape = CircleShape,
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
                 modifier = Modifier.padding(8.dp)
@@ -60,17 +73,32 @@ fun TourStartedSettingsScreen() {
             }
 
             Button(
-                onClick = { /* Handle click */ },
+                onClick = {
+                    if (isPaused) {
+                        resumeLocationUpdates()
+                    } else {
+                        pauseLocationUpdates()
+                    }
+                    isPaused = !isPaused
+                },
                 shape = CircleShape,
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
                 modifier = Modifier.padding(8.dp)
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.baseline_pause_24),
-                    contentDescription = "Pause",
+                    painter = painterResource(id = if (isPaused) R.drawable.baseline_start_24 else R.drawable.baseline_pause_24),
+                    contentDescription = if (isPaused) "Start" else "Pause",
                     modifier = Modifier.size(50.dp)
                 )
             }
         }
+        Text(
+            text = "Speed: ${speed} km/o",
+            modifier = Modifier.padding(top = 16.dp)
+        )
+        Text(
+            text = "Distance: ${distance} meter",
+            modifier = Modifier.padding(top = 8.dp)
+        )
     }
 }

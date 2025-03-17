@@ -68,6 +68,7 @@ class LocationRepository(
         isUpdating = false
         Log.w("LocationRepository", "Location updates stopped")
 
+        //_locations.value = emptyList()
 
         // TODO: Stop foreground service
 
@@ -77,6 +78,37 @@ class LocationRepository(
     override fun pauseLocationUpdates() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
         isUpdating = false
+    }
+
+    override fun resumeLocationUpdates() {
+        val request = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5000).build()
+
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.w("LocationRepository", "Location permission not granted")
+            return
+        }
+
+        if (isUpdating) {
+            Log.w("LocationRepository", "Location updates already started, skipping...")
+            return
+        }
+        isUpdating = true
+
+        fusedLocationProviderClient.requestLocationUpdates(
+            request,
+            locationCallback,
+            Looper.getMainLooper()
+        )
+
+        if (!isServiceRunning(LocationService::class.java)) {
+            val serviceIntent = Intent(context, LocationService::class.java)
+            ContextCompat.startForegroundService(context, serviceIntent)
+            Log.d("LocationRepository", "Foreground service started")
+        } else {
+            Log.d("LocationRepository", "Foreground service already running")
+        }
+
+        Log.w("LocationRepository", "Location updates resumed")
     }
 
     private val locationCallback = object : LocationCallback() {
