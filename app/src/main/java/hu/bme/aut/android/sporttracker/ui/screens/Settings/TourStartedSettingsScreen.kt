@@ -78,13 +78,15 @@ fun TourStartedSettingsScreen(
                 )
             }
         }
-        Spacer(modifier = Modifier.height(60.dp))
         if(tourStartedSettingsViewModel.getSpeedHistory().isNotEmpty()) {
             SpeedChart(tourStartedSettingsViewModel)
         }
+
         Spacer(modifier = Modifier.height(60.dp))
-        Text(text = "Total Distance: $totalDistance meters")
+
+        Text(text = "Total Distance: $totalDistance m")
         Text(text = "Speed: $currentSpeed km/h")
+
         Spacer(modifier = Modifier.height(30.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),

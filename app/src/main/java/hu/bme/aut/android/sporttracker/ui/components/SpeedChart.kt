@@ -20,7 +20,6 @@ import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
 import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourStartedSettingsViewModel
 
-// TODO: Inicializálni a speedHistory-t a TourStartedSettingsViewModel-ben 1 db 0-val így lesz egy 0 és egy max érték is a diagrammon
 @Composable
 fun SpeedChart(tourStartedSettingsViewModel: TourStartedSettingsViewModel) {
     val speedHistory = tourStartedSettingsViewModel.getSpeedHistory()
@@ -28,23 +27,26 @@ fun SpeedChart(tourStartedSettingsViewModel: TourStartedSettingsViewModel) {
         co.yml.charts.common.model.Point(index.toFloat(), speed.toFloat())
     }
 
-    val uniqueSpeeds = speedHistory.distinct().sorted()
-    val yAxisSteps = uniqueSpeeds.size
+    val maxSpeed = ((speedHistory.maxOrNull() ?: 0f) * 10f).toInt() / 10f
+    val stepSize = ((maxSpeed / 4) * 10f).toInt() / 10f
+
+    val yAxisLabels = listOf(0f, stepSize, stepSize * 2, stepSize * 3, maxSpeed)
 
     val xAxisData = AxisData.Builder()
         .axisStepSize(50.dp)
-        .backgroundColor(Color.LightGray)
+        .backgroundColor(Color.Gray)
         .steps(pointsData.size - 1)
-        .labelData { it.toString() }
-        .labelAndAxisLinePadding(10.dp)
+        .labelData { if (it == 0) "  0" else it.toString() }
+        .startPadding(12.dp)
+        //.labelAndAxisLinePadding(10.dp)
         .build()
 
     val yAxisData = AxisData.Builder()
         .axisStepSize(50.dp)
-        .backgroundColor(Color.LightGray)
-        .steps(yAxisSteps - 1)
-        .labelData { uniqueSpeeds[it].toString() }
-        .labelAndAxisLinePadding(10.dp)
+        .backgroundColor(Color.Gray)
+        .steps(4)
+        .labelData { yAxisLabels[it].toString() }
+        //.labelAndAxisLinePadding(10.dp)
         .build()
 
     val lineChartData = LineChartData(
@@ -62,14 +64,14 @@ fun SpeedChart(tourStartedSettingsViewModel: TourStartedSettingsViewModel) {
         ),
         xAxisData = xAxisData,
         yAxisData = yAxisData,
-        gridLines = GridLines(color = Color.Gray.copy(alpha = 0.3f)),
-        backgroundColor = Color.White
+        gridLines = GridLines(color = Color.LightGray.copy(alpha = 0.3f)),
+        backgroundColor = Color.Gray
     )
 
     LineChart(
         modifier = Modifier
             .fillMaxWidth()
-            .height(300.dp),
+            .height(200.dp),
         lineChartData = lineChartData
     )
 }

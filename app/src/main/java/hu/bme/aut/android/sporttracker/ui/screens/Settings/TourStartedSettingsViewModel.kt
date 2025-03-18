@@ -21,14 +21,13 @@ import kotlin.math.*
 class TourStartedSettingsViewModel(
     private val locationRepository: LocationRepository
 ) : ViewModel() {
-    // GPS alapú helymeghatározás
     private val _locationHistory = MutableStateFlow<List<LocationPoint>>(emptyList())
     val locationHistory = _locationHistory.asStateFlow()
 
     private val _isPaused = MutableStateFlow(false)
     val isPaused = _isPaused.asStateFlow()
 
-    private val _speedHistory = MutableStateFlow<List<Float>>(emptyList())
+    private val _speedHistory = MutableStateFlow<List<Float>>(listOf(0f))
     val speedHistory = _speedHistory.asStateFlow()
 
     //private var totalDistance = 0f
@@ -77,7 +76,8 @@ class TourStartedSettingsViewModel(
         for (i in 1 until locations.size) {
             _totalDistance.value += haversineDistance(locations[i - 1], locations[i])
         }
-        return (_totalDistance.value * 100).roundToInt() / 100f // Két tizedesre kerekítve
+        _totalDistance.value = (_totalDistance.value * 100).roundToInt() / 100f // Két tizedesre kerekítve
+        return totalDistance.value
     }
 
     fun stopTour() {
