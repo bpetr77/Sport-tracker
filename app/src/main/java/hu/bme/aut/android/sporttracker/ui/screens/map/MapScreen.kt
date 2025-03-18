@@ -32,6 +32,7 @@ import kotlinx.coroutines.launch
 import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourSettingsScreen
 import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourSettingsViewModel
 import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourStartedSettingsScreen
+import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourStartedSettingsViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,7 +43,8 @@ fun MapScreen(
     userLocation: MutableState<LatLng?>,
     locationPermissionGranted: MutableState<Boolean>,
     locationRepository: LocationRepository,
-    tourSettingsViewModel: TourSettingsViewModel
+    tourSettingsViewModel: TourSettingsViewModel,
+    tourStartedSettingsViewModel: TourStartedSettingsViewModel
 ) {
     val defaultLocation = LatLng(47.497913, 19.040236) // Budapest
     val cameraPositionState = rememberCameraPositionState {
@@ -52,6 +54,7 @@ fun MapScreen(
     val coroutineScope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
     val isTourStarted by tourSettingsViewModel.isTourStarted.collectAsState()
+    var locations = locationRepository.locations.collectAsState()
 
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -152,8 +155,8 @@ fun MapScreen(
                     },
                     pauseLocationUpdates = { locationRepository.pauseLocationUpdates() },
                     resumeLocationUpdates = { locationRepository.resumeLocationUpdates() },
-                    speed = 0.0f,
-                    distance = 0.0f
+                    tourStartedSettingsViewModel = tourStartedSettingsViewModel,
+                    locations = locations.value
                 )
             }
         }

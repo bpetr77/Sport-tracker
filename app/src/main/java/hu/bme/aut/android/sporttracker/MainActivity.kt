@@ -12,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -22,8 +23,10 @@ import hu.bme.aut.android.sporttracker.data.location.repository.getLastKnownLoca
 import hu.bme.aut.android.sporttracker.data.service.LocationService
 import hu.bme.aut.android.sporttracker.ui.screens.map.MapScreen
 import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourSettingsViewModel
+import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourStartedSettingsViewModel
 import hu.bme.aut.android.sporttracker.ui.theme.SportTrackerTheme
 import kotlinx.coroutines.launch
+import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourStartedSettingsViewModelFactory
 
 
 class MainActivity : ComponentActivity() {
@@ -33,6 +36,9 @@ class MainActivity : ComponentActivity() {
     private lateinit var locationRepository: LocationRepository
 
     private val tourSettingsViewModel: TourSettingsViewModel by viewModels()
+    private val tourStartedSettingsViewModel: TourStartedSettingsViewModel by viewModels {
+        TourStartedSettingsViewModelFactory(locationRepository)
+    }
 
     // Engedélykérés indítása az új API-val
     private val locationPermissionLauncher = registerForActivityResult(
@@ -73,7 +79,8 @@ class MainActivity : ComponentActivity() {
                         userLocation,
                         locationPermissionGranted,
                         locationRepository,
-                        tourSettingsViewModel
+                        tourSettingsViewModel,
+                        tourStartedSettingsViewModel
                     )
                 }
             }

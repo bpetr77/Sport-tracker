@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class TourSettingsViewModel : ViewModel() {
-
     private val _selectedTransportMode = MutableStateFlow<String?>(null)
     val selectedTransportMode = _selectedTransportMode.asStateFlow()
 

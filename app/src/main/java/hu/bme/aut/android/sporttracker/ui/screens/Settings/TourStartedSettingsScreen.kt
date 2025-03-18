@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import hu.bme.aut.android.sporttracker.R
+import hu.bme.aut.android.sporttracker.data.location.model.LocationPoint
 
 
 // TODO: ViewModel implemet over this class will be
@@ -30,12 +31,13 @@ fun TourStartedSettingsScreen(
     stopLocationUpdates: () -> Unit,
     pauseLocationUpdates: () -> Unit,
     resumeLocationUpdates: () -> Unit,
-    speed: Float,
-    distance: Float
+    tourStartedSettingsViewModel: TourStartedSettingsViewModel,
+    locations: List<LocationPoint>
 ) {
     val tourSettingsViewModel: TourSettingsViewModel = TourSettingsViewModel()
     val selectedTransportMode by tourSettingsViewModel.selectedTransportMode.collectAsState()
     var isPaused by remember { mutableStateOf(false) }
+    //val locationHistory by tourStartedSettingsViewModel.locationHistory.collectAsState()
 
     Column(
         modifier = Modifier
@@ -92,13 +94,9 @@ fun TourStartedSettingsScreen(
                 )
             }
         }
-        Text(
-            text = "Speed: ${speed} km/o",
-            modifier = Modifier.padding(top = 16.dp)
-        )
-        Text(
-            text = "Distance: ${distance} meter",
-            modifier = Modifier.padding(top = 8.dp)
-        )
+        Text(text = "Total Distance: ${tourStartedSettingsViewModel.calculateTotalDistance()} meters")
+
+        Text(text = "Speed: ${tourStartedSettingsViewModel.getCurrentSpeedInKmH()} km/h")
+
     }
 }
