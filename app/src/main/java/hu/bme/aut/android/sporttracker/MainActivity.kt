@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 permissions[Manifest.permission.FOREGROUND_SERVICE_LOCATION] ?: false
             } else {
-                true // Nem kell az engedély Android 14 alatt
+                true
             }
 
         if (fineLocationGranted && coarseLocationGranted && foregroundServiceGranted) {

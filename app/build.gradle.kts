@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "hu.bme.aut.android.sporttracker"
-    compileSdk = 34
+    compileSdk = 35 //34
 
     defaultConfig {
         applicationId = "hu.bme.aut.android.sporttracker"
-        minSdk = 24
-        targetSdk = 34
+        minSdk = 26 //24
+        targetSdk = 35   //34
         versionCode = 1
         versionName = "1.0"
 
@@ -79,6 +79,7 @@ dependencies {
     //implementation("com.google.accompanist:accompanist-permissions:0.32.0") // Engedélykéréshez
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
     implementation(libs.androidx.navigation.runtime.android)
+    implementation ("co.yml:ycharts:2.1.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

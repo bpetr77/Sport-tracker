@@ -156,7 +156,7 @@ fun MapScreen(
                     pauseLocationUpdates = { locationRepository.pauseLocationUpdates() },
                     resumeLocationUpdates = { locationRepository.resumeLocationUpdates() },
                     tourStartedSettingsViewModel = tourStartedSettingsViewModel,
-                    locations = locations.value
+                    tourSettingsViewModel = tourSettingsViewModel
                 )
             }
         }
