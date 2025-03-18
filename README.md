@@ -38,12 +38,12 @@
            - ### 🔛 Útvonal megjelenítés térképen
               - [X] Rögzített pontok térképre rajzolása valós időben
            - ### 📏 Idő és távolság mérése
-              - [ ] Távolság számítása GPS koordináták alapján
-              - [ ] Időmérés hozzáadása az útvonalhoz
+              - [X] Távolság számítása GPS koordináták alapján
+              - [X] Időmérés hozzáadása az útvonalhoz
     
       - ## 3. Statisztikai Adatok (Week 5-6)
            - ### ⏱️ Sebességszámítás
-              - [ ] Átlagsebesség számítása az út során
+              - [X] Átlagsebesség számítása az út során
               - [ ] Maximális sebesség mérése
            - ### ⛰️ Szintemelkedés kiszámítása
               - [ ] Magassági adatok lekérése az útvonal mentén
