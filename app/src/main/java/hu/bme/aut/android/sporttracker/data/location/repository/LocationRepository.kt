@@ -114,7 +114,7 @@ class LocationRepository(
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(result: LocationResult) {
             val newLocations = result.locations.map {
-                LocationPoint(it.latitude, it.longitude, it.time)
+                LocationPoint(it.latitude, it.longitude, it.altitude, it.time)
             }
             _locations.value = _locations.value + newLocations
             logAllLocations()

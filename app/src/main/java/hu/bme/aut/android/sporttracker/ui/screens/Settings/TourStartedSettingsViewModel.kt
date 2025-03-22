@@ -27,7 +27,7 @@ class TourStartedSettingsViewModel(
     private val _isPaused = MutableStateFlow(false)
     val isPaused = _isPaused.asStateFlow()
 
-    private val _speedHistory = MutableStateFlow<List<Float>>(listOf(0f))
+    private val _speedHistory = MutableStateFlow<List<Double>>(listOf(0.0))
     val speedHistory = _speedHistory.asStateFlow()
 
     //private var totalDistance = 0f
@@ -46,7 +46,7 @@ class TourStartedSettingsViewModel(
 
     //private var lastUpdateTime: Long = System.currentTimeMillis()
 
-    fun getSpeedHistory(): List<Float> {
+    fun getSpeedHistory(): List<Double> {
         return speedHistory.value
     }
     init {
@@ -87,7 +87,7 @@ class TourStartedSettingsViewModel(
         _speedHistory.value = emptyList()
     }
     // Átlagos sebesség számítás GPS alapján (km/h)
-    fun calculateAvgSpeed(): Float {
+    fun getAverageSpeed(): Float {
         val locations = _locationHistory.value
         if (locations.size < 2) return 0f
 
@@ -99,9 +99,29 @@ class TourStartedSettingsViewModel(
         return if (totalTimeSeconds > 0) (_totalDistance.value / totalTimeSeconds * 3.6).toFloat() else 0f // km/h
     }
 
-    fun getCurrentSpeedInKmH(): Float {
+    fun getDuration(): Long {
         val locations = _locationHistory.value
-        if (locations.size < 2) return 0f
+        if (locations.size < 2) return 0
+
+        val firstLocation = locations.first()
+        val lastLocation = locations.last()
+
+        return (lastLocation.timestamp - firstLocation.timestamp) / 1000 // millis --> sec
+    }
+
+    fun calculateAllElevation(): Double {
+        var elevation = 0.0
+        for(i in 1 until _locationHistory.value.size) {
+            val firstAltitude = _locationHistory.value[i - 1].altitude
+            val lastAltitude = _locationHistory.value[i].altitude
+            elevation = (firstAltitude - lastAltitude).absoluteValue
+        }
+        return elevation
+    }
+
+    fun getCurrentSpeedInKmH(): Double {
+        val locations = _locationHistory.value
+        if (locations.size < 2) return 0.0
 
         val secondLastLocation = locations[locations.size - 2]
         val lastLocation = locations.last()
@@ -111,9 +131,9 @@ class TourStartedSettingsViewModel(
 
         if (timeSeconds > 0) _currentSpeed.value = ((distance / timeSeconds * 3.6)* 100).roundToInt() / 100f else _currentSpeed.value = 0f
 
-        _speedHistory.value = _speedHistory.value + _currentSpeed.value
+        _speedHistory.value = (_speedHistory.value + _currentSpeed.value.toDouble())
         Log.w("_speedHistory", "_speedHistory: ${_speedHistory.value}")
-        return _currentSpeed.value
+        return _currentSpeed.value.toDouble()
     }
     // Aktuális sebesség gyorsulásmérő alapján
 //    fun getCurrentSpeedInKmH2(): Float {
@@ -159,8 +179,8 @@ class TourStartedSettingsViewModel(
 
 //    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 //
-//    override fun onCleared() {
-//        super.onCleared()
-//        sensorManager.unregisterListener(this)
-//    }
+    override fun onCleared() {
+        super.onCleared()
+        stopTour()
+    }
 }

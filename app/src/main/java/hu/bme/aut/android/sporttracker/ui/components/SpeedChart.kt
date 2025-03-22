@@ -21,16 +21,24 @@ import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourStartedSettingsViewModel
 
 @Composable
-fun SpeedChart(tourStartedSettingsViewModel: TourStartedSettingsViewModel) {
-    val speedHistory = tourStartedSettingsViewModel.getSpeedHistory()
-    val pointsData = speedHistory.mapIndexed { index, speed ->
-        co.yml.charts.common.model.Point(index.toFloat(), speed.toFloat())
+fun SpeedChart(ListOfData: List<Double>) {
+    //val speedHistory = tourStartedSettingsViewModel.getSpeedHistory()
+    if (ListOfData.isEmpty()) {
+        // Handle empty list case, e.g., show a message or an empty chart
+        return
+    }
+    val pointsData = ListOfData.mapIndexed { index, data ->
+        co.yml.charts.common.model.Point(index.toFloat(), data.toFloat())
     }
 
-    val maxSpeed = ((speedHistory.maxOrNull() ?: 0f) * 10f).toInt() / 10f
-    val stepSize = ((maxSpeed / 4) * 10f).toInt() / 10f
+//    val maxSpeed = ((ListOfData.maxOrNull() ?: 0f) * 10f).toInt() / 10f
+//    val stepSize = ((maxSpeed / 4) * 10f).toInt() / 10f
+    val min = (ListOfData.minOrNull() ?: 0).toFloat()
+    val max = (ListOfData.maxOrNull() ?: 0).toFloat()
+    val stepSize = (((max - min) / 4)).toInt()
 
-    val yAxisLabels = listOf(0f, stepSize, stepSize * 2, stepSize * 3, maxSpeed)
+
+    val yAxisLabels = listOf(min, stepSize, stepSize * 2, stepSize * 3, max)
 
     val xAxisData = AxisData.Builder()
         .axisStepSize(50.dp)
@@ -44,7 +52,7 @@ fun SpeedChart(tourStartedSettingsViewModel: TourStartedSettingsViewModel) {
     val yAxisData = AxisData.Builder()
         .axisStepSize(50.dp)
         .backgroundColor(Color.Gray)
-        .steps(4)
+        .steps(4) //TODO:
         .labelData { yAxisLabels[it].toString() }
         //.labelAndAxisLinePadding(10.dp)
         .build()

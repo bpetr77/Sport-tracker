@@ -120,4 +120,9 @@ class MainActivity : ComponentActivity() {
         val serviceIntent = Intent(this, LocationService::class.java)
         ContextCompat.startForegroundService(this, serviceIntent)
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        locationRepository.stopLocationUpdates()
+    }
 }

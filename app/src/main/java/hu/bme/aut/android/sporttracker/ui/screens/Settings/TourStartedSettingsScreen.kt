@@ -1,6 +1,7 @@
 package hu.bme.aut.android.sporttracker.ui.screens.Settings
 
 //import android.os.Build.VERSION_CODES.R
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,8 +34,11 @@ import androidx.compose.ui.unit.dp
 import hu.bme.aut.android.sporttracker.R
 import hu.bme.aut.android.sporttracker.data.location.model.LocationPoint
 import hu.bme.aut.android.sporttracker.ui.components.SpeedChart
+import hu.bme.aut.android.sporttracker.ui.screens.tour.TourSummaryScreen
+import kotlinx.coroutines.launch
 
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun TourStartedSettingsScreen(
     stopLocationUpdates: () -> Unit,
@@ -49,6 +53,7 @@ fun TourStartedSettingsScreen(
     val isPaused by tourStartedSettingsViewModel.isPaused.collectAsState()
     val totalDistance by tourStartedSettingsViewModel.totalDistance.collectAsState()
     val currentSpeed by tourStartedSettingsViewModel.currentSpeed.collectAsState()
+    var showTourSummaryScreen = remember { mutableStateOf(false) }
     //val locationHistory by tourStartedSettingsViewModel.locationHistory.collectAsState()
 
     Column(
@@ -78,9 +83,10 @@ fun TourStartedSettingsScreen(
                 )
             }
         }
-        if(tourStartedSettingsViewModel.getSpeedHistory().isNotEmpty()) {
-            SpeedChart(tourStartedSettingsViewModel)
-        }
+
+            SpeedChart(tourStartedSettingsViewModel.getSpeedHistory())
+            SpeedChart(tourStartedSettingsViewModel.locationHistory.value.map { it.altitude })
+
 
         Spacer(modifier = Modifier.height(60.dp))
 
@@ -92,9 +98,17 @@ fun TourStartedSettingsScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End
         ) {
+            //TODO: maybe try to make the dialog screen appear from mapscreen otherwise it will be this page that will be shown under
             FloatingActionButton(
-                onClick = { stopLocationUpdates()
-                            tourStartedSettingsViewModel.stopTour()
+                onClick = { //stopLocationUpdates()
+                            //tourStartedSettingsViewModel.stopTour()
+                            pauseLocationUpdates()
+                            //tourStartedSettingsViewModel.toggleTourPaused()
+
+
+                    //coroutineScope.launch {
+                                showTourSummaryScreen.value = true
+                            //}
                           },
                 modifier = Modifier
                     .padding(8.dp),
@@ -131,6 +145,13 @@ fun TourStartedSettingsScreen(
             }
         }
 
+    }
+    if(showTourSummaryScreen.value) {
+        TourSummaryScreen(
+            viewModel = tourStartedSettingsViewModel,
+            onDismiss = { showTourSummaryScreen.value = false },
+            stopLocationUpdates = {stopLocationUpdates() }
+        )
     }
 }
 
