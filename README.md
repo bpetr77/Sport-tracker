@@ -44,13 +44,13 @@
       - ## 3. Statisztikai Adatok (Week 5-6)
            - ### ⏱️ Sebességszámítás
               - [X] Átlagsebesség számítása az út során
-              - [ ] Maximális sebesség mérése
+              - [X] Maximális sebesség mérése
            - ### ⛰️ Szintemelkedés kiszámítása
-              - [ ] Magassági adatok lekérése az útvonal mentén
-              - [ ] Összes emelkedés és ereszkedés kiszámítása
+              - [X] Magassági adatok lekérése az útvonal mentén
+              - [X] Összes emelkedés és ereszkedés kiszámítása
            - ### 📊 Összegzett útvonal statisztikák megjelenítése
-              - [ ] Távolság, idő és sebesség kijelzése UI-ban
-              - [ ] Grafikon készítése sebesség/idő viszonyáról
+              - [X] Távolság, idő és sebesség kijelzése UI-ban
+              - [X] Grafikon készítése sebesség/idő viszonyáról
     
       - ## 4. Mentés és Visszatöltés (Week 7-8)
            - ### ⛃ Útvonalak mentése SQLite adatbázisba
