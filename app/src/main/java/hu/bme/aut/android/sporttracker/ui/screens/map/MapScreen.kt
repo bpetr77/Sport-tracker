@@ -92,8 +92,13 @@ fun MapScreen(
 
         FloatingActionButton(
             onClick = {
+                Log.w("MapScreen", "Location button clicked")
                 activity.handleLocationPermission()
+
+                Log.d("MapScreen", "Location permission granted value: ${locationPermissionGranted.value}")
+
                 if (locationPermissionGranted.value) {
+                    Log.w("MapScreen", "Location permission granted")
                     activity.lifecycleScope.launch {
                         val newLocation = getLastKnownLocation(activity, fusedLocationClient)
                         userLocation.value = newLocation
@@ -102,6 +107,8 @@ fun MapScreen(
                             cameraPositionState.animate(CameraUpdateFactory.newLatLngZoom(it, 15f))
                         }
                     }
+                }else {
+                    Log.w("MapScreen", "Location permission not granted")
                 }
             },
             modifier = Modifier

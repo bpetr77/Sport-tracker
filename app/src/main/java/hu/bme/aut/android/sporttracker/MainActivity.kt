@@ -12,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
@@ -34,7 +35,7 @@ import hu.bme.aut.android.sporttracker.ui.navigation.NavGraph
 class MainActivity : ComponentActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val userLocation = mutableStateOf<LatLng?>(null)
-    private val locationPermissionGranted = mutableStateOf(false)
+    //private var locationPermissionGranted = remember { mutableStateOf(false) }
     private lateinit var locationRepository: LocationRepository
 
     private val tourSettingsViewModel: TourSettingsViewModel by viewModels()
@@ -56,10 +57,12 @@ class MainActivity : ComponentActivity() {
             }
 
         if (fineLocationGranted && coarseLocationGranted && foregroundServiceGranted) {
-            locationPermissionGranted.value = true
+            //locationPermissionGranted.value = true
+            tourSettingsViewModel.updatePermissionGranted(true)
             //startLocationService() // Foreground service indítása
             lifecycleScope.launch {
                 val location = getLastKnownLocation(this@MainActivity, fusedLocationClient)
+                Log.w("Location", "Location: $location")
                 userLocation.value = location
             }
         } else {
@@ -71,7 +74,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         locationRepository = LocationRepository(fusedLocationClient, this)
-
+        handleLocationPermission()
         setContent {
             SportTrackerTheme(dynamicColor = true) {
                 Surface {
@@ -103,34 +106,47 @@ class MainActivity : ComponentActivity() {
         }
 
         // Engedélyek kérése
-        handleLocationPermission()
+        //handleLocationPermission()
     }
 
     fun handleLocationPermission() {
+        Log.d("handleLocationPermission", "Checking location permissions...")
+
         val permissions = mutableListOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
         )
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            Log.d("handleLocationPermission", "Adding FOREGROUND_SERVICE_LOCATION permission")
             permissions.add(Manifest.permission.FOREGROUND_SERVICE_LOCATION)
         }
 
-        when {
-            permissions.all { ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED } -> {
-                locationPermissionGranted.value = true
-                // TODO: delete this line
-                startLocationService() // Foreground service elindítása
-                lifecycleScope.launch {
-                    val location = getLastKnownLocation(this@MainActivity, fusedLocationClient)
-                    userLocation.value = location
-                }
+        // Ellenőrizzük, hogy minden szükséges engedély megvan-e
+        val allPermissionsGranted = permissions.all {
+            ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
+        }
+
+        if (allPermissionsGranted) {
+            Log.d("handleLocationPermission", "All permissions granted. Updating state and starting location service.")
+            //locationPermissionGranted.value = true
+            tourSettingsViewModel.updatePermissionGranted(true)
+            // TODO: delete this line
+            Log.d("handleLocationPermission", "Starting foreground location service...")
+            startLocationService() // Foreground service elindítása
+
+            lifecycleScope.launch {
+                Log.d("handleLocationPermission", "Fetching last known location...")
+                val location = getLastKnownLocation(this@MainActivity, fusedLocationClient)
+                userLocation.value = location
+                Log.d("handleLocationPermission", "Last known location received: $location")
             }
-            else -> {
-                locationPermissionLauncher.launch(permissions.toTypedArray())
-            }
+        } else {
+            Log.d("handleLocationPermission", "Permissions not granted. Requesting permissions...")
+            locationPermissionLauncher.launch(permissions.toTypedArray())
         }
     }
+
 
     private fun startLocationService() {
         val serviceIntent = Intent(this, LocationService::class.java)

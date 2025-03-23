@@ -6,6 +6,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -50,12 +51,12 @@ fun MainScreen(
         }
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            // 🔹 A térkép mindig a háttérben marad
+            // TODO: MAKE AN OTHER VIEWMODEL FOR LOCATION PERMISSION BC IT IS NOT RELATED TO TOUR SETTINGS AND NOW IT IS IN THE SAME VIEWMODEL
             MapScreen(
                 activity = activity,
                 fusedLocationClient = fusedLocationClient,
                 userLocation = remember { mutableStateOf(null) },
-                locationPermissionGranted = remember { mutableStateOf(false) },
+                locationPermissionGranted = tourSettingsViewModel.locationPermissionGranted,
                 locationRepository = locationRepository,
                 tourSettingsViewModel = tourSettingsViewModel,
                 tourStartedSettingsViewModel = tourStartedSettingsViewModel
