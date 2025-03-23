@@ -6,6 +6,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import hu.bme.aut.android.sporttracker.data.phoneData.getScreenSize
 import hu.bme.aut.android.sporttracker.ui.components.SpeedChart
 import kotlinx.coroutines.launch
 import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourStartedSettingsViewModel
@@ -46,7 +47,7 @@ fun TourSummaryScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             // Magasság adatok
-            SpeedChart(viewModel.locationHistory.value.map { it.altitude.toDouble() })
+            SpeedChart(viewModel.locationHistory.value.map { it.altitude.toDouble() }, (getScreenSize().first.dp - 50.dp).value / viewModel.locationHistory.value.size)
 
             Spacer(modifier = Modifier.height(16.dp))
 

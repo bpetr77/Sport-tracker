@@ -27,6 +27,8 @@ import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourStartedSettingsVi
 import hu.bme.aut.android.sporttracker.ui.theme.SportTrackerTheme
 import kotlinx.coroutines.launch
 import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourStartedSettingsViewModelFactory
+import hu.bme.aut.android.sporttracker.ui.screens.main.MainScreen
+import hu.bme.aut.android.sporttracker.ui.navigation.NavGraph
 
 
 class MainActivity : ComponentActivity() {
@@ -73,14 +75,28 @@ class MainActivity : ComponentActivity() {
         setContent {
             SportTrackerTheme(dynamicColor = true) {
                 Surface {
-                    MapScreen(
-                        this,
-                        fusedLocationClient,
-                        userLocation,
-                        locationPermissionGranted,
-                        locationRepository,
-                        tourSettingsViewModel,
-                        tourStartedSettingsViewModel
+//                    MapScreen(
+//                        this,
+//                        fusedLocationClient,
+//                        userLocation,
+//                        locationPermissionGranted,
+//                        locationRepository,
+//                        tourSettingsViewModel,
+//                        tourStartedSettingsViewModel
+//                    )
+//                    MainScreen(
+//                        this,
+//                        fusedLocationClient,
+//                        locationRepository,
+//                        tourSettingsViewModel,
+//                        tourStartedSettingsViewModel
+//                    )
+                    NavGraph(
+                        activity = this,
+                        fusedLocationClient = fusedLocationClient,
+                        locationRepository = locationRepository,
+                        tourSettingsViewModel = tourSettingsViewModel,
+                        tourStartedSettingsViewModel = tourStartedSettingsViewModel
                     )
                 }
             }

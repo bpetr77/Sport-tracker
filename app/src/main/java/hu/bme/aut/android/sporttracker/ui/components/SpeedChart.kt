@@ -21,7 +21,7 @@ import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourStartedSettingsViewModel
 
 @Composable
-fun SpeedChart(ListOfData: List<Double>) {
+fun SpeedChart(ListOfData: List<Double>, xStep: Float = 30f) {
     //val speedHistory = tourStartedSettingsViewModel.getSpeedHistory()
     if (ListOfData.isEmpty()) {
         // Handle empty list case, e.g., show a message or an empty chart
@@ -38,13 +38,13 @@ fun SpeedChart(ListOfData: List<Double>) {
     val stepSize = (((max - min) / 4)).toInt()
 
 
-    val yAxisLabels = listOf(min, stepSize, stepSize * 2, stepSize * 3, max)
+    val yAxisLabels = listOf(min,min + stepSize,min + stepSize * 2,min + stepSize * 3, max)
 
     val xAxisData = AxisData.Builder()
-        .axisStepSize(50.dp)
+        .axisStepSize(xStep.dp)
         .backgroundColor(Color.Gray)
         .steps(pointsData.size - 1)
-        .labelData { if (it == 0) "  0" else it.toString() }
+        //.labelData { if (it == 0) "  0" else it.toString() } TODO: if the data is too big to show all the labels then dont show all of them
         .startPadding(12.dp)
         //.labelAndAxisLinePadding(10.dp)
         .build()
@@ -52,7 +52,7 @@ fun SpeedChart(ListOfData: List<Double>) {
     val yAxisData = AxisData.Builder()
         .axisStepSize(50.dp)
         .backgroundColor(Color.Gray)
-        .steps(4) //TODO:
+        .steps(4)
         .labelData { yAxisLabels[it].toString() }
         //.labelAndAxisLinePadding(10.dp)
         .build()

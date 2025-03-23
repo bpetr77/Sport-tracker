@@ -107,7 +107,7 @@ fun TourStartedSettingsScreen(
 
 
                     //coroutineScope.launch {
-                                showTourSummaryScreen.value = true
+                            showTourSummaryScreen.value = true
                             //}
                           },
                 modifier = Modifier
