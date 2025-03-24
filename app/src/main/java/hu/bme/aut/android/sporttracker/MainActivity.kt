@@ -12,8 +12,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -22,16 +20,15 @@ import com.google.android.gms.maps.model.LatLng
 import hu.bme.aut.android.sporttracker.data.location.repository.LocationRepository
 import hu.bme.aut.android.sporttracker.data.location.repository.getLastKnownLocation
 import hu.bme.aut.android.sporttracker.data.service.LocationService
-import hu.bme.aut.android.sporttracker.ui.screens.map.MapScreen
-import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourSettingsViewModel
-import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourStartedSettingsViewModel
+import hu.bme.aut.android.sporttracker.ui.viewModels.TourSettingsViewModel
+import hu.bme.aut.android.sporttracker.ui.viewModels.TourStartedSettingsViewModel
 import hu.bme.aut.android.sporttracker.ui.theme.SportTrackerTheme
 import kotlinx.coroutines.launch
-import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourStartedSettingsViewModelFactory
-import hu.bme.aut.android.sporttracker.ui.screens.main.MainScreen
+import hu.bme.aut.android.sporttracker.ui.viewModels.TourStartedSettingsViewModelFactory
 import hu.bme.aut.android.sporttracker.ui.navigation.NavGraph
+import hu.bme.aut.android.sporttracker.ui.viewModels.LocationViewmodel
 
-
+//TODO: should put the viewmodels into the NavGraph
 class MainActivity : ComponentActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val userLocation = mutableStateOf<LatLng?>(null)
@@ -42,6 +39,7 @@ class MainActivity : ComponentActivity() {
     private val tourStartedSettingsViewModel: TourStartedSettingsViewModel by viewModels {
         TourStartedSettingsViewModelFactory(locationRepository)
     }
+    private val locationViewModel: LocationViewmodel by viewModels()
 
     // Engedélykérés indítása az új API-val
     private val locationPermissionLauncher = registerForActivityResult(
@@ -58,7 +56,8 @@ class MainActivity : ComponentActivity() {
 
         if (fineLocationGranted && coarseLocationGranted && foregroundServiceGranted) {
             //locationPermissionGranted.value = true
-            tourSettingsViewModel.updatePermissionGranted(true)
+            //tourSettingsViewModel.updatePermissionGranted(true)
+            locationViewModel.updatePermissionGranted(true)
             //startLocationService() // Foreground service indítása
             lifecycleScope.launch {
                 val location = getLastKnownLocation(this@MainActivity, fusedLocationClient)
@@ -99,7 +98,8 @@ class MainActivity : ComponentActivity() {
                         fusedLocationClient = fusedLocationClient,
                         locationRepository = locationRepository,
                         tourSettingsViewModel = tourSettingsViewModel,
-                        tourStartedSettingsViewModel = tourStartedSettingsViewModel
+                        tourStartedSettingsViewModel = tourStartedSettingsViewModel,
+                        locationViewmodel = locationViewModel
                     )
                 }
             }
@@ -130,7 +130,8 @@ class MainActivity : ComponentActivity() {
         if (allPermissionsGranted) {
             Log.d("handleLocationPermission", "All permissions granted. Updating state and starting location service.")
             //locationPermissionGranted.value = true
-            tourSettingsViewModel.updatePermissionGranted(true)
+            //tourSettingsViewModel.updatePermissionGranted(true)
+            locationViewModel.updatePermissionGranted(true)
             // TODO: delete this line
             Log.d("handleLocationPermission", "Starting foreground location service...")
             startLocationService() // Foreground service elindítása

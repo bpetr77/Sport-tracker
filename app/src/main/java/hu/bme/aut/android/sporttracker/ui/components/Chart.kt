@@ -1,6 +1,5 @@
 package hu.bme.aut.android.sporttracker.ui.components
 
-import android.graphics.Point
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
@@ -18,7 +17,6 @@ import co.yml.charts.ui.linechart.model.LineStyle
 import co.yml.charts.ui.linechart.model.SelectionHighlightPoint
 import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
 import co.yml.charts.ui.linechart.model.ShadowUnderLine
-import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourStartedSettingsViewModel
 
 @Composable
 fun SpeedChart(ListOfData: List<Double>, xStep: Float = 30f) {
@@ -35,10 +33,10 @@ fun SpeedChart(ListOfData: List<Double>, xStep: Float = 30f) {
 //    val stepSize = ((maxSpeed / 4) * 10f).toInt() / 10f
     val min = (ListOfData.minOrNull() ?: 0).toFloat()
     val max = (ListOfData.maxOrNull() ?: 0).toFloat()
-    val stepSize = (((max - min) / 4)).toInt()
+    val stepSize = (((max - min) / 4)).toFloat()
 
 
-    val yAxisLabels = listOf(min,min + stepSize,min + stepSize * 2,min + stepSize * 3, max)
+    val yAxisLabels = listOf(min, min + stepSize, min + (stepSize * 2), min + (stepSize * 3), max)
 
     val xAxisData = AxisData.Builder()
         .axisStepSize(xStep.dp)

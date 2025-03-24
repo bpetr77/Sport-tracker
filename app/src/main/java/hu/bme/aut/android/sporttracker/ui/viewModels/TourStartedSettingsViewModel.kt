@@ -1,23 +1,15 @@
-package hu.bme.aut.android.sporttracker.ui.screens.Settings
+package hu.bme.aut.android.sporttracker.ui.viewModels
 
-import android.content.Context
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
-import android.health.connect.datatypes.ExerciseRoute
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.maps.model.LatLng
 import hu.bme.aut.android.sporttracker.data.location.model.LocationPoint
 import hu.bme.aut.android.sporttracker.data.location.repository.LocationRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlin.math.*
-
+// TODO: Get the bussiness logic from this class to the domain layer
 class TourStartedSettingsViewModel(
     private val locationRepository: LocationRepository
 ) : ViewModel() {

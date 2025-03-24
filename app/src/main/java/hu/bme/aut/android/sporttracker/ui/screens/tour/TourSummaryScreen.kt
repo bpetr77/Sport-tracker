@@ -8,8 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import hu.bme.aut.android.sporttracker.data.phoneData.getScreenSize
 import hu.bme.aut.android.sporttracker.ui.components.SpeedChart
-import kotlinx.coroutines.launch
-import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourStartedSettingsViewModel
+import hu.bme.aut.android.sporttracker.ui.viewModels.TourStartedSettingsViewModel
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterial3Api::class)

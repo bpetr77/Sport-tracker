@@ -1,4 +1,4 @@
-package hu.bme.aut.android.sporttracker.ui.screens.Settings
+package hu.bme.aut.android.sporttracker.ui.viewModels
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel

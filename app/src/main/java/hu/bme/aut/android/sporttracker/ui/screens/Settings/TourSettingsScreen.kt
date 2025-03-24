@@ -25,6 +25,7 @@ import hu.bme.aut.android.sporttracker.data.location.repository.LocationReposito
 import hu.bme.aut.android.sporttracker.ui.components.RadioButtonSingleSelection
 import hu.bme.aut.android.sporttracker.ui.components.TransportButton
 import hu.bme.aut.android.sporttracker.ui.components.UserInputTextField
+import hu.bme.aut.android.sporttracker.ui.viewModels.TourSettingsViewModel
 
 @Composable
 fun TourSettingsScreen(

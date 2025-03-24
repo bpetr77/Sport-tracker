@@ -1,6 +1,5 @@
-package hu.bme.aut.android.sporttracker.ui.screens.Settings
+package hu.bme.aut.android.sporttracker.ui.viewModels
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import hu.bme.aut.android.sporttracker.data.location.repository.LocationRepository
