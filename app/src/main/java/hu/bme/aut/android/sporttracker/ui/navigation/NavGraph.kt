@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import hu.bme.aut.android.sporttracker.MainActivity
 import hu.bme.aut.android.sporttracker.data.location.repository.LocationRepository
+import hu.bme.aut.android.sporttracker.domain.usecase.TourUseCase
 import hu.bme.aut.android.sporttracker.ui.screens.main.MainScreen
 import hu.bme.aut.android.sporttracker.ui.screens.menu.MenuScreen
 import hu.bme.aut.android.sporttracker.ui.viewModels.LocationViewmodel
@@ -22,7 +23,8 @@ fun NavGraph(
     locationRepository: LocationRepository,
     tourSettingsViewModel: TourSettingsViewModel,
     tourStartedSettingsViewModel: TourStartedSettingsViewModel,
-    locationViewmodel: LocationViewmodel
+    locationViewmodel: LocationViewmodel,
+    tourUseCase: TourUseCase
 ) {
     NavHost(
         navController = navController,
@@ -36,7 +38,8 @@ fun NavGraph(
                 tourSettingsViewModel = tourSettingsViewModel,
                 tourStartedSettingsViewModel = tourStartedSettingsViewModel,
                 locationViewmodel = locationViewmodel,
-                onMenuclick = { navController.navigate(Screen.Menu.route) }
+                onMenuclick = { navController.navigate(Screen.Menu.route) },
+                tourUseCase = tourUseCase
             )
         }
         composable(Screen.Menu.route){

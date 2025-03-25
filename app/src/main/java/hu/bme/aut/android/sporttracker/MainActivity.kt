@@ -20,6 +20,7 @@ import com.google.android.gms.maps.model.LatLng
 import hu.bme.aut.android.sporttracker.data.location.repository.LocationRepository
 import hu.bme.aut.android.sporttracker.data.location.repository.getLastKnownLocation
 import hu.bme.aut.android.sporttracker.data.service.LocationService
+import hu.bme.aut.android.sporttracker.domain.usecase.TourUseCase
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourSettingsViewModel
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourStartedSettingsViewModel
 import hu.bme.aut.android.sporttracker.ui.theme.SportTrackerTheme
@@ -34,10 +35,11 @@ class MainActivity : ComponentActivity() {
     private val userLocation = mutableStateOf<LatLng?>(null)
     //private var locationPermissionGranted = remember { mutableStateOf(false) }
     private lateinit var locationRepository: LocationRepository
+    private val TourUseCase = TourUseCase()
 
     private val tourSettingsViewModel: TourSettingsViewModel by viewModels()
     private val tourStartedSettingsViewModel: TourStartedSettingsViewModel by viewModels {
-        TourStartedSettingsViewModelFactory(locationRepository)
+        TourStartedSettingsViewModelFactory(locationRepository, TourUseCase)
     }
     private val locationViewModel: LocationViewmodel by viewModels()
 
@@ -99,7 +101,8 @@ class MainActivity : ComponentActivity() {
                         locationRepository = locationRepository,
                         tourSettingsViewModel = tourSettingsViewModel,
                         tourStartedSettingsViewModel = tourStartedSettingsViewModel,
-                        locationViewmodel = locationViewModel
+                        locationViewmodel = locationViewModel,
+                        tourUseCase = TourUseCase
                     )
                 }
             }

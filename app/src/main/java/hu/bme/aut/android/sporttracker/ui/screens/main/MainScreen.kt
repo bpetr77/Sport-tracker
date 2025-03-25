@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.google.android.gms.location.FusedLocationProviderClient
 import hu.bme.aut.android.sporttracker.MainActivity
 import hu.bme.aut.android.sporttracker.data.location.repository.LocationRepository
+import hu.bme.aut.android.sporttracker.domain.usecase.TourUseCase
 import hu.bme.aut.android.sporttracker.ui.navigation.Screen
 import hu.bme.aut.android.sporttracker.ui.screens.map.MapScreen
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourSettingsViewModel
@@ -27,7 +28,8 @@ fun MainScreen(
     tourSettingsViewModel: TourSettingsViewModel,
     tourStartedSettingsViewModel: TourStartedSettingsViewModel,
     locationViewmodel: LocationViewmodel,
-    onMenuclick: () -> Unit
+    onMenuclick: () -> Unit,
+    tourUseCase: TourUseCase
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
