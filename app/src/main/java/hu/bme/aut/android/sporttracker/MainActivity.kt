@@ -20,6 +20,7 @@ import com.google.android.gms.maps.model.LatLng
 import hu.bme.aut.android.sporttracker.data.location.repository.LocationRepository
 import hu.bme.aut.android.sporttracker.data.location.repository.getLastKnownLocation
 import hu.bme.aut.android.sporttracker.data.service.LocationService
+import hu.bme.aut.android.sporttracker.data.tour.repository.TourRepository
 import hu.bme.aut.android.sporttracker.domain.usecase.TourUseCase
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourSettingsViewModel
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourStartedSettingsViewModel
@@ -36,14 +37,13 @@ class MainActivity : ComponentActivity() {
     //private var locationPermissionGranted = remember { mutableStateOf(false) }
     private lateinit var locationRepository: LocationRepository
     private val TourUseCase = TourUseCase()
-
+    private val tourRepository = TourRepository()
     private val tourSettingsViewModel: TourSettingsViewModel by viewModels()
     private val tourStartedSettingsViewModel: TourStartedSettingsViewModel by viewModels {
         TourStartedSettingsViewModelFactory(locationRepository, TourUseCase)
     }
     private val locationViewModel: LocationViewmodel by viewModels()
 
-    // Engedélykérés indítása az új API-val
     private val locationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -102,7 +102,8 @@ class MainActivity : ComponentActivity() {
                         tourSettingsViewModel = tourSettingsViewModel,
                         tourStartedSettingsViewModel = tourStartedSettingsViewModel,
                         locationViewmodel = locationViewModel,
-                        tourUseCase = TourUseCase
+                        tourUseCase = TourUseCase,
+                        tourRepository = tourRepository
                     )
                 }
             }

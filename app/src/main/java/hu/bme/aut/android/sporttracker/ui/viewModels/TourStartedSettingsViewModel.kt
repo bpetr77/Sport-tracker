@@ -205,6 +205,8 @@ class TourStartedSettingsViewModel(
                 _locationHistory.value = locations
                 _totalDistance.value = tourUseCase.calculateTotalDistance(locations)
                 _currentSpeed.value = tourUseCase.getCurrentSpeedInKmH(locations)
+                _speedHistory.value = _speedHistory.value + _currentSpeed.value.toDouble()
+
             }
         }
     }
@@ -235,4 +237,8 @@ class TourStartedSettingsViewModel(
     fun getSpeedHistory(): List<Double> {
         return speedHistory.value
     }
+
+    fun getTour() = tourUseCase.createTourEntity(
+        _locationHistory.value
+    )
 }

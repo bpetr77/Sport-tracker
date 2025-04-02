@@ -2,6 +2,7 @@ package hu.bme.aut.android.sporttracker.ui.screens.Settings
 
 //import android.os.Build.VERSION_CODES.R
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import hu.bme.aut.android.sporttracker.R
+import hu.bme.aut.android.sporttracker.data.tour.repository.TourRepository
 import hu.bme.aut.android.sporttracker.ui.components.SpeedChart
 import hu.bme.aut.android.sporttracker.ui.screens.tour.TourSummaryScreen
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourSettingsViewModel
@@ -79,8 +81,10 @@ fun TourStartedSettingsScreen(
             }
         }
 
-            SpeedChart(tourStartedSettingsViewModel.getSpeedHistory())
-            SpeedChart(tourStartedSettingsViewModel.locationHistory.value.map { it.altitude })
+        SpeedChart(tourStartedSettingsViewModel.getSpeedHistory())
+        Log.w("Speed", "Speed: ${tourStartedSettingsViewModel.getSpeedHistory()}")
+
+        SpeedChart(tourStartedSettingsViewModel.locationHistory.value.map { it.altitude })
 
 
         Spacer(modifier = Modifier.height(60.dp))
@@ -96,13 +100,16 @@ fun TourStartedSettingsScreen(
             //TODO: maybe try to make the dialog screen appear from mapscreen otherwise it will be this page that will be shown under
             FloatingActionButton(
                 onClick = { //stopLocationUpdates()
-                            //tourStartedSettingsViewModel.stopTour()
+                            tourStartedSettingsViewModel.getTour()
+                            Log.w("Tour", "Tour: ${tourStartedSettingsViewModel.getTour()}")
+                    //tourStartedSettingsViewModel.stopTour()
                             pauseLocationUpdates()
                             //tourStartedSettingsViewModel.toggleTourPaused()
 
 
                     //coroutineScope.launch {
                             showTourSummaryScreen.value = true
+                            TourRepository().addTour(tourStartedSettingsViewModel.getTour())
                             //}
                           },
                 modifier = Modifier
@@ -148,16 +155,4 @@ fun TourStartedSettingsScreen(
             stopLocationUpdates = {stopLocationUpdates() }
         )
     }
-}
-
-@Composable
-fun CircularImageButton(onClick: () -> Unit, imageResId: Int) {
-    Image(
-        painter = painterResource(imageResId),
-        contentDescription = "Kör alakú gomb képpel",
-        modifier = Modifier
-            .size(50.dp)  // Teljes méret: 50 dp átmérő
-            .background(Color.Gray, CircleShape)  // Szürke háttér, kör alak
-            .clickable { onClick() }
-    )
 }

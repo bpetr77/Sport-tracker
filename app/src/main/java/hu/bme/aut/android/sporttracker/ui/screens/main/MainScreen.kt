@@ -29,7 +29,8 @@ fun MainScreen(
     tourStartedSettingsViewModel: TourStartedSettingsViewModel,
     locationViewmodel: LocationViewmodel,
     onMenuclick: () -> Unit,
-    tourUseCase: TourUseCase
+    tourUseCase: TourUseCase,
+    onToursClick: () -> Unit
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -45,7 +46,7 @@ fun MainScreen(
                 NavigationDrawerItem(
                     label = { Text(text = "Completed Tours") },
                     selected = false,
-                    onClick = { scope.launch { drawerState.close() }/* Handle navigation to completed tours */ }
+                    onClick = { scope.launch { onToursClick() } }
                 )
                 NavigationDrawerItem(
                     label = { Text(text = "Settings") },
@@ -57,7 +58,6 @@ fun MainScreen(
         }
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            // TODO: MAKE AN OTHER VIEWMODEL FOR LOCATION PERMISSION BC IT IS NOT RELATED TO TOUR SETTINGS AND NOW IT IS IN THE SAME VIEWMODEL
             MapScreen(
                 activity = activity,
                 fusedLocationClient = fusedLocationClient,
