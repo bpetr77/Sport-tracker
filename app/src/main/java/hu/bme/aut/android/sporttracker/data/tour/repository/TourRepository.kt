@@ -2,7 +2,7 @@ package hu.bme.aut.android.sporttracker.data.tour.repository
 
 import hu.bme.aut.android.sporttracker.data.tour.model.TourEntity
 
-class TourRepository{
+object TourRepository{
     private val tours = mutableListOf<TourEntity>()
 
     fun addTour(tour: TourEntity) {

@@ -8,10 +8,11 @@ import hu.bme.aut.android.sporttracker.data.location.model.LocationPoint
 data class TourEntity(
 //    @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val id: Long = 0,
-    val startTime: Long,  // A túra kezdési időpontja (timestamp)
-    val endTime: Long,    // A túra befejezési időpontja (timestamp)
+    val startTime: Long,
+    val endTime: Long,
     val totalDistance: Float, // km
     val averageSpeed: Float, // km/h
     val elevationGain: Double, // méter
-    val locationHistory: List<LocationPoint> // Az útvonal pontjai (JSON-ben mentve)
+    val locationHistory: List<LocationPoint>,
+    val transportationMode: String
 )

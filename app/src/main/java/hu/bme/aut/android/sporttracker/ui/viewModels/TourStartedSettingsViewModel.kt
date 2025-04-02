@@ -181,7 +181,7 @@ import kotlin.math.*
 
 class TourStartedSettingsViewModel(
     private val locationRepository: LocationRepository,
-    private val tourUseCase: TourUseCase // Új UseCase injektálva
+    private val tourUseCase: TourUseCase
 ) : ViewModel() {
 
     private val _locationHistory = MutableStateFlow<List<LocationPoint>>(emptyList())
@@ -238,7 +238,8 @@ class TourStartedSettingsViewModel(
         return speedHistory.value
     }
 
-    fun getTour() = tourUseCase.createTourEntity(
-        _locationHistory.value
+    fun getTour(selectedTransportMode: String) = tourUseCase.createTourEntity(
+        _locationHistory.value,
+        selectedTransportMode
     )
 }

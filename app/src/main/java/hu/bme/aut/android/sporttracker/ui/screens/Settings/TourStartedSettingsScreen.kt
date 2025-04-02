@@ -100,8 +100,7 @@ fun TourStartedSettingsScreen(
             //TODO: maybe try to make the dialog screen appear from mapscreen otherwise it will be this page that will be shown under
             FloatingActionButton(
                 onClick = { //stopLocationUpdates()
-                            tourStartedSettingsViewModel.getTour()
-                            Log.w("Tour", "Tour: ${tourStartedSettingsViewModel.getTour()}")
+                            tourStartedSettingsViewModel.getTour(tourSettingsViewModel.selectedTransportMode.toString())
                     //tourStartedSettingsViewModel.stopTour()
                             pauseLocationUpdates()
                             //tourStartedSettingsViewModel.toggleTourPaused()
@@ -109,7 +108,7 @@ fun TourStartedSettingsScreen(
 
                     //coroutineScope.launch {
                             showTourSummaryScreen.value = true
-                            TourRepository().addTour(tourStartedSettingsViewModel.getTour())
+                            TourRepository.addTour(tourStartedSettingsViewModel.getTour(tourSettingsViewModel.selectedTransportMode.toString()))
                             //}
                           },
                 modifier = Modifier

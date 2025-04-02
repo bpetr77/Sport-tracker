@@ -1,5 +1,6 @@
 package hu.bme.aut.android.sporttracker.domain.usecase
 
+import android.graphics.drawable.Icon
 import hu.bme.aut.android.sporttracker.data.location.model.LocationPoint
 import hu.bme.aut.android.sporttracker.data.tour.model.TourEntity
 import kotlin.math.*
@@ -69,7 +70,7 @@ class TourUseCase {
         return (R * c).toFloat()
     }
 
-    fun createTourEntity(locations: List<LocationPoint>): TourEntity {
+    fun createTourEntity(locations: List<LocationPoint>, transportationMode: String): TourEntity {
         val startTime = locations.firstOrNull()?.timestamp ?: 0L
         val endTime = locations.lastOrNull()?.timestamp ?: 0L
         val totalDistance = calculateTotalDistance(locations)
@@ -83,7 +84,8 @@ class TourUseCase {
             totalDistance = totalDistance,
             averageSpeed = averageSpeed,
             elevationGain = elevationGain,
-            locationHistory = locations
+            locationHistory = locations,
+            transportationMode = transportationMode
         )
     }
 }

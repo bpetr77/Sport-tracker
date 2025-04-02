@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
     //private var locationPermissionGranted = remember { mutableStateOf(false) }
     private lateinit var locationRepository: LocationRepository
     private val TourUseCase = TourUseCase()
-    private val tourRepository = TourRepository()
+    //private val tourRepository = TourRepository()
     private val tourSettingsViewModel: TourSettingsViewModel by viewModels()
     private val tourStartedSettingsViewModel: TourStartedSettingsViewModel by viewModels {
         TourStartedSettingsViewModelFactory(locationRepository, TourUseCase)
@@ -102,8 +102,7 @@ class MainActivity : ComponentActivity() {
                         tourSettingsViewModel = tourSettingsViewModel,
                         tourStartedSettingsViewModel = tourStartedSettingsViewModel,
                         locationViewmodel = locationViewModel,
-                        tourUseCase = TourUseCase,
-                        tourRepository = tourRepository
+                        tourUseCase = TourUseCase
                     )
                 }
             }

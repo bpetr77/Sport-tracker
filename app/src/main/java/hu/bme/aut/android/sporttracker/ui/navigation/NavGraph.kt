@@ -26,8 +26,7 @@ fun NavGraph(
     tourSettingsViewModel: TourSettingsViewModel,
     tourStartedSettingsViewModel: TourStartedSettingsViewModel,
     locationViewmodel: LocationViewmodel,
-    tourUseCase: TourUseCase,
-    tourRepository: TourRepository
+    tourUseCase: TourUseCase
 ) {
     NavHost(
         navController = navController,
@@ -51,7 +50,7 @@ fun NavGraph(
         }
 
         composable(Screen.Tours.route) {
-            TourMenuScreen(tourRepository = tourRepository)
+            TourMenuScreen()
         }
     }
 }
