@@ -17,6 +17,11 @@ import hu.bme.aut.android.sporttracker.ui.viewModels.LocationViewmodel
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourSettingsViewModel
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourStartedSettingsViewModel
 
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+
 @Composable
 fun NavGraph(
     navController: NavHostController = rememberNavController(),
@@ -28,6 +33,8 @@ fun NavGraph(
     locationViewmodel: LocationViewmodel,
     tourUseCase: TourUseCase
 ) {
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+
     NavHost(
         navController = navController,
         startDestination = Screen.Main.route
@@ -40,9 +47,10 @@ fun NavGraph(
                 tourSettingsViewModel = tourSettingsViewModel,
                 tourStartedSettingsViewModel = tourStartedSettingsViewModel,
                 locationViewmodel = locationViewmodel,
+                drawerState = drawerState,
                 onMenuclick = { navController.navigate(Screen.Menu.route) },
-                tourUseCase = tourUseCase,
-                onToursClick = { navController.navigate(Screen.Tours.route) }
+                onToursClick = { navController.navigate(Screen.Tours.route) },
+                onMapClick = { navController.navigate(Screen.Main.route) }
             )
         }
         composable(Screen.Menu.route){
@@ -50,7 +58,12 @@ fun NavGraph(
         }
 
         composable(Screen.Tours.route) {
-            TourMenuScreen()
+            TourMenuScreen(
+                drawerState = drawerState,
+                onMenuClick = { navController.navigate(Screen.Menu.route) },
+                onToursClick = { navController.navigate(Screen.Tours.route) },
+                onMapClick = { navController.navigate(Screen.Main.route) }
+            )
         }
     }
 }
