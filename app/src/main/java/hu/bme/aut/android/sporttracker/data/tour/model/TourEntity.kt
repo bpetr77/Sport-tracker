@@ -14,5 +14,5 @@ data class TourEntity(
     val averageSpeed: Float, // km/h
     val elevationGain: Double, // méter
     val locationHistory: List<LocationPoint>,
-    val transportationMode: String
+    val transportationMode: String?
 )

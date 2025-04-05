@@ -70,7 +70,7 @@ class TourUseCase {
         return (R * c).toFloat()
     }
 
-    fun createTourEntity(locations: List<LocationPoint>, transportationMode: String): TourEntity {
+    fun createTourEntity(locations: List<LocationPoint>, transportationMode: String?): TourEntity {
         val startTime = locations.firstOrNull()?.timestamp ?: 0L
         val endTime = locations.lastOrNull()?.timestamp ?: 0L
         val totalDistance = calculateTotalDistance(locations)

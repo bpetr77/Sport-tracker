@@ -20,7 +20,6 @@ import hu.bme.aut.android.sporttracker.ui.viewModels.LocationViewmodel
 import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainLayout(
     drawerState: DrawerState,

@@ -1,5 +1,6 @@
 package hu.bme.aut.android.sporttracker.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -23,7 +24,13 @@ import hu.bme.aut.android.sporttracker.ui.viewModels.TourStartedSettingsViewMode
 
 @Composable
 fun TourElement(tour: TourEntity) {
-    Column(modifier = Modifier.padding(16.dp)) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         tour.transportationMode?.let { mode: String ->
             val imageRes = when (mode) {
                 "Gyalog" -> R.drawable.baseline_hiking_24
@@ -31,22 +38,21 @@ fun TourElement(tour: TourEntity) {
                 "Autó" -> R.drawable.baseline_directions_car_24
                 else -> R.drawable.ic_launcher_foreground // Default image
             }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                val imageColor = if (isSystemInDarkTheme()) Color.White else Color.Black
-                Image(
-                    painter = painterResource(id = imageRes),
-                    contentDescription = "Selected transport mode: $mode",
-                    modifier = Modifier
-                        .size(100.dp)
-                        .padding(10.dp),
-                    colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(imageColor)
-                )
-            }
+            val imageColor = if (isSystemInDarkTheme()) Color.White else Color.Black
+            Image(
+                painter = painterResource(id = imageRes),
+                contentDescription = "Selected transport mode: $mode",
+                modifier = Modifier
+                    .size(100.dp)
+                    .padding(10.dp),
+                colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(imageColor)
+            )
         }
-        Text(text = "Időtartam: ${(tour.endTime - tour.startTime) / 60000} perc")
-        Text(text = "Távolság: ${tour.totalDistance} km")
+        Column(
+            horizontalAlignment = Alignment.End
+        ) {
+            Text(text = "Időtartam: ${(tour.endTime - tour.startTime) / 60000} perc")
+            Text(text = "Távolság: ${tour.totalDistance} m")
+        }
     }
 }

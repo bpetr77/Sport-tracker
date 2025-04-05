@@ -20,7 +20,6 @@ import co.yml.charts.ui.linechart.model.ShadowUnderLine
 
 @Composable
 fun SpeedChart(ListOfData: List<Double>, xStep: Float = 30f) {
-    //val speedHistory = tourStartedSettingsViewModel.getSpeedHistory()
     if (ListOfData.isEmpty()) {
         // Handle empty list case, e.g., show a message or an empty chart
         return
@@ -28,15 +27,33 @@ fun SpeedChart(ListOfData: List<Double>, xStep: Float = 30f) {
     val pointsData = ListOfData.mapIndexed { index, data ->
         co.yml.charts.common.model.Point(index.toFloat(), data.toFloat())
     }
+    // Check if all data points are the same
+//    val allSame = ListOfData.distinct().size == 1
+//    val pointsData = ListOfData.mapIndexed { index, data ->
+//        val adjustedData = if (allSame) data + (index * 0.0001) else data
+//        co.yml.charts.common.model.Point(index.toFloat(), adjustedData.toFloat())
+//    }
 
-//    val maxSpeed = ((ListOfData.maxOrNull() ?: 0f) * 10f).toInt() / 10f
-//    val stepSize = ((maxSpeed / 4) * 10f).toInt() / 10f
     val min = (ListOfData.minOrNull() ?: 0).toFloat()
     val max = (ListOfData.maxOrNull() ?: 0).toFloat()
     val stepSize = (((max - min) / 4)).toFloat()
 
 
-    val yAxisLabels = listOf(min, min + stepSize, min + (stepSize * 2), min + (stepSize * 3), max)
+    //val yAxisLabels = listOf(min, min + stepSize, min + (stepSize * 2), min + (stepSize * 3), max)
+
+
+    val formattedMin = String.format("%.1f", min)
+    val formattedMax = String.format("%.1f", max)
+
+    val yAxisLabels = listOf(
+        formattedMin,
+        String.format("%.1f", min + stepSize),
+        String.format("%.1f", min + (stepSize * 2)),
+        String.format("%.1f", min + (stepSize * 3)),
+        formattedMax
+    )
+
+
 
     val xAxisData = AxisData.Builder()
         .axisStepSize(xStep.dp)

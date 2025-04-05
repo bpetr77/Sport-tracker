@@ -44,14 +44,11 @@ fun TourStartedSettingsScreen(
     tourStartedSettingsViewModel: TourStartedSettingsViewModel,
     tourSettingsViewModel: TourSettingsViewModel
 ) {
-    //val tourSettingsViewModel: TourSettingsViewModel = TourSettingsViewModel()
     val selectedTransportMode by tourSettingsViewModel.selectedTransportMode.collectAsState()
-    //var isPaused by remember { mutableStateOf(false) }
     val isPaused by tourStartedSettingsViewModel.isPaused.collectAsState()
     val totalDistance by tourStartedSettingsViewModel.totalDistance.collectAsState()
     val currentSpeed by tourStartedSettingsViewModel.currentSpeed.collectAsState()
     var showTourSummaryScreen = remember { mutableStateOf(false) }
-    //val locationHistory by tourStartedSettingsViewModel.locationHistory.collectAsState()
 
     Column(
         modifier = Modifier
@@ -99,17 +96,13 @@ fun TourStartedSettingsScreen(
         ) {
             //TODO: maybe try to make the dialog screen appear from mapscreen otherwise it will be this page that will be shown under
             FloatingActionButton(
-                onClick = { //stopLocationUpdates()
+                onClick = {
+                            // IS THIS NECESSARY?
                             tourStartedSettingsViewModel.getTour(tourSettingsViewModel.selectedTransportMode.toString())
-                    //tourStartedSettingsViewModel.stopTour()
+                            //
                             pauseLocationUpdates()
-                            //tourStartedSettingsViewModel.toggleTourPaused()
-
-
-                    //coroutineScope.launch {
                             showTourSummaryScreen.value = true
-                            TourRepository.addTour(tourStartedSettingsViewModel.getTour(tourSettingsViewModel.selectedTransportMode.toString()))
-                            //}
+                            TourRepository.addTour(tourStartedSettingsViewModel.getTour(selectedTransportMode))
                           },
                 modifier = Modifier
                     .padding(8.dp),

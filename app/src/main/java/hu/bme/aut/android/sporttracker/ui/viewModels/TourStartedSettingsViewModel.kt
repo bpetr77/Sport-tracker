@@ -238,7 +238,7 @@ class TourStartedSettingsViewModel(
         return speedHistory.value
     }
 
-    fun getTour(selectedTransportMode: String) = tourUseCase.createTourEntity(
+    fun getTour(selectedTransportMode: String?) = tourUseCase.createTourEntity(
         _locationHistory.value,
         selectedTransportMode
     )
