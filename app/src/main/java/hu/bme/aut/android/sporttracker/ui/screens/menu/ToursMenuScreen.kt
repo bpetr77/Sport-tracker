@@ -56,7 +56,7 @@ fun TourMenuScreen(
                         fontSize = 24.sp
                     )
                 }
-
+// TODO:Add click action here
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                     items(tours) { tour ->
                         Surface(

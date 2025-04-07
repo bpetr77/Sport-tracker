@@ -77,11 +77,10 @@ fun SpeedChart(ListOfData: List<Double>, xStep: Float = 30f) {
             lines = listOf(
                 Line(
                     dataPoints = pointsData,
-                    LineStyle(),
-                    IntersectionPoint(),
-                    SelectionHighlightPoint(),
-                    ShadowUnderLine(),
-                    SelectionHighlightPopUp()
+                    lineStyle = LineStyle(),
+                    selectionHighlightPoint = SelectionHighlightPoint(),
+                    shadowUnderLine = ShadowUnderLine(),
+                    selectionHighlightPopUp = SelectionHighlightPopUp()
                 )
             )
         ),
