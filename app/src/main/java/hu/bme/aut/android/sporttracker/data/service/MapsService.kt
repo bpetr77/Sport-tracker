@@ -21,7 +21,6 @@ object MapsService {
         val latDiff = maxLat - minLat
         val lngDiff = maxLng - minLng
 
-        // A Google Maps zoom szintekhez igazodó értékek
         val zoomLevels = listOf(
             360.0 to 2,   // 360° → Világ nézet
             180.0 to 3,
