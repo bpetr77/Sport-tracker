@@ -15,6 +15,7 @@ import hu.bme.aut.android.sporttracker.data.service.MapsService
 import hu.bme.aut.android.sporttracker.ui.components.SpeedChart
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourStartedSettingsViewModel
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import hu.bme.aut.android.sporttracker.R
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -40,6 +41,7 @@ fun TourSummaryScreen(
             url
         }
     }
+
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState
@@ -53,18 +55,23 @@ fun TourSummaryScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text(text= "⏳ Időtartam: ${duration / 60000} perc")
+            Text(text= "⏳ Időtartam: ${duration / 60} perc")
             Text(text= "📏 Távolság: $totalDistance")
             Text(text= "🚴 Átlagsebesség: $averageSpeed")
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Image(
+                painter = rememberAsyncImagePainter(
+                    model = staticMapUrl,
+                    error = painterResource(R.drawable.baseline_my_location_24),
+                    placeholder = painterResource(R.drawable.ic_launcher_foreground)
+                ),
+                contentDescription = "Térkép az útvonalról",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp)
+            )
 
             SpeedChart(viewModel.locationHistory.value.map { it.altitude.toDouble() }, (getScreenSize().first.dp - 50.dp).value / viewModel.locationHistory.value.size)
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Ide jönne a térkép vagy kép az útvonalról
-
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -77,16 +84,7 @@ fun TourSummaryScreen(
                 Text(text = "Bezárás")
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
-            Image(
-                painter = rememberAsyncImagePainter(
-                    model = staticMapUrl,
-                    error = painterResource(R.drawable.baseline_my_location_24), // Ha a kép nem tölthető be
-                    placeholder = painterResource(R.drawable.ic_launcher_foreground) // Amíg tölt
-                ),
-                contentDescription = "Térkép az útvonalról",
-                modifier = Modifier.fillMaxWidth()
-            )
+
         }
     }
 }

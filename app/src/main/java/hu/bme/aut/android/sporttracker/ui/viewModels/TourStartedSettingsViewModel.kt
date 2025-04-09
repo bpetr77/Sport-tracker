@@ -190,7 +190,7 @@ class TourStartedSettingsViewModel(
     private val _isPaused = MutableStateFlow(false)
     val isPaused = _isPaused.asStateFlow()
 
-    private val _speedHistory = MutableStateFlow<List<Double>>(listOf(0.0))
+    private val _speedHistory = MutableStateFlow<List<Double>>(emptyList())
     val speedHistory = _speedHistory.asStateFlow()
 
     private val _totalDistance = MutableStateFlow(0f)

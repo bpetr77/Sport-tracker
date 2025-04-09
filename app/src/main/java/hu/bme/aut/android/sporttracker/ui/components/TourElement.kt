@@ -2,6 +2,7 @@ package hu.bme.aut.android.sporttracker.ui.components
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,8 @@ import hu.bme.aut.android.sporttracker.ui.viewModels.TourStartedSettingsViewMode
 
 @Composable
 fun TourElement(tour: TourEntity) {
+    val backgroundColor = if (isSystemInDarkTheme()) Color(0xFF2C2C2C) else Color(0xFFF5F5F5)
+
     Row(
         modifier = Modifier
             .fillMaxWidth()

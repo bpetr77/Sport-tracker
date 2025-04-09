@@ -26,7 +26,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.Alignment
-
+import androidx.compose.foundation.background
 
 @Composable
 fun TourMenuScreen(
@@ -41,8 +41,15 @@ fun TourMenuScreen(
         onToursClick = onToursClick,
         onMapClick = onMapClick
     ) {
+        val backgroundColor = Color(0xFF255F38) // Set unique background color
+
         val tours = TourRepository.getAllTours()
-        Box(modifier = Modifier.fillMaxSize()) {
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFF18230F)) // Set gray background color
+      )  {
             Column {
                 Spacer(modifier = Modifier.height(45.dp))
 
@@ -65,16 +72,17 @@ fun TourMenuScreen(
                                 .padding(8.dp)
                                 .clickable { },
                             shape = MaterialTheme.shapes.medium,
-                            shadowElevation = 4.dp
+                            shadowElevation = 4.dp,
+                            color = backgroundColor
                         ) {
                             TourElement(tour)
                         }
-                        Divider(
-                            color = if (isSystemInDarkTheme()) Color(0xFFFFF8DC) else Color.Gray,
-                            thickness = 1.dp,
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp)
-                        )
+//                        Divider(
+//                            color = if (isSystemInDarkTheme()) Color(0xFFFFF8DC) else Color.Gray,
+//                            thickness = 1.dp,
+//                            modifier = Modifier
+//                                .padding(horizontal = 16.dp)
+//                        )
                     }
                 }
             }
