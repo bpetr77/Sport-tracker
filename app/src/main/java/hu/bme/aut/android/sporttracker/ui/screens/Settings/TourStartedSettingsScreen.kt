@@ -25,8 +25,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.google.android.gms.maps.GoogleMap
 import hu.bme.aut.android.sporttracker.R
 import hu.bme.aut.android.sporttracker.data.tour.repository.TourRepository
 import hu.bme.aut.android.sporttracker.ui.components.SpeedChart
@@ -144,7 +146,8 @@ fun TourStartedSettingsScreen(
         TourSummaryScreen(
             viewModel = tourStartedSettingsViewModel,
             onDismiss = { showTourSummaryScreen.value = false },
-            stopLocationUpdates = {stopLocationUpdates() }
+            stopLocationUpdates = {stopLocationUpdates() },
+            context = LocalContext.current
         )
     }
 }

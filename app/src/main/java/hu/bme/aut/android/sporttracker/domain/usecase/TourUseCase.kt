@@ -88,4 +88,12 @@ class TourUseCase {
             transportationMode = transportationMode
         )
     }
+//    fun getTransportationModeIcon(mode: String): Int {
+//        return when (mode) {
+//            "Gyalog" -> Icon.createWithResource("drawable/baseline_hiking_24")
+//            "Bicikli" -> Icon.createWithResource("drawable/baseline_directions_bike_24")
+//            "Autó" -> Icon.createWithResource("drawable/baseline_directions_car_24")
+//            else -> Icon.createWithResource("drawable/ic_launcher_foreground") // Default image
+//        }
+//    }
 }

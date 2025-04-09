@@ -1,9 +1,18 @@
+import java.util.Properties
+
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
-
+////////////
+val properties = Properties()
+val secretsFile = rootProject.file("secrets.properties")
+if (secretsFile.exists()) {
+    properties.load(secretsFile.inputStream())
+}
+////////////
 android {
     namespace = "hu.bme.aut.android.sporttracker"
     compileSdk = 35 //34
@@ -59,6 +68,17 @@ android {
         // checked in version control.
         defaultPropertiesFileName = "local.defaults.properties"
     }
+    buildFeatures {
+        buildConfig = true
+    }
+
+    defaultConfig {
+        buildConfigField(
+            "String",
+            "MAPS_API_KEY",
+            properties["MAPS_API_KEY"]?.toString()?.let { "\"$it\"" } ?: "\"\""
+        )
+    }
 }
 
 dependencies {
@@ -81,6 +101,7 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.android)
     implementation ("co.yml:ycharts:2.1.0")
     implementation(libs.androidx.navigation.compose)
+    implementation ("io.coil-kt:coil-compose:2.4.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
