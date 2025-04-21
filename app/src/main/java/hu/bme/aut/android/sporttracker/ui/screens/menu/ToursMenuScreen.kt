@@ -27,13 +27,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.Alignment
 import androidx.compose.foundation.background
+import hu.bme.aut.android.sporttracker.ui.navigation.Screen
 
 @Composable
 fun TourMenuScreen(
     drawerState: DrawerState,
     onMenuClick: () -> Unit,
     onToursClick: () -> Unit,
-    onMapClick: () -> Unit
+    onMapClick: () -> Unit,
+    onTourClick: (Long) -> Unit
 ) {
     MainLayout(
         drawerState = drawerState,
@@ -63,26 +65,22 @@ fun TourMenuScreen(
                         fontSize = 24.sp
                     )
                 }
-// TODO:Add click action here
+                // TODO: All tours have the same id
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                     items(tours) { tour ->
                         Surface(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(8.dp)
-                                .clickable { },
+                                .clickable {
+                                            onTourClick(tour.id)
+                                },
                             shape = MaterialTheme.shapes.medium,
                             shadowElevation = 4.dp,
                             color = backgroundColor
                         ) {
                             TourElement(tour)
                         }
-//                        Divider(
-//                            color = if (isSystemInDarkTheme()) Color(0xFFFFF8DC) else Color.Gray,
-//                            thickness = 1.dp,
-//                            modifier = Modifier
-//                                .padding(horizontal = 16.dp)
-//                        )
                     }
                 }
             }
