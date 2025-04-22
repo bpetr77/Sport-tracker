@@ -30,11 +30,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.GoogleMap
 import hu.bme.aut.android.sporttracker.R
+import hu.bme.aut.android.sporttracker.data.tour.database.DatabaseProvider
 import hu.bme.aut.android.sporttracker.data.tour.repository.TourRepository
 import hu.bme.aut.android.sporttracker.ui.components.SpeedChart
 import hu.bme.aut.android.sporttracker.ui.screens.tour.TourSummaryScreen
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourSettingsViewModel
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourStartedSettingsViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -51,6 +55,11 @@ fun TourStartedSettingsScreen(
     val totalDistance by tourStartedSettingsViewModel.totalDistance.collectAsState()
     val currentSpeed by tourStartedSettingsViewModel.currentSpeed.collectAsState()
     var showTourSummaryScreen = remember { mutableStateOf(false) }
+
+    // TODO: move this to a repository or a provider or somewhere else
+    val context = LocalContext.current
+    val database = DatabaseProvider.getDatabase(context)
+    val tourRepository = TourRepository(database.tourDao())
 
     Column(
         modifier = Modifier
@@ -104,8 +113,9 @@ fun TourStartedSettingsScreen(
                             //
                             pauseLocationUpdates()
                             showTourSummaryScreen.value = true
-                            TourRepository.addTour(tourStartedSettingsViewModel.getTour(selectedTransportMode))
-                          },
+                            CoroutineScope(Dispatchers.IO).launch {
+                                tourRepository.addTour(tourStartedSettingsViewModel.getTour(selectedTransportMode))
+                            }                          },
                 modifier = Modifier
                     .padding(8.dp),
                 containerColor = Color.White

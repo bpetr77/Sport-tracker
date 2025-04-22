@@ -27,7 +27,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.Alignment
 import androidx.compose.foundation.background
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
+import hu.bme.aut.android.sporttracker.MainActivity
 import hu.bme.aut.android.sporttracker.ui.navigation.Screen
+import hu.bme.aut.android.sporttracker.data.tour.database.DatabaseProvider
+import androidx.compose.runtime.*
+import hu.bme.aut.android.sporttracker.data.tour.model.TourEntity
+import kotlinx.coroutines.launch
 
 @Composable
 fun TourMenuScreen(
@@ -44,9 +51,16 @@ fun TourMenuScreen(
         onMapClick = onMapClick
     ) {
         val backgroundColor = Color(0xFF255F38) // Set unique background color
+        var tours by remember { mutableStateOf(emptyList<TourEntity>()) }
 
-        val tours = TourRepository.getAllTours()
+        // TODO: Move this to a repository or a provider or somewhere else
+        val database = DatabaseProvider.getDatabase(LocalContext.current)
+        val tourRepository = TourRepository(database.tourDao())
 
+        LaunchedEffect(Unit) {
+            tours = tourRepository.getAllTours()
+        }
+        println(tours)
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -65,9 +79,8 @@ fun TourMenuScreen(
                         fontSize = 24.sp
                     )
                 }
-                // TODO: All tours have the same id
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    items(tours) { tour ->
+                    items(tours) { tour: TourEntity ->
                         Surface(
                             modifier = Modifier
                                 .fillMaxSize()

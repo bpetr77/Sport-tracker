@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import hu.bme.aut.android.sporttracker.data.tour.database.DatabaseProvider
 import hu.bme.aut.android.sporttracker.ui.screens.tour.TourDetailsScreen
 
 @Composable
@@ -71,12 +72,23 @@ fun NavGraph(
             )
         }
 
+//        composable(
+//            route = Screen.TourDetails.route,
+//            arguments = listOf(navArgument("tourId") { type = NavType.LongType })
+//        ) { backStackEntry ->
+//            val tourId = backStackEntry.arguments?.getLong("tourId") ?: return@composable
+//            TourDetailsScreen(tourId = tourId)
+//        }
+
+        val database = DatabaseProvider.getDatabase(activity)
+        val tourRepository = TourRepository(database.tourDao())
+
         composable(
             route = Screen.TourDetails.route,
             arguments = listOf(navArgument("tourId") { type = NavType.LongType })
         ) { backStackEntry ->
             val tourId = backStackEntry.arguments?.getLong("tourId") ?: return@composable
-            TourDetailsScreen(tourId = tourId)
+            TourDetailsScreen(tourId = tourId, tourRepository = tourRepository)
         }
     }
 }
