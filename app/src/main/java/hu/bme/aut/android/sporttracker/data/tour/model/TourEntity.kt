@@ -10,12 +10,11 @@ import kotlin.random.Random
 @Entity(tableName = "tours")
 data class TourEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    //val id: Long,
     val startTime: Long,
     val endTime: Long,
     val totalDistance: Float, // km
     val averageSpeed: Float, // km/h
-    val elevationGain: Double, // méter
+    val elevationGain: Double, // m
     val locationHistory: List<LocationPoint>,
     val transportationMode: String?
 )

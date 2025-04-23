@@ -8,7 +8,6 @@ import hu.bme.aut.android.sporttracker.data.tour.model.TourEntity
 
 @Dao
 interface TourDao {
-
     @Query("SELECT * FROM tours WHERE id = :id")
     suspend fun getTourById(id: Long): TourEntity?
 

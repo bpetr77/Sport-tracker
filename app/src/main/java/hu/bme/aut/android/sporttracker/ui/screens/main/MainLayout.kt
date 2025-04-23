@@ -22,6 +22,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MainLayout(
+    iconTint: Color,
     drawerState: DrawerState,
     onMenuClick: () -> Unit,
     onToursClick: () -> Unit,
@@ -77,7 +78,7 @@ fun MainLayout(
                 },
                 modifier = Modifier.padding(16.dp, 30.dp)
             ) {
-                Icon(Icons.Default.Menu, contentDescription = "Menu", tint = Color.Black)
+                Icon(Icons.Default.Menu, contentDescription = "Menu", tint = iconTint)
             }
         }
     }

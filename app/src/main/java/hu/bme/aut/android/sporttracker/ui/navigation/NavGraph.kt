@@ -79,7 +79,7 @@ fun NavGraph(
 //            val tourId = backStackEntry.arguments?.getLong("tourId") ?: return@composable
 //            TourDetailsScreen(tourId = tourId)
 //        }
-
+        // TODO: Move this to a repository or a provider or somewhere else
         val database = DatabaseProvider.getDatabase(activity)
         val tourRepository = TourRepository(database.tourDao())
 
@@ -88,7 +88,13 @@ fun NavGraph(
             arguments = listOf(navArgument("tourId") { type = NavType.LongType })
         ) { backStackEntry ->
             val tourId = backStackEntry.arguments?.getLong("tourId") ?: return@composable
-            TourDetailsScreen(tourId = tourId, tourRepository = tourRepository)
+            TourDetailsScreen(tourId = tourId,
+                tourRepository = tourRepository,
+                drawerState = drawerState,
+                onMenuClick = { navController.navigate(Screen.Menu.route) },
+                onToursClick = { navController.navigate(Screen.Tours.route) },
+                onMapClick = { navController.navigate(Screen.Main.route) }
+            )
         }
     }
 }

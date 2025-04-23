@@ -32,7 +32,7 @@ fun MainScreen(
     onToursClick: () -> Unit,
     onMapClick: () -> Unit
 ) {
-    MainLayout(drawerState = drawerState, onMenuClick = onMenuclick, onToursClick = onToursClick, onMapClick = onMapClick) {
+    MainLayout(iconTint = Color.Black ,drawerState = drawerState, onMenuClick = onMenuclick, onToursClick = onToursClick, onMapClick = onMapClick) {
         MapScreen(
             activity = activity,
             fusedLocationClient = fusedLocationClient,

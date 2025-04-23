@@ -45,6 +45,7 @@ fun TourMenuScreen(
     onTourClick: (Long) -> Unit
 ) {
     MainLayout(
+        iconTint = Color.White,
         drawerState = drawerState,
         onMenuClick = onMenuClick,
         onToursClick = onToursClick,
