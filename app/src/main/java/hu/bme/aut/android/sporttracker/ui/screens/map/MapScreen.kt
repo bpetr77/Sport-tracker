@@ -24,6 +24,8 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.widgets.DisappearingScaleBar
+import com.google.maps.android.compose.widgets.ScaleBar
 import hu.bme.aut.android.sporttracker.MainActivity
 import hu.bme.aut.android.sporttracker.R
 import hu.bme.aut.android.sporttracker.data.location.repository.LocationRepository
@@ -85,7 +87,12 @@ fun MapScreen(
                 )
             }
         }
-
+        DisappearingScaleBar(
+            modifier = Modifier
+                .padding(bottom = 17.dp, end = 5.dp)
+                .align(Alignment.BottomStart),
+            cameraPositionState = cameraPositionState
+        )
         FloatingActionButton(
             onClick = {
                 Log.w("MapScreen", "Location button clicked")
@@ -138,7 +145,7 @@ fun MapScreen(
             )
         }
     }
-
+// TODO secod check this logic because its outdated
     if (showBottomSheet) {
         ModalBottomSheet(
             onDismissRequest = { showBottomSheet = false },

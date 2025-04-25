@@ -95,7 +95,7 @@ dependencies {
     implementation(libs.androidx.material3)
 
     implementation("com.google.android.gms:play-services-maps:18.2.0")
-    implementation("com.google.maps.android:maps-compose:2.5.3")
+    //implementation("com.google.maps.android:maps-compose:2.5.3")
     implementation(libs.play.services.location)
     implementation(libs.support.annotations)
     //implementation("com.google.accompanist:accompanist-permissions:0.32.0") // Engedélykéréshez
@@ -114,6 +114,16 @@ dependencies {
     kapt("androidx.room:room-compiler:$roomVersion")
     implementation ("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.9.0")
     implementation ("androidx.room:room-paging:$roomVersion")
+
+    implementation ("com.google.maps.android:maps-compose:6.6.0")
+
+    // Optionally, you can include the Compose utils library for Clustering,
+    // Street View metadata checks, etc.
+    implementation ("com.google.maps.android:maps-compose-utils:6.6.0")
+
+    // Optionally, you can include the widgets library for ScaleBar, etc.
+    implementation ("com.google.maps.android:maps-compose-widgets:6.6.0")
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

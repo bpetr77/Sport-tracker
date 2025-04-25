@@ -94,6 +94,7 @@ fun TourMenuScreen(
                             color = backgroundColor
                         ) {
                             TourElement(tour)
+                            println(tour)
                         }
                     }
                 }

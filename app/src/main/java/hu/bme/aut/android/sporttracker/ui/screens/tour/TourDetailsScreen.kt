@@ -1,5 +1,7 @@
 package hu.bme.aut.android.sporttracker.ui.screens.tour
 
+import android.view.View
+import android.widget.RelativeLayout
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
@@ -10,7 +12,9 @@ import hu.bme.aut.android.sporttracker.data.tour.repository.TourRepository
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.DrawerState
 import androidx.compose.runtime.produceState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
@@ -18,6 +22,10 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import hu.bme.aut.android.sporttracker.data.tour.model.TourEntity
 import hu.bme.aut.android.sporttracker.ui.screens.main.MainLayout
 
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import com.google.maps.android.compose.widgets.DisappearingScaleBar
+import com.google.maps.android.compose.widgets.ScaleBar
 
 @Composable
 fun TourDetailsScreen(tourId: Long,
@@ -33,8 +41,6 @@ fun TourDetailsScreen(tourId: Long,
     }.value
 
     val locations = tour?.locationHistory ?: emptyList()
-    println(locations)
-    println(tour)
     val cameraPositionState = rememberCameraPositionState()
 
     if (locations.isNotEmpty()) {
@@ -69,6 +75,14 @@ fun TourDetailsScreen(tourId: Long,
                     width = 5f
                 )
             }
+        }
+        Box(modifier = Modifier.fillMaxSize()) {
+            DisappearingScaleBar(
+                modifier = Modifier
+                    .padding(bottom = 10.dp, end = 5.dp)
+                    .align(Alignment.BottomEnd),
+                cameraPositionState = cameraPositionState
+            )
         }
     }
 }

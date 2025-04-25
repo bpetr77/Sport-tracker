@@ -109,13 +109,23 @@ fun TourStartedSettingsScreen(
             FloatingActionButton(
                 onClick = {
                             // IS THIS NECESSARY?
-                            tourStartedSettingsViewModel.getTour(tourSettingsViewModel.selectedTransportMode.toString())
+                            tourStartedSettingsViewModel.getTour(
+                                tourSettingsViewModel.selectedTransportMode.toString(),
+                                tourSettingsViewModel.weatherSelection.value,
+                                tourSettingsViewModel.commentInput.value
+                            )
                             //
                             pauseLocationUpdates()
                             showTourSummaryScreen.value = true
                             CoroutineScope(Dispatchers.IO).launch {
-                                tourRepository.addTour(tourStartedSettingsViewModel.getTour(selectedTransportMode))
-                            }                          },
+                                tourRepository.addTour(tourStartedSettingsViewModel.getTour(
+                                    selectedTransportMode,
+                                    tourSettingsViewModel.weatherSelection.value,
+                                    tourSettingsViewModel.commentInput.value
+                                )
+                                )
+                            }
+                },
                 modifier = Modifier
                     .padding(8.dp),
                 containerColor = Color.White
