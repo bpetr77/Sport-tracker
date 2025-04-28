@@ -77,7 +77,9 @@ fun MapScreen(
                 isMyLocationEnabled = locationPermissionGranted.value
             )
         ) {
+            //TODO: if paused, do not draw the line between the points maybe create a class for this in the domain layer
             val locations by locationRepository.locations.collectAsState()
+            val isPaused by tourStartedSettingsViewModel.isPaused.collectAsState()
 
             if (locations.isNotEmpty()) {
                 Polyline(

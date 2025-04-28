@@ -7,7 +7,6 @@ import kotlin.math.*
 import kotlin.random.Random
 
 class TourUseCase {
-
     fun calculateTotalDistance(locations: List<LocationPoint>): Float {
         var totalDistance = 0f
         for (i in 1 until locations.size) {

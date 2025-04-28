@@ -136,10 +136,7 @@ fun TourStartedSettingsScreen(
                     modifier = Modifier.size(37.dp)
                 )
             }
-//            CircularImageButton(
-//                onClick = { stopLocationUpdates() },
-//                imageResId = R.drawable.baseline_stop_24
-//            )
+
             FloatingActionButton(
                 onClick = {
                     if (isPaused) {
@@ -154,7 +151,7 @@ fun TourStartedSettingsScreen(
                 containerColor = Color.White
             ) {
                 Image(
-                    painter = painterResource(id = if (isPaused) R.drawable.baseline_start_24 else R.drawable.baseline_pause_24),
+                    painter = painterResource(id = if (isPaused) R.drawable.baseline_play_arrow_24 else R.drawable.baseline_pause_24),
                     contentDescription = if (isPaused) "Start" else "Pause",
                     modifier = Modifier.size(37.dp)
                 )
