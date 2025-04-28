@@ -3,7 +3,7 @@
 
   - ## 📌 Projektról
 
-       - Ez az Android-alkalmazás lehetővé teszi a felhasználók számára, rögzítsék futásaikat, túráikat vagy bármilyen szabadtéri mozgásukat. A rögzített útvonal megjelenik a térképen, kiegészítve statisztikai adatokkal (pl. megtett távolság, időtartam, átlagsebesség).
+       - Ez az Android-alkalmazás lehetővé teszi a felhasználók számára hogy, rögzítsék futásaikat, túráikat vagy bármilyen szabadtéri mozgásukat. A rögzített útvonal megjelenik a térképen, kiegészítve statisztikai adatokkal (pl. megtett távolság, időtartam, átlagsebesség).
 
   - ## ✨ Funkciók 
 
