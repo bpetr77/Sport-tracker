@@ -10,6 +10,7 @@ import hu.bme.aut.android.sporttracker.data.location.repository.LocationReposito
 import hu.bme.aut.android.sporttracker.data.tour.repository.TourRepository
 import hu.bme.aut.android.sporttracker.domain.usecase.TourUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -33,6 +34,9 @@ class TourStartedSettingsViewModel(
     private val _currentSpeed = MutableStateFlow(0f) // m/s
     val currentSpeed = _currentSpeed.asStateFlow()
 
+    val _segments = MutableStateFlow<List<MutableList<LocationPoint>>>(listOf(mutableListOf()))
+    val segments: StateFlow<List<List<LocationPoint>>> = _segments
+
     init {
         viewModelScope.launch {
             locationRepository.locations.collect { locations ->
@@ -41,8 +45,27 @@ class TourStartedSettingsViewModel(
                 _currentSpeed.value = tourUseCase.getCurrentSpeedInKmH(locations)
                 _speedHistory.value = _speedHistory.value + _currentSpeed.value.toDouble()
 
+//                locations.forEach { location ->
+//                    addLocation(location)
+//                }
             }
         }
+    }
+    fun addLocation(location: LocationPoint) {
+        if (_isPaused.value) return
+
+        val currentSegments = _segments.value.toMutableList()
+        currentSegments.last().add(location)
+        _segments.value = currentSegments
+    }
+
+    fun pause() {
+        _isPaused.value = true
+    }
+
+    fun resume() {
+        //_isPaused.value = false
+        _segments.value = _segments.value + listOf(mutableListOf()) // új szegmens
     }
 
     fun toggleTourPaused() {

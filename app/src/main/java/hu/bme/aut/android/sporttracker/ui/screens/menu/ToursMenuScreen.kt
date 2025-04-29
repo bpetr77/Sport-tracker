@@ -42,14 +42,16 @@ fun TourMenuScreen(
     onMenuClick: () -> Unit,
     onToursClick: () -> Unit,
     onMapClick: () -> Unit,
-    onTourClick: (Long) -> Unit
+    onTourClick: (Long) -> Unit,
+    onAllToursClick: () -> Unit
 ) {
     MainLayout(
         iconTint = Color.White,
         drawerState = drawerState,
         onMenuClick = onMenuClick,
         onToursClick = onToursClick,
-        onMapClick = onMapClick
+        onMapClick = onMapClick,
+        onAllToursClick = onAllToursClick
     ) {
         val backgroundColor = Color(0xFF255F38) // Set unique background color
         var tours by remember { mutableStateOf(emptyList<TourEntity>()) }

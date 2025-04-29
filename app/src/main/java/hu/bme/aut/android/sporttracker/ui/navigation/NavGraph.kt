@@ -23,6 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import hu.bme.aut.android.sporttracker.data.tour.database.DatabaseProvider
+import hu.bme.aut.android.sporttracker.ui.screens.tour.AllToursScreen
 import hu.bme.aut.android.sporttracker.ui.screens.tour.TourDetailsScreen
 
 @Composable
@@ -53,7 +54,8 @@ fun NavGraph(
                 drawerState = drawerState,
                 onMenuclick = { navController.navigate(Screen.Menu.route) },
                 onToursClick = { navController.navigate(Screen.Tours.route) },
-                onMapClick = { navController.navigate(Screen.Main.route) }
+                onMapClick = { navController.navigate(Screen.Main.route) },
+                onAllToursClick = { navController.navigate(Screen.AllTours.route) }
             )
         }
         composable(Screen.Menu.route){
@@ -68,7 +70,8 @@ fun NavGraph(
                 onMapClick = { navController.navigate(Screen.Main.route) },
                 onTourClick = { tourId ->
                     navController.navigate("tourDetails/$tourId")
-                }
+                },
+                onAllToursClick = { navController.navigate(Screen.AllTours.route) }
             )
         }
 
@@ -93,7 +96,19 @@ fun NavGraph(
                 drawerState = drawerState,
                 onMenuClick = { navController.navigate(Screen.Menu.route) },
                 onToursClick = { navController.navigate(Screen.Tours.route) },
-                onMapClick = { navController.navigate(Screen.Main.route) }
+                onMapClick = { navController.navigate(Screen.Main.route) },
+                onAllToursClick = { navController.navigate(Screen.AllTours.route) }
+            )
+        }
+
+        composable(Screen.AllTours.route) {
+            AllToursScreen(
+                tourRepository = tourRepository,
+                drawerState = drawerState,
+                onMenuClick = { navController.navigate(Screen.Menu.route) },
+                onToursClick = { navController.navigate(Screen.Tours.route) },
+                onMapClick = { navController.navigate(Screen.Main.route) },
+                onAllToursClick = { navController.navigate(Screen.AllTours.route) }
             )
         }
     }

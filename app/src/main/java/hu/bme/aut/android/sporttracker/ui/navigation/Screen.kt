@@ -7,4 +7,5 @@ sealed class Screen(val route: String) {
     object TourDetails : Screen("tourDetails/{tourId}") {
         fun createRoute(tourId: Long) = "tourDetails/$tourId"
     }
+    object AllTours: Screen("allTours")
 }

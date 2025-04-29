@@ -27,6 +27,7 @@ fun MainLayout(
     onMenuClick: () -> Unit,
     onToursClick: () -> Unit,
     onMapClick: () -> Unit,
+    onAllToursClick: () -> Unit,
     content: @Composable () -> Unit
 ) {
     val scope = rememberCoroutineScope()
@@ -60,6 +61,15 @@ fun MainLayout(
                     selected = false,
                     onClick = {
                         onMapClick()
+                        scope.launch { drawerState.close() }
+                    }
+                )
+
+                NavigationDrawerItem(
+                    label = { Text(text = "Összesített térkép") },
+                    selected = false,
+                    onClick = {
+                        onAllToursClick()
                         scope.launch { drawerState.close() }
                     }
                 )

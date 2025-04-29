@@ -28,26 +28,28 @@ import com.google.maps.android.compose.widgets.DisappearingScaleBar
 import com.google.maps.android.compose.widgets.ScaleBar
 
 @Composable
-fun TourDetailsScreen(tourId: Long,
-                      tourRepository: TourRepository,
-                      drawerState: DrawerState,
-                      onMenuClick: () -> Unit,
-                      onToursClick: () -> Unit,
-                      onMapClick: () -> Unit,
-                        onAllToursClick: () -> Unit
-){
-    // Fetch the tour asynchronously
-    val tour = produceState<TourEntity?>(initialValue = null, tourId) {
-        value = tourRepository.getTourById(tourId)
+fun AllToursScreen(
+    tourRepository: TourRepository,
+    drawerState: DrawerState,
+    onMenuClick: () -> Unit,
+    onToursClick: () -> Unit,
+    onMapClick: () -> Unit,
+    onAllToursClick: () -> Unit
+) {
+    // Fetch all tours asynchronously
+    val tours = produceState<List<TourEntity>>(initialValue = emptyList()) {
+        value = tourRepository.getAllTours()
     }.value
 
-    val locations = tour?.locationHistory ?: emptyList()
+    // Combine all locations from all tours
+    val allLocations = tours.flatMap { it.locationHistory }
     val cameraPositionState = rememberCameraPositionState()
 
-    if (locations.isNotEmpty()) {
-        val firstLocation = LatLng(locations.first().latitude, locations.first().longitude)
-        cameraPositionState.position = CameraPosition.fromLatLngZoom(firstLocation, 15f)
+    if (allLocations.isNotEmpty()) {
+        val firstLocation = LatLng(allLocations.first().latitude, allLocations.first().longitude)
+        cameraPositionState.position = CameraPosition.fromLatLngZoom(firstLocation, 10f)
     }
+
     MainLayout(
         iconTint = Color.Black,
         drawerState = drawerState,
@@ -69,13 +71,16 @@ fun TourDetailsScreen(tourId: Long,
                 mapToolbarEnabled = true
             )
         ) {
-            val polylinePoints = locations.map { LatLng(it.latitude, it.longitude) }
-            if (locations.isNotEmpty()) {
-                Polyline(
-                    points = polylinePoints,
-                    color = Color.Blue,
-                    width = 5f
-                )
+            // Draw a polyline for each tour
+            tours.forEach { tour ->
+                val polylinePoints = tour.locationHistory.map { LatLng(it.latitude, it.longitude) }
+                if (polylinePoints.isNotEmpty()) {
+                    Polyline(
+                        points = polylinePoints,
+                        color = Color.Blue,
+                        width = 5f
+                    )
+                }
             }
         }
         Box(modifier = Modifier.fillMaxSize()) {

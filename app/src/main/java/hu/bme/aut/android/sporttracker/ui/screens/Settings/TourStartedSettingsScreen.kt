@@ -141,10 +141,12 @@ fun TourStartedSettingsScreen(
                 onClick = {
                     if (isPaused) {
                         resumeLocationUpdates()
+                        tourStartedSettingsViewModel.resume()
                     } else {
                         pauseLocationUpdates()
                     }
                     tourStartedSettingsViewModel.toggleTourPaused()
+
                 },
                 modifier = Modifier
                     .padding(8.dp),

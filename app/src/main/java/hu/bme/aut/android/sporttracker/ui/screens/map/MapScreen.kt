@@ -57,7 +57,6 @@ fun MapScreen(
     val coroutineScope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
     val isTourStarted by tourSettingsViewModel.isTourStarted.collectAsState()
-    var locations = locationRepository.locations.collectAsState()
 
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -77,16 +76,50 @@ fun MapScreen(
                 isMyLocationEnabled = locationPermissionGranted.value
             )
         ) {
-            //TODO: if paused, do not draw the line between the points maybe create a class for this in the domain layer
+            //TODO: maybe consider this logic, because it is not as stable as it should be
             val locations by locationRepository.locations.collectAsState()
             val isPaused by tourStartedSettingsViewModel.isPaused.collectAsState()
+            val segments = mutableListOf<MutableList<LatLng>>()
+            var currentSegment = mutableListOf<LatLng>()
 
             if (locations.isNotEmpty()) {
-                Polyline(
-                    points = locations.map { LatLng(it.latitude, it.longitude) },
-                    color = Color.Blue,
-                    width = 5f
-                )
+                for (i in locations.indices) {
+                    val currentLocation = locations[i]
+                    val currentLatLng = LatLng(currentLocation.latitude, currentLocation.longitude)
+
+                    if (i == 0) {
+                        // Start the first segment
+                        currentSegment.add(currentLatLng)
+                    } else {
+                        val previousLocation = locations[i - 1]
+                        val timeDifference = currentLocation.timestamp - (previousLocation.timestamp + 5000)
+
+                        if (timeDifference <= 5000) {
+                            // Add to the current segment
+                            currentSegment.add(currentLatLng)
+                        } else {
+                            // Start a new segment
+                            segments.add(currentSegment)
+                            currentSegment = mutableListOf(currentLatLng)
+                        }
+                    }
+                }
+
+                // Add the last segment
+                if (currentSegment.isNotEmpty()) {
+                    segments.add(currentSegment)
+                }
+
+                // Draw the segments
+                for (segment in segments) {
+                    if (segment.size >= 2) {
+                        Polyline(
+                            points = segment,
+                            color = Color.Blue,
+                            width = 5f
+                        )
+                    }
+                }
             }
         }
         DisappearingScaleBar(
