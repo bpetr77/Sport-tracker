@@ -55,6 +55,7 @@ fun MapScreen(
     }
     val sheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
+    // TODO: viewmodel
     var showBottomSheet by remember { mutableStateOf(false) }
     val isTourStarted by tourSettingsViewModel.isTourStarted.collectAsState()
 

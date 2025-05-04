@@ -38,29 +38,26 @@ fun MainLayout(
         drawerContent = {
             ModalDrawerSheet {
                 Text("Sport Tracker", modifier = Modifier.padding(16.dp))
+
+                Spacer(modifier = Modifier.height(40.dp))
+
                 HorizontalDivider()
-                NavigationDrawerItem(
-                    label = { Text(text = "Completed Tours") },
-                    selected = false,
-                    onClick = {
-                        onToursClick()
-                        scope.launch { drawerState.close() }
-                    }
-                )
-                NavigationDrawerItem(
-                    label = { Text(text = "Settings") },
-                    selected = false,
-                    onClick = {
-                        onMenuClick()
-                        scope.launch { drawerState.close() }
-                    }
-                )
+
                 // TODO: if on the map screen just close the drawer
                 NavigationDrawerItem(
-                    label = { Text(text = "Map") },
+                    label = { Text(text = "Térkép") },
                     selected = false,
                     onClick = {
                         onMapClick()
+                        scope.launch { drawerState.close() }
+                    }
+                )
+
+                NavigationDrawerItem(
+                    label = { Text(text = "Teljesített túrák") },
+                    selected = false,
+                    onClick = {
+                        onToursClick()
                         scope.launch { drawerState.close() }
                     }
                 )
@@ -70,6 +67,15 @@ fun MainLayout(
                     selected = false,
                     onClick = {
                         onAllToursClick()
+                        scope.launch { drawerState.close() }
+                    }
+                )
+
+                NavigationDrawerItem(
+                    label = { Text(text = "Beállítások") },
+                    selected = false,
+                    onClick = {
+                        onMenuClick()
                         scope.launch { drawerState.close() }
                     }
                 )
