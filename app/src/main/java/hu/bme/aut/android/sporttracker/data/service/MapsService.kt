@@ -11,7 +11,7 @@ object MapsService {
 
     //TODO: Move this to domain
     fun calculateZoomLevel(locations: List<Pair<Double, Double>>): Int {
-        if (locations.isEmpty()) return 15 // Alapértelmezett zoom, ha nincs adat
+        if (locations.isEmpty()) return 15 // Default zoom level
 
         val minLat = locations.minOf { it.first }
         val maxLat = locations.maxOf { it.first }
@@ -22,7 +22,7 @@ object MapsService {
         val lngDiff = maxLng - minLng
 
         val zoomLevels = listOf(
-            360.0 to 1,   // 360° → Világ nézet
+            360.0 to 1,
             180.0 to 2,
             90.0 to 3,
             45.0 to 4,
@@ -40,27 +40,12 @@ object MapsService {
             0.010986328125 to 16,
             0.0054931640625 to 17,
             0.00274658203125 to 18,
-            0.001373291015625 to 19
+            0.001373291015625 to 19  // Max zoom level
         )
 
         val maxDiff = maxOf(latDiff, lngDiff)
 
-        return zoomLevels.last { it.first >= maxDiff }.second - 1 // Reduce zoom by 1 level for a higher view
-    }
-    fun getStaticMapUrl2(locations: List<Pair<Double, Double>>): String {
-        val apiKey = BuildConfig.MAPS_API_KEY
-
-        if (locations.isEmpty()) return ""
-
-        val center = "${locations.first().first},${locations.first().second}"
-
-        // Az útvonal helyes formátumban
-        val path = locations.joinToString("|") { "${it.first},${it.second}" }
-
-        return "https://maps.googleapis.com/maps/api/staticmap?" +
-                "size=640x500&center=$center&zoom=18" +
-                "&path=color:0x0000FF|weight:4|$path" +
-                "&key=$apiKey"
+        return zoomLevels.last { it.first >= maxDiff }.second
     }
 
     fun getStaticMapUrl(locations: List<Pair<Double, Double>>): String {
@@ -68,15 +53,20 @@ object MapsService {
 
         if (locations.isEmpty()) return ""
 
-        val center2 = "${locations.first().first},${locations.first().second}"
-        val center = "${locations.get((locations.size / 2).toInt()).first}, ${locations.get((locations.size / 2).toInt()).second}"
+        //val center = "${locations.first().first},${locations.first().second}"
+        val center = if (locations.isNotEmpty()) {
+            val middleIndex = locations.size / 2
+            "${locations[middleIndex].first},${locations[middleIndex].second}"
+        } else {
+            ""
+        }
         val path = locations.joinToString("|") { "${it.first},${it.second}" }
 
-        val zoom = calculateZoomLevel(locations) // Dinamikusan számított zoom szint
+        val zoom = calculateZoomLevel(locations)
 
         return "https://maps.googleapis.com/maps/api/staticmap?" +
                 "size=640x500&center=$center&zoom=$zoom" +
-                "&path=color:0x800080FF|weight:6|$path" + // Élénkebb lila vonal
+                "&path=color:0x800080FF|weight:6|$path" +
                 "&key=$apiKey"
     }
 }

@@ -27,7 +27,6 @@ fun TourSummaryScreen(
     stopLocationUpdates: () -> Unit,
     context: Context
 ) {
-    val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     val totalDistance by viewModel.totalDistance.collectAsState()
@@ -43,7 +42,11 @@ fun TourSummaryScreen(
     }
 
     ModalBottomSheet(
-        onDismissRequest = onDismiss,
+        onDismissRequest = {
+            stopLocationUpdates()
+            viewModel.stopTour()
+            onDismiss()
+        },
         sheetState = sheetState
     ) {
         Column(

@@ -25,8 +25,6 @@ import hu.bme.aut.android.sporttracker.ui.viewModels.TourStartedSettingsViewMode
 
 @Composable
 fun TourElement(tour: TourEntity) {
-    val backgroundColor = if (isSystemInDarkTheme()) Color(0xFF2C2C2C) else Color(0xFFF5F5F5)
-
     Row(
         modifier = Modifier
             .fillMaxWidth()

@@ -16,11 +16,15 @@ import hu.bme.aut.android.sporttracker.ui.screens.menu.TourMenuScreen
 import hu.bme.aut.android.sporttracker.ui.viewModels.LocationViewmodel
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourSettingsViewModel
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourStartedSettingsViewModel
-
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import hu.bme.aut.android.sporttracker.data.tour.database.DatabaseProvider
+import hu.bme.aut.android.sporttracker.ui.screens.tour.AllToursScreen
+import hu.bme.aut.android.sporttracker.ui.screens.tour.TourDetailsScreen
 
 @Composable
 fun NavGraph(
@@ -50,7 +54,8 @@ fun NavGraph(
                 drawerState = drawerState,
                 onMenuclick = { navController.navigate(Screen.Menu.route) },
                 onToursClick = { navController.navigate(Screen.Tours.route) },
-                onMapClick = { navController.navigate(Screen.Main.route) }
+                onMapClick = { navController.navigate(Screen.Main.route) },
+                onAllToursClick = { navController.navigate(Screen.AllTours.route) }
             )
         }
         composable(Screen.Menu.route){
@@ -62,7 +67,48 @@ fun NavGraph(
                 drawerState = drawerState,
                 onMenuClick = { navController.navigate(Screen.Menu.route) },
                 onToursClick = { navController.navigate(Screen.Tours.route) },
-                onMapClick = { navController.navigate(Screen.Main.route) }
+                onMapClick = { navController.navigate(Screen.Main.route) },
+                onTourClick = { tourId ->
+                    navController.navigate("tourDetails/$tourId")
+                },
+                onAllToursClick = { navController.navigate(Screen.AllTours.route) }
+            )
+        }
+
+//        composable(
+//            route = Screen.TourDetails.route,
+//            arguments = listOf(navArgument("tourId") { type = NavType.LongType })
+//        ) { backStackEntry ->
+//            val tourId = backStackEntry.arguments?.getLong("tourId") ?: return@composable
+//            TourDetailsScreen(tourId = tourId)
+//        }
+        // TODO: Move this to a repository or a provider or somewhere else
+        val database = DatabaseProvider.getDatabase(activity)
+        val tourRepository = TourRepository(database.tourDao())
+
+        composable(
+            route = Screen.TourDetails.route,
+            arguments = listOf(navArgument("tourId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val tourId = backStackEntry.arguments?.getLong("tourId") ?: return@composable
+            TourDetailsScreen(tourId = tourId,
+                tourRepository = tourRepository,
+                drawerState = drawerState,
+                onMenuClick = { navController.navigate(Screen.Menu.route) },
+                onToursClick = { navController.navigate(Screen.Tours.route) },
+                onMapClick = { navController.navigate(Screen.Main.route) },
+                onAllToursClick = { navController.navigate(Screen.AllTours.route) }
+            )
+        }
+
+        composable(Screen.AllTours.route) {
+            AllToursScreen(
+                tourRepository = tourRepository,
+                drawerState = drawerState,
+                onMenuClick = { navController.navigate(Screen.Menu.route) },
+                onToursClick = { navController.navigate(Screen.Tours.route) },
+                onMapClick = { navController.navigate(Screen.Main.route) },
+                onAllToursClick = { navController.navigate(Screen.AllTours.route) }
             )
         }
     }

@@ -3,7 +3,7 @@
 
   - ## 📌 Projektról
 
-       - Ez az Android-alkalmazás lehetővé teszi a felhasználók számára, rögzítsék futásaikat, túráikat vagy bármilyen szabadtéri mozgásukat. A rögzített útvonal megjelenik a térképen, kiegészítve statisztikai adatokkal (pl. megtett távolság, időtartam, átlagsebesség).
+       - Ez az Android-alkalmazás lehetővé teszi a felhasználók számára hogy, rögzítsék futásaikat, túráikat vagy bármilyen szabadtéri mozgásukat. A rögzített útvonal megjelenik a térképen, kiegészítve statisztikai adatokkal (pl. megtett távolság, időtartam, átlagsebesség).
 
   - ## ✨ Funkciók 
 
@@ -54,11 +54,11 @@
     
       - ## 4. Mentés és Visszatöltés (Week 7-8)
            - ### ⛃ Útvonalak mentése SQLite adatbázisba
-              - [ ] Útvonal adatok (koordináták, időbélyegek, statisztikák) elmentése
-              - [ ] Adatmodell kialakítása az adatok tárolásához
+              - [X] Útvonal adatok (koordináták, időbélyegek, statisztikák) elmentése
+              - [X] Adatmodell kialakítása az adatok tárolásához
            - ### 💾 Előzmények listázása
-              - [ ] Korábbi útvonalak megjelenítése egy listában
-              - [ ] Kiválasztott útvonal megjelenítése térképen
+              - [X] Korábbi útvonalak megjelenítése egy listában
+              - [X] Kiválasztott útvonal megjelenítése térképen
     
       - ## 5. UI Finomhangolás és Extra Funkciók (Week 9-10)
 
@@ -71,4 +71,4 @@
     
        - FusedLocationProvider API
     
-       - SQLite
+       - Room over SQLite

@@ -1,6 +1,5 @@
 package hu.bme.aut.android.sporttracker.ui.screens.Settings
 
-//import android.os.Build.VERSION_CODES.R
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,6 +15,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,7 +38,7 @@ fun TourSettingsScreen(
     val selectedTransportMode by tourSettingsViewModel.selectedTransportMode.collectAsState()
     val isTourStarted by tourSettingsViewModel.isTourStarted.collectAsState()
 
-    //var selectedTransportMode by remember { mutableStateOf<String?>(null) }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -74,12 +75,22 @@ fun TourSettingsScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        RadioButtonSingleSelection(Modifier)
+//        RadioButtonSingleSelection(Modifier)
+//
+//        UserInputTextField()
 
-        UserInputTextField()
+        // Pass current selection state and update callback to handle weather changes.
+        RadioButtonSingleSelection(
+            modifier = Modifier,
+            viewModel = tourSettingsViewModel
+        )
+
+        // Update UserInputTextField to capture comment.
+        UserInputTextField(viewModel = tourSettingsViewModel)
 
         Spacer(modifier = Modifier.height(30.dp))
 
+        //TODO: Clear the tura leallítása section, its not used anymore
         Button(
             onClick = {
                 if (isTourStarted) {

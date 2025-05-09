@@ -34,10 +34,8 @@ import hu.bme.aut.android.sporttracker.ui.viewModels.LocationViewmodel
 class MainActivity : ComponentActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val userLocation = mutableStateOf<LatLng?>(null)
-    //private var locationPermissionGranted = remember { mutableStateOf(false) }
     private lateinit var locationRepository: LocationRepository
     private val TourUseCase = TourUseCase()
-    //private val tourRepository = TourRepository()
     private val tourSettingsViewModel: TourSettingsViewModel by viewModels()
     private val tourStartedSettingsViewModel: TourStartedSettingsViewModel by viewModels {
         TourStartedSettingsViewModelFactory(locationRepository, TourUseCase)

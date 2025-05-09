@@ -4,6 +4,8 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose.compiler)
+    id("org.jetbrains.kotlin.kapt")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 ////////////
@@ -82,7 +84,7 @@ android {
 }
 
 dependencies {
-
+    val roomVersion = "2.7.0"
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -93,7 +95,7 @@ dependencies {
     implementation(libs.androidx.material3)
 
     implementation("com.google.android.gms:play-services-maps:18.2.0")
-    implementation("com.google.maps.android:maps-compose:2.5.3")
+    //implementation("com.google.maps.android:maps-compose:2.5.3")
     implementation(libs.play.services.location)
     implementation(libs.support.annotations)
     //implementation("com.google.accompanist:accompanist-permissions:0.32.0") // Engedélykéréshez
@@ -102,6 +104,26 @@ dependencies {
     implementation ("co.yml:ycharts:2.1.0")
     implementation(libs.androidx.navigation.compose)
     implementation ("io.coil-kt:coil-compose:2.4.0")
+    implementation(libs.androidx.room.common.jvm)
+    implementation(libs.firebase.crashlytics.buildtools)
+    //implementation(libs.androidx.room.runtime.android)
+    implementation(libs.androidx.media3.database)
+    implementation("com.google.code.gson:gson:2.10.1") // Add Gson library
+    implementation("com.google.guava:guava:32.1.2-jre")
+    implementation("androidx.room:room-runtime:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
+    implementation ("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.9.0")
+    implementation ("androidx.room:room-paging:$roomVersion")
+
+    implementation ("com.google.maps.android:maps-compose:6.6.0")
+
+    // Optionally, you can include the Compose utils library for Clustering,
+    // Street View metadata checks, etc.
+    implementation ("com.google.maps.android:maps-compose-utils:6.6.0")
+
+    // Optionally, you can include the widgets library for ScaleBar, etc.
+    implementation ("com.google.maps.android:maps-compose-widgets:6.6.0")
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

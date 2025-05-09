@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat
 import hu.bme.aut.android.sporttracker.data.service.LocationService
 import hu.bme.aut.android.sporttracker.data.location.model.LocationPoint
 import hu.bme.aut.android.sporttracker.domain.location.LocationTracker
+import hu.bme.aut.android.sporttracker.ui.viewModels.TourStartedSettingsViewModel
 
 class LocationRepository(
     private val fusedLocationProviderClient: FusedLocationProviderClient,
@@ -117,6 +118,11 @@ class LocationRepository(
                 LocationPoint(it.latitude, it.longitude, it.altitude, it.time)
             }
             _locations.value = _locations.value + newLocations
+
+//            newLocations.forEach { location ->
+//                viewModel.addLocation(location)
+//            }
+
             logAllLocations()
         }
     }

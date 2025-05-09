@@ -1,30 +1,43 @@
 package hu.bme.aut.android.sporttracker.data.tour.repository
 
 import hu.bme.aut.android.sporttracker.data.tour.model.TourEntity
+import hu.bme.aut.android.sporttracker.data.tour.database.TourDao
 
-object TourRepository{
-    private val tours = mutableListOf<TourEntity>()
+//object TourRepository{
+//    private val tours = mutableListOf<TourEntity>()
+//
+//    fun addTour(tour: TourEntity) {
+//        tours.add(tour)
+//    }
+//
+//    fun getTourById(id: Long): TourEntity? {
+//        return tours.find { it.id == id }
+//    }
+//
+//    fun getAllTours(): List<TourEntity> {
+//        return tours.toList()
+//    }
+//
+//    fun updateTour(tour: TourEntity) {
+//        val index = tours.indexOfFirst { it.id == tour.id }
+//        if (index != -1) {
+//            tours[index] = tour
+//        }
+//    }
+//
+//    fun deleteTourById(id: Long) {
+//        tours.removeAll { it.id == id }
+//    }
+//}
 
-    fun addTour(tour: TourEntity) {
-        tours.add(tour)
-    }
+class TourRepository(private val tourDao: TourDao) {
+    suspend fun addTour(tour: TourEntity) = tourDao.insertTour(tour)
 
-    fun getTourById(id: Long): TourEntity? {
-        return tours.find { it.id == id }
-    }
+    suspend fun getTourById(id: Long) = tourDao.getTourById(id)
 
-    fun getAllTours(): List<TourEntity> {
-        return tours.toList()
-    }
+    suspend fun getAllTours() = tourDao.getAllTours()
 
-    fun updateTour(tour: TourEntity) {
-        val index = tours.indexOfFirst { it.id == tour.id }
-        if (index != -1) {
-            tours[index] = tour
-        }
-    }
+    suspend fun updateTour(tour: TourEntity) = tourDao.updateTour(tour)
 
-    fun deleteTourById(id: Long) {
-        tours.removeAll { it.id == id }
-    }
+    suspend fun deleteTourById(id: Long) = tourDao.deleteTourById(id)
 }

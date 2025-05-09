@@ -22,10 +22,12 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MainLayout(
+    iconTint: Color,
     drawerState: DrawerState,
     onMenuClick: () -> Unit,
     onToursClick: () -> Unit,
     onMapClick: () -> Unit,
+    onAllToursClick: () -> Unit,
     content: @Composable () -> Unit
 ) {
     val scope = rememberCoroutineScope()
@@ -36,29 +38,44 @@ fun MainLayout(
         drawerContent = {
             ModalDrawerSheet {
                 Text("Sport Tracker", modifier = Modifier.padding(16.dp))
+
+                Spacer(modifier = Modifier.height(40.dp))
+
                 HorizontalDivider()
+
+                // TODO: if on the map screen just close the drawer
                 NavigationDrawerItem(
-                    label = { Text(text = "Completed Tours") },
+                    label = { Text(text = "Térkép") },
+                    selected = false,
+                    onClick = {
+                        onMapClick()
+                        scope.launch { drawerState.close() }
+                    }
+                )
+
+                NavigationDrawerItem(
+                    label = { Text(text = "Teljesített túrák") },
                     selected = false,
                     onClick = {
                         onToursClick()
                         scope.launch { drawerState.close() }
                     }
                 )
+
                 NavigationDrawerItem(
-                    label = { Text(text = "Settings") },
+                    label = { Text(text = "Összesített térkép") },
                     selected = false,
                     onClick = {
-                        onMenuClick()
+                        onAllToursClick()
                         scope.launch { drawerState.close() }
                     }
                 )
-                // TODO: if on the map screen just close the drawer
+
                 NavigationDrawerItem(
-                    label = { Text(text = "Map") },
+                    label = { Text(text = "Beállítások") },
                     selected = false,
                     onClick = {
-                        onMapClick()
+                        onMenuClick()
                         scope.launch { drawerState.close() }
                     }
                 )
@@ -77,7 +94,7 @@ fun MainLayout(
                 },
                 modifier = Modifier.padding(16.dp, 30.dp)
             ) {
-                Icon(Icons.Default.Menu, contentDescription = "Menu", tint = Color.Black)
+                Icon(Icons.Default.Menu, contentDescription = "Menu", tint = iconTint)
             }
         }
     }
