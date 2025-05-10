@@ -55,6 +55,7 @@ fun MapScreen(
     }
     val sheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
+
     // TODO: viewmodel
     var showBottomSheet by remember { mutableStateOf(false) }
     val isTourStarted by tourSettingsViewModel.isTourStarted.collectAsState()
@@ -181,7 +182,7 @@ fun MapScreen(
             )
         }
     }
-// TODO secod check this logic because its outdated
+    // Show the bottom sheet when the button is clicked
     if (showBottomSheet) {
         ModalBottomSheet(
             onDismissRequest = { showBottomSheet = false },
