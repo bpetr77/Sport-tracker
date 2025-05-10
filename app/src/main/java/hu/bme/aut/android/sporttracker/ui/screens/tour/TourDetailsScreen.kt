@@ -102,7 +102,6 @@ fun TourDetailsScreen(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(16.dp)
-                    .background(Color.White)
             )
         }
     }
