@@ -53,7 +53,7 @@ fun TourElement(tour: TourEntity) {
             horizontalAlignment = Alignment.End
         ) {
             Text(text = "Időtartam: ${(tour.endTime - tour.startTime) / 60000} perc")
-            Text(text = "Távolság: ${tour.totalDistance} m")
+            Text(text = "Távolság: ${String.format("%.2f", tour.totalDistance / 1000)} km")
         }
     }
 }

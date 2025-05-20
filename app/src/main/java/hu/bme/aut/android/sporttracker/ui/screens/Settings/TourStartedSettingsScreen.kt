@@ -97,7 +97,8 @@ fun TourStartedSettingsScreen(
 
         Spacer(modifier = Modifier.height(60.dp))
 
-        Text(text = "Total Distance: $totalDistance m")
+        //Text(text = "Total Distance: $totalDistance m")
+        Text(text = "Távolság: ${String.format("%.2f", totalDistance / 1000)} km")
         Text(text = "Speed: $currentSpeed km/h")
 
         Spacer(modifier = Modifier.height(30.dp))

@@ -59,8 +59,9 @@ fun TourSummaryScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(text= "⏳ Időtartam: ${duration / 60} perc")
-            Text(text= "📏 Távolság: $totalDistance")
-            Text(text= "🚴 Átlagsebesség: $averageSpeed")
+            //Text(text= "📏 Távolság: ${(totalDistance / 1000)} km")
+            Text(text = "📏 Távolság: ${String.format("%.2f", totalDistance / 1000)} km")
+            Text(text= "🚴 Átlagsebesség: $averageSpeed km/h")
 
             Image(
                 painter = rememberAsyncImagePainter(
