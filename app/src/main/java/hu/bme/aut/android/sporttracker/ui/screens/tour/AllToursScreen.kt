@@ -50,6 +50,12 @@ fun AllToursScreen(
         cameraPositionState.position = CameraPosition.fromLatLngZoom(firstLocation, 10f)
     }
 
+    val modeColors = mapOf(
+        "Gyalog" to Color(0xFF008D00),
+        "Bicikli" to Color(0xFF051E9F),
+        "Autó" to Color(0xFFBE2222)
+    )
+
     MainLayout(
         iconTint = Color.Black,
         drawerState = drawerState,
@@ -71,17 +77,29 @@ fun AllToursScreen(
                 mapToolbarEnabled = true
             )
         ) {
-            // Draw a polyline for each tour
             tours.forEach { tour ->
                 val polylinePoints = tour.locationHistory.map { LatLng(it.latitude, it.longitude) }
                 if (polylinePoints.isNotEmpty()) {
                     Polyline(
                         points = polylinePoints,
-                        color = Color.Blue,
-                        width = 5f
+                        color = Color(0x5234CECA),
+                        width = 60f
                     )
                 }
             }
+            // Draw a polyline for each tour with a color based on the transportation mode
+            tours.forEach { tour ->
+                val polylinePoints = tour.locationHistory.map { LatLng(it.latitude, it.longitude) }
+                val polylineColor = modeColors[tour.transportationMode] ?: Color.Gray
+                if (polylinePoints.isNotEmpty()) {
+                    Polyline(
+                        points = polylinePoints,
+                        color = polylineColor,
+                        width = 8f
+                    )
+                }
+            }
+
         }
         Box(modifier = Modifier.fillMaxSize()) {
             DisappearingScaleBar(
