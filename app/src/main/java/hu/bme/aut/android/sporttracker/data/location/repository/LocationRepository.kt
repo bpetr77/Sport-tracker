@@ -27,7 +27,6 @@ class LocationRepository(
     private val fusedLocationProviderClient: FusedLocationProviderClient,
     private val context: Context
 ): LocationTracker {
-
     private val _locations = MutableStateFlow<List<LocationPoint>>(emptyList())
     override val locations: StateFlow<List<LocationPoint>> = _locations.asStateFlow()
     private var isUpdating = false

@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import hu.bme.aut.android.sporttracker.R
 import hu.bme.aut.android.sporttracker.data.location.repository.LocationRepository
@@ -38,13 +39,12 @@ fun TourSettingsScreen(
     val selectedTransportMode by tourSettingsViewModel.selectedTransportMode.collectAsState()
     val isTourStarted by tourSettingsViewModel.isTourStarted.collectAsState()
 
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        Text(text = "Túra beállításai", style = MaterialTheme.typography.headlineSmall)
+        Text(text = stringResource(id = R.string.tour_settings_title), style = MaterialTheme.typography.headlineSmall)
         Spacer(modifier = Modifier.height(16.dp))
 
         Row(
@@ -52,21 +52,21 @@ fun TourSettingsScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             TransportButton(
-                transportType = "Gyalog",
+                transportType = stringResource(id = R.string.transport_mode_hiking),
                 iconRes = R.drawable.baseline_hiking_24,
                 selectedTransportMode = selectedTransportMode,
-                onTransportSelected = { tourSettingsViewModel.selectTransportMode(it) } //onTransportSelected = { selectedTransportMode = it }
+                onTransportSelected = { tourSettingsViewModel.selectTransportMode(it) }
             )
 
             TransportButton(
-                transportType = "Bicikli",
+                transportType = stringResource(id = R.string.transport_mode_bike),
                 iconRes = R.drawable.baseline_directions_bike_24,
                 selectedTransportMode = selectedTransportMode,
                 onTransportSelected = { tourSettingsViewModel.selectTransportMode(it) }
             )
 
             TransportButton(
-                transportType = "Autó",
+                transportType = stringResource(id = R.string.transport_mode_car),
                 iconRes = R.drawable.baseline_directions_car_24,
                 selectedTransportMode = selectedTransportMode,
                 onTransportSelected = { tourSettingsViewModel.selectTransportMode(it) }
@@ -75,22 +75,15 @@ fun TourSettingsScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
 
-//        RadioButtonSingleSelection(Modifier)
-//
-//        UserInputTextField()
-
-        // Pass current selection state and update callback to handle weather changes.
         RadioButtonSingleSelection(
             modifier = Modifier,
             viewModel = tourSettingsViewModel
         )
 
-        // Update UserInputTextField to capture comment.
         UserInputTextField(viewModel = tourSettingsViewModel)
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        //TODO: Clear the tura leallítása section, its not used anymore
         Button(
             onClick = {
                 if (isTourStarted) {
@@ -101,7 +94,7 @@ fun TourSettingsScreen(
                         locationRepository.startLocationUpdates()
                         onStartTour(selectedTransportMode!!)
                     } else {
-                        Log.w("TourSettingsScreen", "Nem választottál közlekedési módot!")
+                        Log.w("TourSettingsScreen", "Transport mode not selected")
                     }
                 }
                 tourSettingsViewModel.toggleTourState()
@@ -112,7 +105,7 @@ fun TourSettingsScreen(
             )
         ) {
             Text(
-                text = if (isTourStarted) "Túra leállítása" else "Túra indítása",
+                text = if (isTourStarted) stringResource(id = R.string.stop_tour) else stringResource(id = R.string.start_tour),
                 color = Color.Black
             )
         }

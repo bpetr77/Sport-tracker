@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import hu.bme.aut.android.sporttracker.R
 import hu.bme.aut.android.sporttracker.data.tour.model.TourEntity
@@ -42,7 +43,7 @@ fun TourElement(tour: TourEntity) {
             val imageColor = if (isSystemInDarkTheme()) Color.White else Color.Black
             Image(
                 painter = painterResource(id = imageRes),
-                contentDescription = "Selected transport mode: $mode",
+                contentDescription = stringResource(id = R.string.transport_mode_description, mode),
                 modifier = Modifier
                     .size(100.dp)
                     .padding(10.dp),
@@ -52,8 +53,8 @@ fun TourElement(tour: TourEntity) {
         Column(
             horizontalAlignment = Alignment.End
         ) {
-            Text(text = "Időtartam: ${(tour.endTime - tour.startTime) / 60000} perc")
-            Text(text = "Távolság: ${String.format("%.2f", tour.totalDistance / 1000)} km")
+            Text(text = stringResource(id = R.string.duration, (tour.endTime - tour.startTime) / 60000))
+            Text(text = stringResource(id = R.string.distance, tour.totalDistance / 1000))
         }
     }
 }

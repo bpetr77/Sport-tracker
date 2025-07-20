@@ -7,9 +7,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.location.FusedLocationProviderClient
 import hu.bme.aut.android.sporttracker.MainActivity
+import hu.bme.aut.android.sporttracker.R
 import hu.bme.aut.android.sporttracker.data.location.repository.LocationRepository
 import hu.bme.aut.android.sporttracker.domain.usecase.TourUseCase
 import hu.bme.aut.android.sporttracker.ui.navigation.Screen
@@ -45,7 +47,7 @@ fun MainLayout(
 
                 // TODO: if on the map screen just close the drawer
                 NavigationDrawerItem(
-                    label = { Text(text = "Térkép") },
+                    label = { Text(stringResource(id = R.string.menu_map)) },
                     selected = false,
                     onClick = {
                         onMapClick()
@@ -54,7 +56,7 @@ fun MainLayout(
                 )
 
                 NavigationDrawerItem(
-                    label = { Text(text = "Teljesített túrák") },
+                    label = { Text(stringResource(id = R.string.menu_completed_tours)) },
                     selected = false,
                     onClick = {
                         onToursClick()
@@ -63,7 +65,7 @@ fun MainLayout(
                 )
 
                 NavigationDrawerItem(
-                    label = { Text(text = "Összesített térkép") },
+                    label = { Text(stringResource(id = R.string.menu_all_tours_map)) },
                     selected = false,
                     onClick = {
                         onAllToursClick()
@@ -72,7 +74,7 @@ fun MainLayout(
                 )
 
                 NavigationDrawerItem(
-                    label = { Text(text = "Beállítások") },
+                    label = { Text(stringResource(id = R.string.menu_settings)) },
                     selected = false,
                     onClick = {
                         onMenuClick()

@@ -33,6 +33,8 @@ import hu.bme.aut.android.sporttracker.MainActivity
 import hu.bme.aut.android.sporttracker.ui.navigation.Screen
 import hu.bme.aut.android.sporttracker.data.tour.database.DatabaseProvider
 import androidx.compose.runtime.*
+import androidx.compose.ui.res.stringResource
+import hu.bme.aut.android.sporttracker.R
 import hu.bme.aut.android.sporttracker.data.tour.model.TourEntity
 import kotlinx.coroutines.launch
 
@@ -63,7 +65,6 @@ fun TourMenuScreen(
         LaunchedEffect(Unit) {
             tours = tourRepository.getAllTours()
         }
-        println(tours)
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -77,7 +78,7 @@ fun TourMenuScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        "Teljesített túrák",
+                        text = stringResource(id = R.string.menu_completed_tours),
                         modifier = Modifier.padding(16.dp),
                         fontSize = 24.sp
                     )

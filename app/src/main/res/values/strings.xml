@@ -1,3 +1,33 @@
 <resources>
     <string name="app_name">SportTracker</string>
+
+    <!-- Menu items -->
+    <string name="menu_map">Térkép</string>
+    <string name="menu_completed_tours">Teljesített túrák</string>
+    <string name="menu_all_tours_map">Öszesített térkép</string>
+    <string name="menu_settings">Beállítások</string>
+
+    <!-- Tour Settings -->
+    <string name="tour_settings_title">Túra beállításai</string>
+    <string name="transport_mode_hiking">Gyalog</string>
+    <string name="transport_mode_bike">Bicikli</string>
+    <string name="transport_mode_car">Autó</string>
+    <string name="start_tour">Túra indítása</string>
+    <string name="stop_tour">Túra leállítása</string>
+    <string name="no_transport_mode_warning">Nem választottál közlekedési módot!</string>
+
+    <string name="weather_sunny">Napos</string>
+    <string name="weather_cloudy">Felhős</string>
+    <string name="weather_rainy">Esős</string>
+    <string name="weather_snowy">Havas</string>
+    <string name="weather_windy">Szeles</string>
+
+    <string name="note_for_tour">Jegyzet a túrához</string>
+
+    <!-- Completed Tours -->
+    <string name="duration">Időtartam: %1$d perc</string>
+    <string name="distance">Távolság: %1$.2f km</string>
+    <string name="transport_mode_description">Selected transport mode: %1$s</string>
+
+
 </resources>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SportTracker</string>
+
+    <!-- Menu items -->
+    <string name="menu_map">Map</string>
+    <string name="menu_completed_tours">Completed Tours</string>
+    <string name="menu_all_tours_map">All Tours Map</string>
+    <string name="menu_settings">Settings</string>
+
+    <!-- Tour Settings -->
+    <string name="tour_settings_title">Tour Settings</string>
+    <string name="transport_mode_hiking">Hiking</string>
+    <string name="transport_mode_bike">Bike</string>
+    <string name="transport_mode_car">Car</string>
+    <string name="start_tour">Start Tour</string>
+    <string name="stop_tour">Stop Tour</string>
+    <string name="no_transport_mode_warning">No transport mode selected!</string>
+
+    <string name="weather_sunny">Sunny</string>
+    <string name="weather_cloudy">Cloudy</string>
+    <string name="weather_rainy">Rainy</string>
+    <string name="weather_snowy">Snowy</string>
+    <string name="weather_windy">Windy</string>
+
+    <string name="note_for_tour">Note for the tour</string>
+
+    <!-- Completed Tours -->
+
+    <string name="duration">Duration: %1$d minutes</string>
+    <string name="distance">Distance: %1$.2f km</string>
+    <string name="transport_mode_description">Selected transport mode: %1$s</string>
+</resources>

@@ -20,16 +20,23 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourSettingsViewModel
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.stringResource
+import hu.bme.aut.android.sporttracker.R
+
 @Composable
 fun RadioButtonSingleSelection(
     modifier: Modifier = Modifier,
     viewModel: TourSettingsViewModel
 ) {
-    val radioOptions = listOf("Napos", "Felhős", "Esős", "Havas", "Szeles")
-    val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
+    val radioOptions = listOf(
+        stringResource(id = R.string.weather_sunny),
+        stringResource(id = R.string.weather_cloudy),
+        stringResource(id = R.string.weather_rainy),
+        stringResource(id = R.string.weather_snowy),
+        stringResource(id = R.string.weather_windy)
+    )
     val selectedWeather by viewModel.weatherSelection.collectAsState()
 
-    // Note that Modifier.selectableGroup() is essential to ensure correct accessibility behavior
     Column(modifier.selectableGroup()) {
         radioOptions.forEach { text ->
             Row(

@@ -36,7 +36,6 @@ object DatabaseProvider {
             "sport_tracker_db"
         )
             .addMigrations(MIGRATION_1_2)
-            // Alternatively, you can use fallbackToDestructiveMigration() to clear all data:
             // .fallbackToDestructiveMigration()
             .build().also { instance = it }
 }

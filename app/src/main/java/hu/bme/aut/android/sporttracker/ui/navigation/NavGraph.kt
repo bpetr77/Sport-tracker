@@ -59,7 +59,12 @@ fun NavGraph(
             )
         }
         composable(Screen.Menu.route){
-            MenuScreen()
+            MenuScreen( drawerState = drawerState,
+                onMenuClick = { navController.navigate(Screen.Menu.route) },
+                onToursClick = { navController.navigate(Screen.Tours.route) },
+                onMapClick = { navController.navigate(Screen.Main.route) },
+                onAllToursClick = { navController.navigate(Screen.AllTours.route) }
+            )
         }
 
         composable(Screen.Tours.route) {

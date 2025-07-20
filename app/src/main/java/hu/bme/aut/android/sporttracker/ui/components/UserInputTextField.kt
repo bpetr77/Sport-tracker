@@ -11,7 +11,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import hu.bme.aut.android.sporttracker.R
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourSettingsViewModel
 
 @Composable
@@ -20,7 +22,7 @@ fun UserInputTextField(viewModel: TourSettingsViewModel) {
     OutlinedTextField(
         value = commentInput,
         onValueChange = { viewModel.updateComment(it) },
-        label = { Text("Jegyzet a túrához") },
+        label = { Text(stringResource(id = R.string.note_for_tour)) },
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 16.dp),
