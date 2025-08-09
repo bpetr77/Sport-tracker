@@ -94,7 +94,6 @@ fun TourStartedSettingsScreen(
 
         SpeedChart(tourStartedSettingsViewModel.locationHistory.value.map { it.altitude })
 
-
         Spacer(modifier = Modifier.height(60.dp))
 
         //Text(text = "Total Distance: $totalDistance m")

@@ -30,4 +30,6 @@
     <string name="duration">Dauer: %1$d Minuten</string>
     <string name="distance">Entfernung: %1$.2f km</string>
     <string name="transport_mode_description">Ausgewähltes Transportmittel: %1$s</string>
+
+    <string name="language">Sprache</string>
 </resources>

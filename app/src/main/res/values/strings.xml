@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">SportTracker</string>
 
     <!-- Menu items -->
@@ -6,6 +6,8 @@
     <string name="menu_completed_tours">Teljesített túrák</string>
     <string name="menu_all_tours_map">Öszesített térkép</string>
     <string name="menu_settings">Beállítások</string>
+    <string name="menu_sign_out" tools:ignore="MissingTranslation">Kilépés</string>
+    <string name="menu_sign_in" tools:ignore="MissingTranslation">Bejelentkezés</string>
 
     <!-- Tour Settings -->
     <string name="tour_settings_title">Túra beállításai</string>
@@ -29,5 +31,9 @@
     <string name="distance">Távolság: %1$.2f km</string>
     <string name="transport_mode_description">Selected transport mode: %1$s</string>
 
+    <string name="language">Nyelv</string>
+
+    <!-- Settings -->
+    <string name="web_client_id" translatable="false">588641888331-he9igoj5nlv74724fthmkugb1oab1kg8.apps.googleusercontent.com</string>
 
 </resources>

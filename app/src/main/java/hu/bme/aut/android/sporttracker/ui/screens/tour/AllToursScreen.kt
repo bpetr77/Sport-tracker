@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.google.maps.android.compose.widgets.DisappearingScaleBar
 import com.google.maps.android.compose.widgets.ScaleBar
+import hu.bme.aut.android.sporttracker.ui.sign_in.UserData
 
 @Composable
 fun AllToursScreen(
@@ -34,7 +35,9 @@ fun AllToursScreen(
     onMenuClick: () -> Unit,
     onToursClick: () -> Unit,
     onMapClick: () -> Unit,
-    onAllToursClick: () -> Unit
+    onAllToursClick: () -> Unit,
+    userData: UserData?,
+    onSignOut: () -> Unit
 ) {
     // Fetch all tours asynchronously
     val tours = produceState<List<TourEntity>>(initialValue = emptyList()) {
@@ -62,7 +65,9 @@ fun AllToursScreen(
         onMenuClick = onMenuClick,
         onToursClick = onToursClick,
         onMapClick = onMapClick,
-        onAllToursClick = onAllToursClick
+        onAllToursClick = onAllToursClick,
+        userData = userData,
+        onSignOut = onSignOut
     ) {
         GoogleMap(
             modifier = Modifier.fillMaxSize(),

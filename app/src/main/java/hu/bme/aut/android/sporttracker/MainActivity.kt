@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,6 +15,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
@@ -28,7 +30,10 @@ import hu.bme.aut.android.sporttracker.ui.theme.SportTrackerTheme
 import kotlinx.coroutines.launch
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourStartedSettingsViewModelFactory
 import hu.bme.aut.android.sporttracker.ui.navigation.NavGraph
+import hu.bme.aut.android.sporttracker.ui.sign_in.GoogleAuthUiClient
+import hu.bme.aut.android.sporttracker.ui.sign_in.SignInViewModel
 import hu.bme.aut.android.sporttracker.ui.viewModels.LocationViewmodel
+import hu.bme.aut.android.sporttracker.ui.viewModels.SettingsViewModel
 
 //TODO: should put the viewmodels into the NavGraph
 class MainActivity : ComponentActivity() {
@@ -41,7 +46,8 @@ class MainActivity : ComponentActivity() {
         TourStartedSettingsViewModelFactory(locationRepository, TourUseCase)
     }
     private val locationViewModel: LocationViewmodel by viewModels()
-
+    private val settingsViewModel: SettingsViewModel by viewModels()
+    private val signInViewModel: SignInViewModel by viewModels()
     private val locationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -69,6 +75,12 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private val googleAuthUiClient by lazy {
+        GoogleAuthUiClient(
+            context = applicationContext,
+            oneTapClient = Identity.getSignInClient(applicationContext)
+        )
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
@@ -77,22 +89,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             SportTrackerTheme(dynamicColor = true) {
                 Surface {
-//                    MapScreen(
-//                        this,
-//                        fusedLocationClient,
-//                        userLocation,
-//                        locationPermissionGranted,
-//                        locationRepository,
-//                        tourSettingsViewModel,
-//                        tourStartedSettingsViewModel
-//                    )
-//                    MainScreen(
-//                        this,
-//                        fusedLocationClient,
-//                        locationRepository,
-//                        tourSettingsViewModel,
-//                        tourStartedSettingsViewModel
-//                    )
                     NavGraph(
                         activity = this,
                         fusedLocationClient = fusedLocationClient,
@@ -100,14 +96,13 @@ class MainActivity : ComponentActivity() {
                         tourSettingsViewModel = tourSettingsViewModel,
                         tourStartedSettingsViewModel = tourStartedSettingsViewModel,
                         locationViewmodel = locationViewModel,
-                        tourUseCase = TourUseCase
+                        signInViewModel = signInViewModel,
+                        settingsViewModel = settingsViewModel,
+                        googleAuthUiClient = googleAuthUiClient,
                     )
                 }
             }
         }
-
-        // Engedélyek kérése
-        //handleLocationPermission()
     }
 
     fun handleLocationPermission() {
@@ -130,8 +125,6 @@ class MainActivity : ComponentActivity() {
 
         if (allPermissionsGranted) {
             Log.d("handleLocationPermission", "All permissions granted. Updating state and starting location service.")
-            //locationPermissionGranted.value = true
-            //tourSettingsViewModel.updatePermissionGranted(true)
             locationViewModel.updatePermissionGranted(true)
             // TODO: delete this line
             Log.d("handleLocationPermission", "Starting foreground location service...")

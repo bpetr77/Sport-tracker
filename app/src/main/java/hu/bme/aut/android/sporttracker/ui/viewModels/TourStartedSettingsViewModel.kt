@@ -1,13 +1,9 @@
 package hu.bme.aut.android.sporttracker.ui.viewModels
 
-import android.util.Log
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.media3.database.DatabaseProvider
 import hu.bme.aut.android.sporttracker.data.location.model.LocationPoint
 import hu.bme.aut.android.sporttracker.data.location.repository.LocationRepository
-import hu.bme.aut.android.sporttracker.data.tour.repository.TourRepository
 import hu.bme.aut.android.sporttracker.domain.usecase.TourUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

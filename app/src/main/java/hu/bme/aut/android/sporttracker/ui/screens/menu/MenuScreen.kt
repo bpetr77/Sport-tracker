@@ -2,6 +2,8 @@ package hu.bme.aut.android.sporttracker.ui.screens.menu
 
 import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
+import android.content.Intent
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -13,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material3.Button
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -22,6 +23,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,8 +31,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import hu.bme.aut.android.sporttracker.R
 import hu.bme.aut.android.sporttracker.ui.screens.main.MainLayout
+import hu.bme.aut.android.sporttracker.ui.sign_in.UserData
+import hu.bme.aut.android.sporttracker.ui.viewModels.SettingsViewModel
 import java.util.Locale
 
 @Composable
@@ -39,19 +45,25 @@ fun MenuScreen(
     onMenuClick: () -> Unit,
     onToursClick: () -> Unit,
     onMapClick: () -> Unit,
-    onAllToursClick: () -> Unit
-) {
+    onAllToursClick: () -> Unit,
+    viewModel: SettingsViewModel,
+    userData: UserData?,
+    onSignOut: () -> Unit
+){
     MainLayout(
         iconTint = Color.White,
         drawerState = drawerState,
         onMenuClick = onMenuClick,
         onToursClick = onToursClick,
         onMapClick = onMapClick,
-        onAllToursClick = onAllToursClick
+        onAllToursClick = onAllToursClick,
+        userData = userData,
+        onSignOut = onSignOut
     ) {
         val context = LocalContext.current
         var expanded by remember { mutableStateOf(false) }
-        var selectedLanguage by remember { mutableStateOf("Magyar") }
+        val selectedLanguage by viewModel.selectedLanguage.collectAsState()
+        val activity = getActivity()
 
         val languages = listOf(
             "Magyar" to Locale("hu"),
@@ -60,7 +72,6 @@ fun MenuScreen(
             "Español" to Locale("es")
         )
 
-
         Column(modifier = Modifier.padding(16.dp)) {
             Spacer(modifier = Modifier.height(80.dp))
             Box(modifier = Modifier
@@ -68,10 +79,10 @@ fun MenuScreen(
                 .clickable { expanded = true }
             ) {
                 OutlinedTextField(
-                    value = selectedLanguage,
+                    value = selectedLanguage.displayLanguage,
                     onValueChange = {},
                     readOnly = true,
-                    label = { Text("Nyelv") },
+                    label = { Text(text = stringResource(id = R.string.language))},
                     modifier = Modifier.fillMaxWidth(),
                     trailingIcon = {
                         Icon(
@@ -81,15 +92,13 @@ fun MenuScreen(
                     },
                     enabled = false,
                     colors = TextFieldDefaults.colors(
-                        disabledTextColor = Color.Black,
-                        disabledLabelColor = Color.Blue,
+                        disabledTextColor = Color(0xFFFFFFFF),
+                        disabledLabelColor = Color(0xFF468FF3),
                         disabledContainerColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Blue,
-                        disabledTrailingIconColor = Color.Blue
+                        disabledIndicatorColor = Color(0xFF468FF3),
+                        disabledTrailingIconColor = Color(0xFFFFFFFF)
                     )
                 )
-
-
                 DropdownMenu(
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
@@ -99,9 +108,9 @@ fun MenuScreen(
                         DropdownMenuItem(
                             text = { Text(languageName) },
                             onClick = {
-                                selectedLanguage = languageName
+                                viewModel.updateSelectedLanguage(locale)
                                 expanded = false
-                                switchToLanguage(context, locale)
+                                activity?.let { switchToLanguage(it, locale) }
                             }
                         )
                     }
@@ -111,16 +120,41 @@ fun MenuScreen(
     }
 }
 
-fun switchToLanguage(context: Context, locale: Locale) {
-    val resources = context.resources
+// TODO: get this out of here
+fun switchToLanguage(activity: Activity, locale: Locale) {
+    val resources = activity.resources
     val config = Configuration(resources.configuration)
 
     Locale.setDefault(locale)
     config.setLocale(locale)
 
-    // Context-frissítés
-    resources.updateConfiguration(config, resources.displayMetrics)
+    activity.baseContext.resources.updateConfiguration(config, resources.displayMetrics)
 
-    // Az Activity újraindítása, hogy a nyelv érvénybe lépjen
-    (context as? Activity)?.recreate()
+    restartActivity(activity)
+}
+
+@Composable
+fun getActivity(): Activity? {
+    val context = LocalContext.current
+    return when (context) {
+        is Activity -> context
+        is ContextWrapper -> {
+            var wrapper = context
+            while (wrapper is ContextWrapper) {
+                if (wrapper is Activity) return wrapper
+                wrapper = wrapper.baseContext as? ContextWrapper ?: break
+            }
+            null
+        }
+        else -> null
+    }
+}
+
+fun restartActivity(activity: Activity) {
+    val intent = Intent(activity, activity::class.java)
+    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+    activity.finish()
+    activity.overridePendingTransition(0, 0)
+    activity.startActivity(intent)
+    activity.overridePendingTransition(0, 0)
 }

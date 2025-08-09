@@ -59,21 +59,20 @@ fun TourSummaryScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(text= "⏳ Időtartam: ${duration / 60} perc")
-            //Text(text= "📏 Távolság: ${(totalDistance / 1000)} km")
             Text(text = "📏 Távolság: ${String.format("%.2f", totalDistance / 1000)} km")
             Text(text= "🚴 Átlagsebesség: $averageSpeed km/h")
 
-            Image(
-                painter = rememberAsyncImagePainter(
-                    model = staticMapUrl,
-                    error = painterResource(R.drawable.baseline_my_location_24),
-                    placeholder = painterResource(R.drawable.ic_launcher_foreground)
-                ),
-                contentDescription = "Térkép az útvonalról",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(300.dp)
-            )
+//            Image(
+//                painter = rememberAsyncImagePainter(
+//                    model = staticMapUrl,
+//                    error = painterResource(R.drawable.baseline_my_location_24),
+//                    placeholder = painterResource(R.drawable.ic_launcher_foreground)
+//                ),
+//                contentDescription = "Térkép az útvonalról",
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(300.dp)
+//            )
 
             SpeedChart(viewModel.locationHistory.value.map { it.altitude.toDouble() }, (getScreenSize().first.dp - 50.dp).value / viewModel.locationHistory.value.size)
 

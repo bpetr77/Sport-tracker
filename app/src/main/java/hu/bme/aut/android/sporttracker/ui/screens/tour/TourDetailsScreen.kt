@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.google.maps.android.compose.widgets.DisappearingScaleBar
 import com.google.maps.android.compose.widgets.ScaleBar
 import hu.bme.aut.android.sporttracker.ui.components.IconButton
+import hu.bme.aut.android.sporttracker.ui.sign_in.UserData
 
 @SuppressLint("RememberReturnType")
 @Composable
@@ -41,7 +42,9 @@ fun TourDetailsScreen(
     onMenuClick: () -> Unit,
     onToursClick: () -> Unit,
     onMapClick: () -> Unit,
-    onAllToursClick: () -> Unit
+    onAllToursClick: () -> Unit,
+    userData: UserData?,
+    onSignOut: () -> Unit
 ){
     // Fetch the tour asynchronously
     val tour = produceState<TourEntity?>(initialValue = null, tourId) {
@@ -64,7 +67,9 @@ fun TourDetailsScreen(
         onMenuClick = onMenuClick,
         onToursClick = onToursClick,
         onMapClick = onMapClick,
-        onAllToursClick = onAllToursClick
+        onAllToursClick = onAllToursClick,
+        userData = userData,
+        onSignOut = onSignOut
     ) {
         GoogleMap(
             modifier = Modifier.fillMaxSize(),

@@ -14,6 +14,7 @@ import hu.bme.aut.android.sporttracker.data.location.repository.LocationReposito
 import hu.bme.aut.android.sporttracker.domain.usecase.TourUseCase
 import hu.bme.aut.android.sporttracker.ui.navigation.Screen
 import hu.bme.aut.android.sporttracker.ui.screens.map.MapScreen
+import hu.bme.aut.android.sporttracker.ui.sign_in.UserData
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourSettingsViewModel
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourStartedSettingsViewModel
 import hu.bme.aut.android.sporttracker.ui.viewModels.LocationViewmodel
@@ -31,9 +32,20 @@ fun MainScreen(
     onMenuclick: () -> Unit,
     onToursClick: () -> Unit,
     onMapClick: () -> Unit,
-    onAllToursClick: () -> Unit
+    onAllToursClick: () -> Unit,
+    userData: UserData?,
+    onSignOut: () -> Unit
 ) {
-    MainLayout(iconTint = Color.Black ,drawerState = drawerState, onMenuClick = onMenuclick, onToursClick = onToursClick, onMapClick = onMapClick, onAllToursClick = onAllToursClick) {
+    MainLayout(
+        iconTint = Color.Black,
+        drawerState = drawerState,
+        onMenuClick = onMenuclick,
+        onToursClick = onToursClick,
+        onMapClick = onMapClick,
+        onAllToursClick = onAllToursClick,
+        userData = userData,
+        onSignOut = onSignOut
+    ) {
         MapScreen(
             activity = activity,
             fusedLocationClient = fusedLocationClient,
@@ -41,7 +53,7 @@ fun MainScreen(
             locationPermissionGranted = locationViewmodel.locationPermissionGranted,
             locationRepository = locationRepository,
             tourSettingsViewModel = tourSettingsViewModel,
-            tourStartedSettingsViewModel = tourStartedSettingsViewModel
+            tourStartedSettingsViewModel = tourStartedSettingsViewModel,
         )
     }
 }

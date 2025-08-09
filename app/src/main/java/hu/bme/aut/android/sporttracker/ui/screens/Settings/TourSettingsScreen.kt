@@ -52,21 +52,21 @@ fun TourSettingsScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             TransportButton(
-                transportType = stringResource(id = R.string.transport_mode_hiking),
+                transportType = "Gyalog",
                 iconRes = R.drawable.baseline_hiking_24,
                 selectedTransportMode = selectedTransportMode,
                 onTransportSelected = { tourSettingsViewModel.selectTransportMode(it) }
             )
 
             TransportButton(
-                transportType = stringResource(id = R.string.transport_mode_bike),
+                transportType = "Bicikli",
                 iconRes = R.drawable.baseline_directions_bike_24,
                 selectedTransportMode = selectedTransportMode,
                 onTransportSelected = { tourSettingsViewModel.selectTransportMode(it) }
             )
 
             TransportButton(
-                transportType = stringResource(id = R.string.transport_mode_car),
+                transportType = "Autó",
                 iconRes = R.drawable.baseline_directions_car_24,
                 selectedTransportMode = selectedTransportMode,
                 onTransportSelected = { tourSettingsViewModel.selectTransportMode(it) }

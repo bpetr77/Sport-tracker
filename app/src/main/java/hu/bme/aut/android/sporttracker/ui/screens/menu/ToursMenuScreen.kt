@@ -36,6 +36,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.res.stringResource
 import hu.bme.aut.android.sporttracker.R
 import hu.bme.aut.android.sporttracker.data.tour.model.TourEntity
+import hu.bme.aut.android.sporttracker.ui.sign_in.UserData
 import kotlinx.coroutines.launch
 
 @Composable
@@ -45,7 +46,9 @@ fun TourMenuScreen(
     onToursClick: () -> Unit,
     onMapClick: () -> Unit,
     onTourClick: (Long) -> Unit,
-    onAllToursClick: () -> Unit
+    onAllToursClick: () -> Unit,
+    userData: UserData?,
+    onSignOut: () -> Unit
 ) {
     MainLayout(
         iconTint = Color.White,
@@ -53,7 +56,9 @@ fun TourMenuScreen(
         onMenuClick = onMenuClick,
         onToursClick = onToursClick,
         onMapClick = onMapClick,
-        onAllToursClick = onAllToursClick
+        onAllToursClick = onAllToursClick,
+        userData = userData,
+        onSignOut = onSignOut
     ) {
         val backgroundColor = Color(0xFF255F38) // Set unique background color
         var tours by remember { mutableStateOf(emptyList<TourEntity>()) }

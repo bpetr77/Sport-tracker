@@ -43,7 +43,7 @@ fun TourElement(tour: TourEntity) {
             val imageColor = if (isSystemInDarkTheme()) Color.White else Color.Black
             Image(
                 painter = painterResource(id = imageRes),
-                contentDescription = stringResource(id = R.string.transport_mode_description, mode),
+                contentDescription = "Selected transport mode: $mode",
                 modifier = Modifier
                     .size(100.dp)
                     .padding(10.dp),

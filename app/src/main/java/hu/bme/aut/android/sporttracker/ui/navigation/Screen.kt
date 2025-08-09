@@ -8,4 +8,5 @@ sealed class Screen(val route: String) {
         fun createRoute(tourId: Long) = "tourDetails/$tourId"
     }
     object AllTours: Screen("allTours")
+    object SignIn : Screen("sign_in")
 }

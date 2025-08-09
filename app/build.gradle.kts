@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     id("org.jetbrains.kotlin.kapt")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id("com.google.gms.google-services")
 }
 ////////////
 val properties = Properties()
@@ -95,10 +96,8 @@ dependencies {
     implementation(libs.androidx.material3)
 
     implementation("com.google.android.gms:play-services-maps:18.2.0")
-    //implementation("com.google.maps.android:maps-compose:2.5.3")
     implementation(libs.play.services.location)
     implementation(libs.support.annotations)
-    //implementation("com.google.accompanist:accompanist-permissions:0.32.0") // Engedélykéréshez
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
     implementation(libs.androidx.navigation.runtime.android)
     implementation ("co.yml:ycharts:2.1.0")
@@ -106,7 +105,6 @@ dependencies {
     implementation ("io.coil-kt:coil-compose:2.4.0")
     implementation(libs.androidx.room.common.jvm)
     implementation(libs.firebase.crashlytics.buildtools)
-    //implementation(libs.androidx.room.runtime.android)
     implementation(libs.androidx.media3.database)
     implementation("com.google.code.gson:gson:2.10.1") // Add Gson library
     implementation("com.google.guava:guava:32.1.2-jre")
@@ -124,6 +122,11 @@ dependencies {
     // Optionally, you can include the widgets library for ScaleBar, etc.
     implementation ("com.google.maps.android:maps-compose-widgets:6.6.0")
 
+    implementation("com.google.firebase:firebase-auth-ktx:22.1.1") // Firebase Authentication
+    implementation("com.google.android.gms:play-services-auth:20.7.0") // Google Sign-In
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.1")
+    implementation("io.coil-kt:coil-compose:2.4.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

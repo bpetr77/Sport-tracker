@@ -22,41 +22,36 @@ import hu.bme.aut.android.sporttracker.ui.viewModels.TourSettingsViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import hu.bme.aut.android.sporttracker.R
+import hu.bme.aut.android.sporttracker.ui.common.WeatherOption
 
 @Composable
 fun RadioButtonSingleSelection(
     modifier: Modifier = Modifier,
     viewModel: TourSettingsViewModel
 ) {
-    val radioOptions = listOf(
-        stringResource(id = R.string.weather_sunny),
-        stringResource(id = R.string.weather_cloudy),
-        stringResource(id = R.string.weather_rainy),
-        stringResource(id = R.string.weather_snowy),
-        stringResource(id = R.string.weather_windy)
-    )
+    val radioOptions = WeatherOption.values()
     val selectedWeather by viewModel.weatherSelection.collectAsState()
 
     Column(modifier.selectableGroup()) {
-        radioOptions.forEach { text ->
+        radioOptions.forEach { option ->
             Row(
                 Modifier
                     .fillMaxWidth()
                     .height(40.dp)
                     .selectable(
-                        selected = (text == selectedWeather),
-                        onClick = { viewModel.updateWeatherSelection(text) },
+                        selected = (option.name == selectedWeather),
+                        onClick = { viewModel.updateWeatherSelection(option.name) },
                         role = Role.RadioButton
                     )
                     .padding(horizontal = 10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 RadioButton(
-                    selected = (text == selectedWeather),
+                    selected = (option.name == selectedWeather),
                     onClick = null // null recommended for accessibility with screen readers
                 )
                 Text(
-                    text = text,
+                    text = stringResource(id = option.labelResId),
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(start = 10.dp)
                 )

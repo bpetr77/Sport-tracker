@@ -19,7 +19,7 @@ fun TransportButton(
     onTransportSelected: (String) -> Unit
 ) {
     val isSelected = selectedTransportMode == transportType
-    val backgroundColor = if (isSelected) Color(0xFF90EE90) else Color(0xFFD3D3D3)  // Zöld ha kiválasztott, szürke ha nem
+    val backgroundColor = if (isSelected) Color(0xFF90EE90) else Color(0xFFD3D3D3)
 
     Button(
         onClick = { onTransportSelected(transportType) },

@@ -1,14 +1,23 @@
 package hu.bme.aut.android.sporttracker.ui.screens.main
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.google.android.gms.location.FusedLocationProviderClient
 import hu.bme.aut.android.sporttracker.MainActivity
 import hu.bme.aut.android.sporttracker.R
@@ -16,6 +25,7 @@ import hu.bme.aut.android.sporttracker.data.location.repository.LocationReposito
 import hu.bme.aut.android.sporttracker.domain.usecase.TourUseCase
 import hu.bme.aut.android.sporttracker.ui.navigation.Screen
 import hu.bme.aut.android.sporttracker.ui.screens.map.MapScreen
+import hu.bme.aut.android.sporttracker.ui.sign_in.UserData
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourSettingsViewModel
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourStartedSettingsViewModel
 import hu.bme.aut.android.sporttracker.ui.viewModels.LocationViewmodel
@@ -30,7 +40,9 @@ fun MainLayout(
     onToursClick: () -> Unit,
     onMapClick: () -> Unit,
     onAllToursClick: () -> Unit,
-    content: @Composable () -> Unit
+    userData: UserData?,
+    onSignOut: () -> Unit,
+    content: @Composable () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
 
@@ -39,7 +51,31 @@ fun MainLayout(
         gesturesEnabled = true,
         drawerContent = {
             ModalDrawerSheet {
-                Text("Sport Tracker", modifier = Modifier.padding(16.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    if (userData?.profilePictureUrl != null) {
+                        AsyncImage(
+                            model = userData.profilePictureUrl,
+                            contentDescription = "Profile picture",
+                            modifier = Modifier
+                                .size(48.dp)
+                                .clip(CircleShape),
+                            contentScale = ContentScale.Crop,
+                            error = painterResource(id = R.drawable.baseline_my_location_24)
+                        )
+                    }
+                    if (userData?.username != null) {
+                        Text(
+                            text = userData.username,
+                            textAlign = TextAlign.Start,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 16.sp,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(40.dp))
 
@@ -81,7 +117,16 @@ fun MainLayout(
                         scope.launch { drawerState.close() }
                     }
                 )
-                // ...other drawer items
+                Spacer(modifier = Modifier.weight(1f))
+
+                NavigationDrawerItem(
+                    label = { Text(stringResource(id = R.string.menu_sign_out)) },
+                    selected = false,
+                    onClick = {
+                        onSignOut()
+                        scope.launch { drawerState.close() }
+                    },
+                )
             }
         }
     ) {
