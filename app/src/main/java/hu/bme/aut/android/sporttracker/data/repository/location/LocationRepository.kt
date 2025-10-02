@@ -1,4 +1,4 @@
-package hu.bme.aut.android.sporttracker.data.location.repository
+package hu.bme.aut.android.sporttracker.data.repository.location
 
 import android.content.Context
 import android.content.pm.PackageManager
@@ -10,7 +10,6 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.Priority
-import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,9 +18,8 @@ import android.app.ActivityManager
 import android.content.Intent
 import androidx.core.content.ContextCompat
 import hu.bme.aut.android.sporttracker.data.service.LocationService
-import hu.bme.aut.android.sporttracker.data.location.model.LocationPoint
+import hu.bme.aut.android.sporttracker.data.model.LocationPoint
 import hu.bme.aut.android.sporttracker.domain.location.LocationTracker
-import hu.bme.aut.android.sporttracker.ui.viewModels.TourStartedSettingsViewModel
 
 class LocationRepository(
     private val fusedLocationProviderClient: FusedLocationProviderClient,

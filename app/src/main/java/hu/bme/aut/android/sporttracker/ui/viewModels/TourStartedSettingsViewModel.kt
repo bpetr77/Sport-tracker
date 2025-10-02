@@ -2,8 +2,11 @@ package hu.bme.aut.android.sporttracker.ui.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import hu.bme.aut.android.sporttracker.data.location.model.LocationPoint
-import hu.bme.aut.android.sporttracker.data.location.repository.LocationRepository
+import hu.bme.aut.android.sporttracker.data.local.model.TourEntity
+import hu.bme.aut.android.sporttracker.data.model.LocationPoint
+import hu.bme.aut.android.sporttracker.data.repository.impl.TourRepositoryImpl
+import hu.bme.aut.android.sporttracker.data.repository.location.LocationRepository
+import hu.bme.aut.android.sporttracker.data.repository.location.TourRepository
 import hu.bme.aut.android.sporttracker.domain.usecase.TourUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +15,8 @@ import kotlinx.coroutines.launch
 
 class TourStartedSettingsViewModel(
     private val locationRepository: LocationRepository,
-    private val tourUseCase: TourUseCase
+    private val tourUseCase: TourUseCase,
+    private val tourRepository: TourRepositoryImpl,
 ) : ViewModel() {
 
     private val _locationHistory = MutableStateFlow<List<LocationPoint>>(emptyList())
@@ -40,13 +44,10 @@ class TourStartedSettingsViewModel(
                 _totalDistance.value = tourUseCase.calculateTotalDistance(locations)
                 _currentSpeed.value = tourUseCase.getCurrentSpeedInKmH(locations)
                 _speedHistory.value = _speedHistory.value + _currentSpeed.value.toDouble()
-
-//                locations.forEach { location ->
-//                    addLocation(location)
-//                }
             }
         }
     }
+
     fun addLocation(location: LocationPoint) {
         if (_isPaused.value) return
 
@@ -68,12 +69,48 @@ class TourStartedSettingsViewModel(
         _isPaused.value = !_isPaused.value
     }
 
-    fun stopTour() {
+    fun stopTour2() {
         _locationHistory.value = emptyList()
         _totalDistance.value = 0f
         _currentSpeed.value = 0f
         _speedHistory.value = emptyList()
         _isPaused.value = false
+    }
+    suspend fun getAllToursById(uid: String): List<TourEntity> {
+        return tourRepository.getUserTours(uid)
+    }
+
+    fun stopTour(
+        selectedTransportMode: String?,
+        weather: String?,
+        comment: String?,
+        userId: String
+    ) {
+        val tour = tourUseCase.createTourEntity(
+            _locationHistory.value,
+            selectedTransportMode,
+            weather,
+            comment,
+            userId = userId
+        )
+
+        viewModelScope.launch {
+            try {
+                tourRepository.addTour(tour)
+
+                // 2. Lokális állapot reset
+                _locationHistory.value = emptyList()
+                _totalDistance.value = 0f
+                _currentSpeed.value = 0f
+                _speedHistory.value = emptyList()
+                _isPaused.value = false
+                _segments.value = listOf(mutableListOf())
+
+            } catch (e: Exception) {
+                // itt lehet logolni vagy snackbar-t küldeni a UI-nak
+                e.printStackTrace()
+            }
+        }
     }
 
     fun getAverageSpeed(): Float {
@@ -92,10 +129,16 @@ class TourStartedSettingsViewModel(
         return speedHistory.value
     }
 
-    fun getTour(selectedTransportMode: String?, weather: String?, Comment: String?) = tourUseCase.createTourEntity(
+    fun getTour(
+        selectedTransportMode: String?,
+        weather: String?,
+        Comment: String?,
+        userId: String
+    ) = tourUseCase.createTourEntity(
         _locationHistory.value,
         selectedTransportMode,
         weather,
-        Comment
+        Comment,
+        userId
     )
 }

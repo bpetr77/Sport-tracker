@@ -1,31 +1,24 @@
 package hu.bme.aut.android.sporttracker.ui.screens.tour
 
-import android.view.View
-import android.widget.RelativeLayout
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Polyline
-import hu.bme.aut.android.sporttracker.data.tour.repository.TourRepository
+import hu.bme.aut.android.sporttracker.data.repository.location.TourRepository
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.DrawerState
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.CameraPosition
-import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
-import hu.bme.aut.android.sporttracker.data.tour.model.TourEntity
+import hu.bme.aut.android.sporttracker.data.local.model.TourEntity
 import hu.bme.aut.android.sporttracker.ui.screens.main.MainLayout
 
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.google.maps.android.compose.widgets.DisappearingScaleBar
-import com.google.maps.android.compose.widgets.ScaleBar
 import hu.bme.aut.android.sporttracker.ui.sign_in.UserData
 
 @Composable
@@ -92,7 +85,6 @@ fun AllToursScreen(
                     )
                 }
             }
-            // Draw a polyline for each tour with a color based on the transportation mode
             tours.forEach { tour ->
                 val polylinePoints = tour.locationHistory.map { LatLng(it.latitude, it.longitude) }
                 val polylineColor = modeColors[tour.transportationMode] ?: Color.Gray

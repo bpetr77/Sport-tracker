@@ -1,4 +1,4 @@
-package hu.bme.aut.android.sporttracker.data.location.repository
+package hu.bme.aut.android.sporttracker.data.repository.location
 
 import android.content.pm.PackageManager
 import androidx.activity.ComponentActivity

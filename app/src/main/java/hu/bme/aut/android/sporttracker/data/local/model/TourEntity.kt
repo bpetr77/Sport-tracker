@@ -1,15 +1,13 @@
-package hu.bme.aut.android.sporttracker.data.tour.model
+package hu.bme.aut.android.sporttracker.data.local.model
 
-//import androidx.room.Entity
-//import androidx.room.PrimaryKey
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import hu.bme.aut.android.sporttracker.data.location.model.LocationPoint
-import kotlin.random.Random
+import hu.bme.aut.android.sporttracker.data.model.LocationPoint
 
 @Entity(tableName = "tours")
 data class TourEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val userId: String,
     val startTime: Long,
     val endTime: Long,
     val totalDistance: Float, // km

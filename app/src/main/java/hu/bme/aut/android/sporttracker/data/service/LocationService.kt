@@ -15,8 +15,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.util.Log
 import hu.bme.aut.android.sporttracker.R
-import hu.bme.aut.android.sporttracker.data.location.repository.LocationRepository
-import hu.bme.aut.android.sporttracker.ui.viewModels.TourStartedSettingsViewModel
+import hu.bme.aut.android.sporttracker.data.repository.location.LocationRepository
 
 class LocationService() : Service() {
 

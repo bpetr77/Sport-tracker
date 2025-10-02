@@ -2,21 +2,16 @@ package hu.bme.aut.android.sporttracker.ui.screens.tour
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.google.android.gms.maps.GoogleMap
-import hu.bme.aut.android.sporttracker.data.phoneData.getScreenSize
+import hu.bme.aut.android.sporttracker.data.local.phoneData.getScreenSize
 import hu.bme.aut.android.sporttracker.data.service.MapsService
 import hu.bme.aut.android.sporttracker.ui.components.SpeedChart
+import hu.bme.aut.android.sporttracker.ui.viewModels.TourSettingsViewModel
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourStartedSettingsViewModel
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
-import hu.bme.aut.android.sporttracker.R
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -25,7 +20,8 @@ fun TourSummaryScreen(
     viewModel: TourStartedSettingsViewModel,
     onDismiss: () -> Unit,
     stopLocationUpdates: () -> Unit,
-    context: Context
+    context: Context,
+    tourSettingsViewModel: TourSettingsViewModel
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
@@ -44,7 +40,12 @@ fun TourSummaryScreen(
     ModalBottomSheet(
         onDismissRequest = {
             stopLocationUpdates()
-            viewModel.stopTour()
+            viewModel.stopTour(
+                selectedTransportMode = tourSettingsViewModel.selectedTransportMode.value,
+                weather = tourSettingsViewModel.weatherSelection.value,
+                comment = tourSettingsViewModel.commentInput.value,
+                userId = "-1"
+            )
             onDismiss()
         },
         sheetState = sheetState
@@ -80,7 +81,12 @@ fun TourSummaryScreen(
 
             Button(
                 onClick = { stopLocationUpdates()
-                            viewModel.stopTour()
+                            viewModel.stopTour(
+                                selectedTransportMode = tourSettingsViewModel.selectedTransportMode.value,
+                                weather = tourSettingsViewModel.weatherSelection.value,
+                                comment = tourSettingsViewModel.commentInput.value,
+                                userId = "-1"
+                            )
                           },
                 modifier = Modifier.fillMaxWidth()
             ) {

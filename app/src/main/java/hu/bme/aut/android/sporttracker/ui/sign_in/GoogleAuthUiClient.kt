@@ -5,6 +5,8 @@ import android.content.Intent
 import android.content.IntentSender
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.SignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -57,11 +59,30 @@ class GoogleAuthUiClient(
             )
         }
     }
-    suspend fun signOut() {
+    suspend fun signOut2() {
         try {
             oneTapClient.signOut().await()
             auth.signOut()
         }catch (e: Exception) {
+            e.printStackTrace()
+            if (e is CancellationException) throw e
+        }
+    }
+
+    suspend fun signOut(context: Context) {
+        try {
+            auth.signOut()
+
+            oneTapClient.signOut().await()
+
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(context.getString(R.string.web_client_id))
+                .requestEmail()
+                .build()
+            val googleSignInClient = GoogleSignIn.getClient(context, gso)
+            googleSignInClient.signOut().await()
+
+        } catch (e: Exception) {
             e.printStackTrace()
             if (e is CancellationException) throw e
         }

@@ -1,7 +1,6 @@
 package hu.bme.aut.android.sporttracker.domain.location
 
-import com.google.android.gms.maps.model.LatLng
-import hu.bme.aut.android.sporttracker.data.location.model.LocationPoint
+import hu.bme.aut.android.sporttracker.data.model.LocationPoint
 import kotlinx.coroutines.flow.StateFlow
 
 interface LocationTracker {

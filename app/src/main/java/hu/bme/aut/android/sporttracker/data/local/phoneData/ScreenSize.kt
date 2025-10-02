@@ -1,4 +1,4 @@
-package hu.bme.aut.android.sporttracker.data.phoneData
+package hu.bme.aut.android.sporttracker.data.local.phoneData
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration

@@ -1,10 +1,11 @@
-package hu.bme.aut.android.sporttracker.data.tour.database
+package hu.bme.aut.android.sporttracker.data.local.database
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import hu.bme.aut.android.sporttracker.data.tour.model.TourEntity
+import hu.bme.aut.android.sporttracker.data.local.model.TourEntity
 
 @Dao
 interface TourDao {
@@ -14,7 +15,7 @@ interface TourDao {
     @Query("SELECT * FROM tours")
     suspend fun getAllTours(): List<TourEntity>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTour(tour: TourEntity): Long
 
     @Update
@@ -22,4 +23,10 @@ interface TourDao {
 
     @Query("DELETE FROM tours WHERE id = :id")
     suspend fun deleteTourById(id: Long)
+
+    @Query("DELETE FROM tours")
+    suspend fun deleteAllTours()
+
+    @Query("SELECT * FROM tours WHERE userId = :userId")
+    suspend fun getToursByUser(userId: String): List<TourEntity>
 }

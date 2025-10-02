@@ -25,12 +25,10 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.widgets.DisappearingScaleBar
-import com.google.maps.android.compose.widgets.ScaleBar
 import hu.bme.aut.android.sporttracker.MainActivity
 import hu.bme.aut.android.sporttracker.R
-import hu.bme.aut.android.sporttracker.data.location.repository.LocationRepository
-import hu.bme.aut.android.sporttracker.data.location.repository.getLastKnownLocation
-import hu.bme.aut.android.sporttracker.domain.usecase.TourUseCase
+import hu.bme.aut.android.sporttracker.data.repository.location.LocationRepository
+import hu.bme.aut.android.sporttracker.data.repository.location.getLastKnownLocation
 import kotlinx.coroutines.launch
 import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourSettingsScreen
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourSettingsViewModel

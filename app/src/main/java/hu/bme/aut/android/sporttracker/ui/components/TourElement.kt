@@ -1,13 +1,10 @@
 package hu.bme.aut.android.sporttracker.ui.components
 
-import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,8 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import hu.bme.aut.android.sporttracker.R
-import hu.bme.aut.android.sporttracker.data.tour.model.TourEntity
-import hu.bme.aut.android.sporttracker.ui.viewModels.TourStartedSettingsViewModel
+import hu.bme.aut.android.sporttracker.data.local.model.TourEntity
 
 
 @Composable

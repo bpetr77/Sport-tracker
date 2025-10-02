@@ -1,11 +1,8 @@
 package hu.bme.aut.android.sporttracker.ui.screens.Settings
 
-//import android.os.Build.VERSION_CODES.R
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,10 +24,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.google.android.gms.maps.GoogleMap
 import hu.bme.aut.android.sporttracker.R
-import hu.bme.aut.android.sporttracker.data.tour.database.DatabaseProvider
-import hu.bme.aut.android.sporttracker.data.tour.repository.TourRepository
+import hu.bme.aut.android.sporttracker.data.local.database.DatabaseProvider
+import hu.bme.aut.android.sporttracker.data.repository.location.TourRepository
 import hu.bme.aut.android.sporttracker.ui.components.SpeedChart
 import hu.bme.aut.android.sporttracker.ui.screens.tour.TourSummaryScreen
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourSettingsViewModel
@@ -109,21 +104,22 @@ fun TourStartedSettingsScreen(
             FloatingActionButton(
                 onClick = {
                             // IS THIS NECESSARY?
-                            tourStartedSettingsViewModel.getTour(
-                                tourSettingsViewModel.selectedTransportMode.toString(),
-                                tourSettingsViewModel.weatherSelection.value,
-                                tourSettingsViewModel.commentInput.value
-                            )
+//                            tourStartedSettingsViewModel.getTour(
+//                                tourSettingsViewModel.selectedTransportMode.toString(),
+//                                tourSettingsViewModel.weatherSelection.value,
+//                                tourSettingsViewModel.commentInput.value
+//                            )
                             //
                             pauseLocationUpdates()
                             showTourSummaryScreen.value = true
                             CoroutineScope(Dispatchers.IO).launch {
-                                tourRepository.addTour(tourStartedSettingsViewModel.getTour(
-                                    selectedTransportMode,
-                                    tourSettingsViewModel.weatherSelection.value,
-                                    tourSettingsViewModel.commentInput.value
-                                )
-                                )
+//                                tourRepository.addTour(tourStartedSettingsViewModel.getTour(
+//                                    selectedTransportMode,
+//                                    tourSettingsViewModel.weatherSelection.value,
+//                                    tourSettingsViewModel.commentInput.value
+//                                )
+//                                )
+                                //tourRepository.deleteAllTours()
                             }
                 },
                 modifier = Modifier
@@ -166,7 +162,8 @@ fun TourStartedSettingsScreen(
             viewModel = tourStartedSettingsViewModel,
             onDismiss = { showTourSummaryScreen.value = false },
             stopLocationUpdates = {stopLocationUpdates() },
-            context = LocalContext.current
+            context = LocalContext.current,
+            tourSettingsViewModel = tourSettingsViewModel
         )
     }
 }

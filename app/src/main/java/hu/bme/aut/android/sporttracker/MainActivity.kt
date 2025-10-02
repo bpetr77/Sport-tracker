@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -19,10 +18,16 @@ import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
-import hu.bme.aut.android.sporttracker.data.location.repository.LocationRepository
-import hu.bme.aut.android.sporttracker.data.location.repository.getLastKnownLocation
+import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import hu.bme.aut.android.sporttracker.data.local.database.AppDatabase
+import hu.bme.aut.android.sporttracker.data.local.database.TourDao
+import hu.bme.aut.android.sporttracker.data.repository.impl.TourRepositoryImpl
+import hu.bme.aut.android.sporttracker.data.repository.location.LocationRepository
+import hu.bme.aut.android.sporttracker.data.repository.location.TourRepository
+import hu.bme.aut.android.sporttracker.data.repository.location.getLastKnownLocation
 import hu.bme.aut.android.sporttracker.data.service.LocationService
-import hu.bme.aut.android.sporttracker.data.tour.repository.TourRepository
 import hu.bme.aut.android.sporttracker.domain.usecase.TourUseCase
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourSettingsViewModel
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourStartedSettingsViewModel
@@ -41,10 +46,11 @@ class MainActivity : ComponentActivity() {
     private val userLocation = mutableStateOf<LatLng?>(null)
     private lateinit var locationRepository: LocationRepository
     private val TourUseCase = TourUseCase()
+
     private val tourSettingsViewModel: TourSettingsViewModel by viewModels()
-    private val tourStartedSettingsViewModel: TourStartedSettingsViewModel by viewModels {
-        TourStartedSettingsViewModelFactory(locationRepository, TourUseCase)
-    }
+//    private val tourStartedSettingsViewModel: TourStartedSettingsViewModel by viewModels {
+//        TourStartedSettingsViewModelFactory(locationRepository, TourUseCase, tourRepositoryImpl)
+//    }
     private val locationViewModel: LocationViewmodel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
     private val signInViewModel: SignInViewModel by viewModels()
@@ -83,8 +89,24 @@ class MainActivity : ComponentActivity() {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Firebase inicializálás
+        FirebaseApp.initializeApp(this)
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         locationRepository = LocationRepository(fusedLocationClient, this)
+
+        // tourRepositoryImpl példányosítás
+        val tourRepositoryImpl = TourRepositoryImpl(
+            dao = provideTourDao(),
+            firestore = provideFirestore(),
+            auth = provideFirebaseAuth()
+        )
+
+        // ViewModel factory
+        val tourStartedSettingsViewModel: TourStartedSettingsViewModel by viewModels {
+            TourStartedSettingsViewModelFactory(locationRepository, TourUseCase(), tourRepositoryImpl)
+        }
+
         handleLocationPermission()
         setContent {
             SportTrackerTheme(dynamicColor = true) {
@@ -104,7 +126,18 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+    fun provideFirestore(): FirebaseFirestore {
+        return FirebaseFirestore.getInstance()
+    }
 
+    fun provideFirebaseAuth(): FirebaseAuth {
+        return FirebaseAuth.getInstance()
+    }
+
+    fun provideTourDao(): TourDao {
+        val db = AppDatabase.getDatabase(applicationContext)
+        return db.tourDao()
+    }
     fun handleLocationPermission() {
         Log.d("handleLocationPermission", "Checking location permissions...")
 

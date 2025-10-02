@@ -18,17 +18,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.google.android.gms.location.FusedLocationProviderClient
-import hu.bme.aut.android.sporttracker.MainActivity
 import hu.bme.aut.android.sporttracker.R
-import hu.bme.aut.android.sporttracker.data.location.repository.LocationRepository
-import hu.bme.aut.android.sporttracker.domain.usecase.TourUseCase
-import hu.bme.aut.android.sporttracker.ui.navigation.Screen
-import hu.bme.aut.android.sporttracker.ui.screens.map.MapScreen
 import hu.bme.aut.android.sporttracker.ui.sign_in.UserData
-import hu.bme.aut.android.sporttracker.ui.viewModels.TourSettingsViewModel
-import hu.bme.aut.android.sporttracker.ui.viewModels.TourStartedSettingsViewModel
-import hu.bme.aut.android.sporttracker.ui.viewModels.LocationViewmodel
 import kotlinx.coroutines.launch
 
 

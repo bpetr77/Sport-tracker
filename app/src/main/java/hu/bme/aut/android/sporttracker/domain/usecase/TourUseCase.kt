@@ -1,8 +1,7 @@
 package hu.bme.aut.android.sporttracker.domain.usecase
 
-import android.graphics.drawable.Icon
-import hu.bme.aut.android.sporttracker.data.location.model.LocationPoint
-import hu.bme.aut.android.sporttracker.data.tour.model.TourEntity
+import hu.bme.aut.android.sporttracker.data.model.LocationPoint
+import hu.bme.aut.android.sporttracker.data.local.model.TourEntity
 import kotlin.math.*
 import kotlin.random.Random
 
@@ -70,7 +69,7 @@ class TourUseCase {
         return (R * c).toFloat()
     }
 
-    fun createTourEntity(locations: List<LocationPoint>, transportationMode: String?, weather: String?, Comment: String?): TourEntity {
+    fun createTourEntity(locations: List<LocationPoint>, transportationMode: String?, weather: String?, Comment: String?, userId: String = "-1"): TourEntity {
         val startTime = locations.firstOrNull()?.timestamp ?: 0L
         val endTime = locations.lastOrNull()?.timestamp ?: 0L
         val totalDistance = calculateTotalDistance(locations)
@@ -87,15 +86,8 @@ class TourUseCase {
             locationHistory = locations,
             transportationMode = transportationMode,
             weatherCondition = weather,
-            comment = Comment
+            comment = Comment,
+            userId = userId
         )
     }
-//    fun getTransportationModeIcon(mode: String): Int {
-//        return when (mode) {
-//            "Gyalog" -> Icon.createWithResource("drawable/baseline_hiking_24")
-//            "Bicikli" -> Icon.createWithResource("drawable/baseline_directions_bike_24")
-//            "Autó" -> Icon.createWithResource("drawable/baseline_directions_car_24")
-//            else -> Icon.createWithResource("drawable/ic_launcher_foreground") // Default image
-//        }
-//    }
 }

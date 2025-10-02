@@ -12,6 +12,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -20,9 +21,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.android.gms.location.FusedLocationProviderClient
 import hu.bme.aut.android.sporttracker.MainActivity
-import hu.bme.aut.android.sporttracker.data.location.repository.LocationRepository
-import hu.bme.aut.android.sporttracker.data.tour.database.DatabaseProvider
-import hu.bme.aut.android.sporttracker.data.tour.repository.TourRepository
+import hu.bme.aut.android.sporttracker.data.repository.location.LocationRepository
+import hu.bme.aut.android.sporttracker.data.local.database.DatabaseProvider
+import hu.bme.aut.android.sporttracker.data.repository.location.TourRepository
 import hu.bme.aut.android.sporttracker.ui.screens.main.MainScreen
 import hu.bme.aut.android.sporttracker.ui.screens.menu.MenuScreen
 import hu.bme.aut.android.sporttracker.ui.screens.menu.TourMenuScreen
@@ -51,7 +52,6 @@ fun NavGraph(
     googleAuthUiClient: GoogleAuthUiClient
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
-
     NavHost(
         navController = navController,
         startDestination = Screen.SignIn.route
@@ -73,15 +73,26 @@ fun NavGraph(
                     }
                 }
             )
+//            LaunchedEffect(key1 = state.isSignInSuccessful) {
+//                if (state.isSignInSuccessful) {
+//                    Toast.makeText(
+//                        activity.applicationContext,
+//                        "Sign in successful",
+//                        Toast.LENGTH_LONG
+//                    ).show()
+//                }
+//                if (googleAuthUiClient.getSignedInUser() != null) {
+//                    navController.navigate("main")
+//                }
+//            }
             LaunchedEffect(key1 = state.isSignInSuccessful) {
-                if(state.isSignInSuccessful) {
+                val signedInUser = googleAuthUiClient.getSignedInUser()
+                if (state.isSignInSuccessful && signedInUser != null) {
                     Toast.makeText(
                         activity.applicationContext,
                         "Sign in successful",
                         Toast.LENGTH_LONG
                     ).show()
-                }
-                if(googleAuthUiClient.getSignedInUser() != null) {
                     navController.navigate("main")
                 }
             }
@@ -115,7 +126,8 @@ fun NavGraph(
                 userData = googleAuthUiClient.getSignedInUser(),
                 onSignOut = {
                     activity.lifecycleScope.launch {
-                        googleAuthUiClient.signOut()
+                        googleAuthUiClient.signOut(context = activity)
+                        signInViewModel.resetState()
                     }
                     navController.navigate(Screen.SignIn.route) {
                         popUpTo(Screen.SignIn.route) { inclusive = true }
@@ -134,7 +146,8 @@ fun NavGraph(
                 userData = googleAuthUiClient.getSignedInUser(),
                 onSignOut = {
                     activity.lifecycleScope.launch {
-                        googleAuthUiClient.signOut()
+                        googleAuthUiClient.signOut(context = activity)
+                        signInViewModel.resetState()
                     }
                     navController.navigate(Screen.SignIn.route) {
                         popUpTo(Screen.SignIn.route) { inclusive = true }
@@ -156,12 +169,15 @@ fun NavGraph(
                 userData = googleAuthUiClient.getSignedInUser(),
                 onSignOut = {
                     activity.lifecycleScope.launch {
-                        googleAuthUiClient.signOut()
+                        googleAuthUiClient.signOut(context = activity)
+                        signInViewModel.resetState()
                     }
                     navController.navigate(Screen.SignIn.route) {
                         popUpTo(Screen.SignIn.route) { inclusive = true }
                     }
-                }
+                },
+                user = signInViewModel.currentUser.value ?: "",
+                tourViewModel = tourStartedSettingsViewModel
             )
         }
 
@@ -184,7 +200,8 @@ fun NavGraph(
                 userData = googleAuthUiClient.getSignedInUser(),
                 onSignOut = {
                     activity.lifecycleScope.launch {
-                        googleAuthUiClient.signOut()
+                        googleAuthUiClient.signOut(context = activity)
+                        signInViewModel.resetState()
                     }
                     navController.navigate(Screen.SignIn.route) {
                         popUpTo(Screen.SignIn.route) { inclusive = true }
@@ -204,7 +221,8 @@ fun NavGraph(
                 userData = googleAuthUiClient.getSignedInUser(),
                 onSignOut = {
                     activity.lifecycleScope.launch {
-                        googleAuthUiClient.signOut()
+                        googleAuthUiClient.signOut(context = activity)
+                        signInViewModel.resetState()
                     }
                     navController.navigate(Screen.SignIn.route) {
                         popUpTo(Screen.SignIn.route) { inclusive = true }

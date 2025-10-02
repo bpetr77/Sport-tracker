@@ -1,6 +1,4 @@
-package hu.bme.aut.android.sporttracker.data.location.model
-
-import android.health.connect.datatypes.ExerciseRoute
+package hu.bme.aut.android.sporttracker.data.model
 
 data class LocationPoint(
     val latitude: Double,
