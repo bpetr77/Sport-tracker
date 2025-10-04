@@ -23,6 +23,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import hu.bme.aut.android.sporttracker.data.local.database.AppDatabase
 import hu.bme.aut.android.sporttracker.data.local.database.TourDao
+import hu.bme.aut.android.sporttracker.data.local.di.provideTourDao
+import hu.bme.aut.android.sporttracker.data.remote.firebase.di.provideFirebaseAuth
+import hu.bme.aut.android.sporttracker.data.remote.firebase.di.provideFirestore
 import hu.bme.aut.android.sporttracker.data.repository.impl.TourRepositoryImpl
 import hu.bme.aut.android.sporttracker.data.repository.location.LocationRepository
 import hu.bme.aut.android.sporttracker.data.repository.location.TourRepository
@@ -97,7 +100,7 @@ class MainActivity : ComponentActivity() {
 
         // tourRepositoryImpl példányosítás
         val tourRepositoryImpl = TourRepositoryImpl(
-            dao = provideTourDao(),
+            dao = provideTourDao(context = applicationContext),
             firestore = provideFirestore(),
             auth = provideFirebaseAuth()
         )
@@ -126,18 +129,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-    fun provideFirestore(): FirebaseFirestore {
-        return FirebaseFirestore.getInstance()
-    }
 
-    fun provideFirebaseAuth(): FirebaseAuth {
-        return FirebaseAuth.getInstance()
-    }
-
-    fun provideTourDao(): TourDao {
-        val db = AppDatabase.getDatabase(applicationContext)
-        return db.tourDao()
-    }
     fun handleLocationPermission() {
         Log.d("handleLocationPermission", "Checking location permissions...")
 
