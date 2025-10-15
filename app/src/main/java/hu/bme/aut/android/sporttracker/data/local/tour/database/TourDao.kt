@@ -1,11 +1,11 @@
-package hu.bme.aut.android.sporttracker.data.local.database
+package hu.bme.aut.android.sporttracker.data.local.tour.database
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import hu.bme.aut.android.sporttracker.data.local.model.TourEntity
+import hu.bme.aut.android.sporttracker.data.local.tour.model.TourEntity
 
 @Dao
 interface TourDao {

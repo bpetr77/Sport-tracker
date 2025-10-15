@@ -30,14 +30,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hu.bme.aut.android.sporttracker.R
-import hu.bme.aut.android.sporttracker.data.local.database.DatabaseProvider
-import hu.bme.aut.android.sporttracker.data.local.model.TourEntity
+import hu.bme.aut.android.sporttracker.data.local.tour.database.DatabaseProvider
+import hu.bme.aut.android.sporttracker.data.local.tour.model.TourEntity
 import hu.bme.aut.android.sporttracker.data.repository.location.TourRepository
 import hu.bme.aut.android.sporttracker.ui.components.TourElement
 import hu.bme.aut.android.sporttracker.ui.screens.main.MainLayout
 import hu.bme.aut.android.sporttracker.ui.sign_in.UserData
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourStartedSettingsViewModel
-import androidx.compose.runtime.collectAsState
 
 @Composable
 fun TourMenuScreen(
@@ -73,10 +72,6 @@ fun TourMenuScreen(
         LaunchedEffect(user) {
             //userTours = tourViewModel.getAllToursById(user)
             tours = tourViewModel.getAllToursById(user)
-
-            val allTours = tourRepository.getAllTours()
-            allTours.forEach { println("Tour: id=${it.id}, userId=${it.userId}") }
-            Log.i("HLOOOOOOO", user ?: "null user")
         }
         Box(
             modifier = Modifier
@@ -98,6 +93,7 @@ fun TourMenuScreen(
                 }
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                     items(tours) { tour: TourEntity ->
+                        Log.w("HALOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO", "Tour: $tour")
                         Surface(
                             modifier = Modifier
                                 .fillMaxSize()

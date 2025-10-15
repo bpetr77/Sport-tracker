@@ -2,11 +2,10 @@ package hu.bme.aut.android.sporttracker.ui.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import hu.bme.aut.android.sporttracker.data.local.model.TourEntity
+import hu.bme.aut.android.sporttracker.data.local.tour.model.TourEntity
 import hu.bme.aut.android.sporttracker.data.model.LocationPoint
 import hu.bme.aut.android.sporttracker.data.repository.impl.TourRepositoryImpl
 import hu.bme.aut.android.sporttracker.data.repository.location.LocationRepository
-import hu.bme.aut.android.sporttracker.data.repository.location.TourRepository
 import hu.bme.aut.android.sporttracker.domain.usecase.TourUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -79,6 +78,11 @@ class TourStartedSettingsViewModel(
     suspend fun getAllToursById(uid: String): List<TourEntity> {
         return tourRepository.getUserTours(uid)
     }
+
+    suspend fun getTourByIdFromFireBase(id: Long): TourEntity? {
+        return tourRepository.getTourById(id)
+    }
+
 
     fun stopTour(
         selectedTransportMode: String?,

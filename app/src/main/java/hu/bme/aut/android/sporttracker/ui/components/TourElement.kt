@@ -17,7 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import hu.bme.aut.android.sporttracker.R
-import hu.bme.aut.android.sporttracker.data.local.model.TourEntity
+import hu.bme.aut.android.sporttracker.data.local.tour.model.TourEntity
 
 
 @Composable

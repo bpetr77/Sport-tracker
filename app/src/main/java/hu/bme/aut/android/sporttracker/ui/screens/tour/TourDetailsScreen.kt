@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
-import hu.bme.aut.android.sporttracker.data.local.model.TourEntity
+import hu.bme.aut.android.sporttracker.data.local.tour.model.TourEntity
 import hu.bme.aut.android.sporttracker.ui.screens.main.MainLayout
 
 import androidx.compose.ui.unit.dp
@@ -37,7 +37,8 @@ fun TourDetailsScreen(
     onMapClick: () -> Unit,
     onAllToursClick: () -> Unit,
     userData: UserData?,
-    onSignOut: () -> Unit
+    onSignOut: () -> Unit,
+
 ){
     // Fetch the tour asynchronously
     val tour = produceState<TourEntity?>(initialValue = null, tourId) {

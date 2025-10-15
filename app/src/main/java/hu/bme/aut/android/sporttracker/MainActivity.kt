@@ -19,17 +19,15 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.FirebaseApp
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import hu.bme.aut.android.sporttracker.data.local.database.AppDatabase
-import hu.bme.aut.android.sporttracker.data.local.database.TourDao
-import hu.bme.aut.android.sporttracker.data.local.di.provideTourDao
+import hu.bme.aut.android.sporttracker.data.local.graph.database.GraphDatabaseProvider
+import hu.bme.aut.android.sporttracker.data.local.tour.di.provideTourDao
 import hu.bme.aut.android.sporttracker.data.remote.firebase.di.provideFirebaseAuth
 import hu.bme.aut.android.sporttracker.data.remote.firebase.di.provideFirestore
 import hu.bme.aut.android.sporttracker.data.repository.impl.TourRepositoryImpl
 import hu.bme.aut.android.sporttracker.data.repository.location.LocationRepository
-import hu.bme.aut.android.sporttracker.data.repository.location.TourRepository
 import hu.bme.aut.android.sporttracker.data.repository.location.getLastKnownLocation
+import hu.bme.aut.android.sporttracker.data.routePlanner.repository.GraphRepository
+import hu.bme.aut.android.sporttracker.data.routePlanner.repository.OSMRepository
 import hu.bme.aut.android.sporttracker.data.service.LocationService
 import hu.bme.aut.android.sporttracker.domain.usecase.TourUseCase
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourSettingsViewModel
@@ -41,6 +39,7 @@ import hu.bme.aut.android.sporttracker.ui.navigation.NavGraph
 import hu.bme.aut.android.sporttracker.ui.sign_in.GoogleAuthUiClient
 import hu.bme.aut.android.sporttracker.ui.sign_in.SignInViewModel
 import hu.bme.aut.android.sporttracker.ui.viewModels.LocationViewmodel
+import hu.bme.aut.android.sporttracker.ui.viewModels.RoutePlannerViewModel
 import hu.bme.aut.android.sporttracker.ui.viewModels.SettingsViewModel
 
 //TODO: should put the viewmodels into the NavGraph
@@ -48,6 +47,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val userLocation = mutableStateOf<LatLng?>(null)
     private lateinit var locationRepository: LocationRepository
+    private lateinit var routeRepository: OSMRepository
     private val TourUseCase = TourUseCase()
 
     private val tourSettingsViewModel: TourSettingsViewModel by viewModels()
@@ -97,6 +97,9 @@ class MainActivity : ComponentActivity() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         locationRepository = LocationRepository(fusedLocationClient, this)
+        routeRepository = OSMRepository(context = applicationContext)
+        val graphDb = GraphDatabaseProvider.getDatabase(applicationContext)
+        val graphRepository = GraphRepository(graphDb)
 
         // tourRepositoryImpl példányosítás
         val tourRepositoryImpl = TourRepositoryImpl(
@@ -110,6 +113,8 @@ class MainActivity : ComponentActivity() {
             TourStartedSettingsViewModelFactory(locationRepository, TourUseCase(), tourRepositoryImpl)
         }
 
+        val routePlannerViewModel = RoutePlannerViewModel(routeRepository, graphRepository)
+
         handleLocationPermission()
         setContent {
             SportTrackerTheme(dynamicColor = true) {
@@ -120,6 +125,7 @@ class MainActivity : ComponentActivity() {
                         locationRepository = locationRepository,
                         tourSettingsViewModel = tourSettingsViewModel,
                         tourStartedSettingsViewModel = tourStartedSettingsViewModel,
+                        routePlannerViewModel = routePlannerViewModel,
                         locationViewmodel = locationViewModel,
                         signInViewModel = signInViewModel,
                         settingsViewModel = settingsViewModel,

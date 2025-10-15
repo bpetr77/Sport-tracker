@@ -11,6 +11,7 @@ import hu.bme.aut.android.sporttracker.ui.sign_in.UserData
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourSettingsViewModel
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourStartedSettingsViewModel
 import hu.bme.aut.android.sporttracker.ui.viewModels.LocationViewmodel
+import hu.bme.aut.android.sporttracker.ui.viewModels.RoutePlannerViewModel
 
 
 @Composable
@@ -21,6 +22,7 @@ fun MainScreen(
     tourSettingsViewModel: TourSettingsViewModel,
     tourStartedSettingsViewModel: TourStartedSettingsViewModel,
     locationViewmodel: LocationViewmodel,
+    routePlannerViewModel: RoutePlannerViewModel,
     drawerState: DrawerState,
     onMenuclick: () -> Unit,
     onToursClick: () -> Unit,
@@ -47,6 +49,7 @@ fun MainScreen(
             locationRepository = locationRepository,
             tourSettingsViewModel = tourSettingsViewModel,
             tourStartedSettingsViewModel = tourStartedSettingsViewModel,
+            routePlannerViewModel = routePlannerViewModel
         )
     }
 }

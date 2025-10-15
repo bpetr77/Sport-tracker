@@ -1,4 +1,4 @@
-package hu.bme.aut.android.sporttracker.data.local.model
+package hu.bme.aut.android.sporttracker.data.local.tour.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

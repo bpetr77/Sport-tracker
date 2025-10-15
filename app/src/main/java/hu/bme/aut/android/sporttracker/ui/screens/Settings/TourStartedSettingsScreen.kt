@@ -25,7 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import hu.bme.aut.android.sporttracker.R
-import hu.bme.aut.android.sporttracker.data.local.database.DatabaseProvider
+import hu.bme.aut.android.sporttracker.data.local.tour.database.DatabaseProvider
 import hu.bme.aut.android.sporttracker.data.repository.location.TourRepository
 import hu.bme.aut.android.sporttracker.ui.components.SpeedChart
 import hu.bme.aut.android.sporttracker.ui.screens.tour.TourSummaryScreen

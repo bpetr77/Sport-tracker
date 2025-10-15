@@ -1,11 +1,11 @@
 package hu.bme.aut.android.sporttracker.data.mappers
 
-import hu.bme.aut.android.sporttracker.data.local.model.TourEntity
+import hu.bme.aut.android.sporttracker.data.local.tour.model.TourEntity
 import hu.bme.aut.android.sporttracker.data.remote.firebase.model.FirebaseTour
 
 fun TourEntity.toFirebase(): FirebaseTour {
     return FirebaseTour(
-        id = java.util.UUID.randomUUID().toString(),
+        id = id.toString(),
         startTime = startTime,
         endTime = endTime,
         totalDistance = totalDistance,
@@ -20,6 +20,7 @@ fun TourEntity.toFirebase(): FirebaseTour {
 
 fun FirebaseTour.toEntity(): TourEntity {
     return TourEntity(
+        id = id.toLong(),
         startTime = startTime,
         endTime = endTime,
         totalDistance = totalDistance,

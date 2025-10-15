@@ -3,8 +3,8 @@ package hu.bme.aut.android.sporttracker.data.repository.impl
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import hu.bme.aut.android.sporttracker.data.local.database.TourDao
-import hu.bme.aut.android.sporttracker.data.local.model.TourEntity
+import hu.bme.aut.android.sporttracker.data.local.tour.database.TourDao
+import hu.bme.aut.android.sporttracker.data.local.tour.model.TourEntity
 import hu.bme.aut.android.sporttracker.data.mappers.toEntity
 import hu.bme.aut.android.sporttracker.data.mappers.toFirebase
 import hu.bme.aut.android.sporttracker.data.remote.firebase.model.FirebaseTour
@@ -52,7 +52,7 @@ class TourRepositoryImpl(
                 val firebaseTours = snapshot.documents.mapNotNull { doc ->
                     doc.toObject(FirebaseTour::class.java)?.toEntity()
                 }
-
+                dao.deleteAllTours()
                 firebaseTours.forEach { tour ->
                     dao.insertTour(tour)
                 }

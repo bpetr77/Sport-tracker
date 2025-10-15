@@ -1,7 +1,7 @@
 package hu.bme.aut.android.sporttracker.domain.usecase
 
 import hu.bme.aut.android.sporttracker.data.model.LocationPoint
-import hu.bme.aut.android.sporttracker.data.local.model.TourEntity
+import hu.bme.aut.android.sporttracker.data.local.tour.model.TourEntity
 import kotlin.math.*
 import kotlin.random.Random
 

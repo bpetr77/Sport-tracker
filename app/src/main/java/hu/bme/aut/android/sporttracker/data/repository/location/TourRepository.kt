@@ -1,7 +1,7 @@
 package hu.bme.aut.android.sporttracker.data.repository.location
 
-import hu.bme.aut.android.sporttracker.data.local.model.TourEntity
-import hu.bme.aut.android.sporttracker.data.local.database.TourDao
+import hu.bme.aut.android.sporttracker.data.local.tour.model.TourEntity
+import hu.bme.aut.android.sporttracker.data.local.tour.database.TourDao
 
 class TourRepository(private val tourDao: TourDao) {
     suspend fun addTour(tour: TourEntity) = tourDao.insertTour(tour)

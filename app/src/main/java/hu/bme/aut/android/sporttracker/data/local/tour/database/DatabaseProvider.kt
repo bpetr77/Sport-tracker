@@ -1,4 +1,4 @@
-package hu.bme.aut.android.sporttracker.data.local.database
+package hu.bme.aut.android.sporttracker.data.local.tour.database
 
 import android.content.Context
 import androidx.room.Room

@@ -1,4 +1,4 @@
-package hu.bme.aut.android.sporttracker.data.local.database
+package hu.bme.aut.android.sporttracker.data.local.tour.database
 
 import android.content.Context
 import androidx.room.Database
@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import hu.bme.aut.android.sporttracker.data.converters.Converters
-import hu.bme.aut.android.sporttracker.data.local.model.TourEntity
+import hu.bme.aut.android.sporttracker.data.local.tour.model.TourEntity
 
 @Database(entities = [TourEntity::class], version = 3, exportSchema = false)
 @TypeConverters(Converters::class)

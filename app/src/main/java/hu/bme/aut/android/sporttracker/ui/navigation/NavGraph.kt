@@ -12,7 +12,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -22,7 +21,7 @@ import androidx.navigation.navArgument
 import com.google.android.gms.location.FusedLocationProviderClient
 import hu.bme.aut.android.sporttracker.MainActivity
 import hu.bme.aut.android.sporttracker.data.repository.location.LocationRepository
-import hu.bme.aut.android.sporttracker.data.local.database.DatabaseProvider
+import hu.bme.aut.android.sporttracker.data.local.tour.database.DatabaseProvider
 import hu.bme.aut.android.sporttracker.data.repository.location.TourRepository
 import hu.bme.aut.android.sporttracker.ui.screens.main.MainScreen
 import hu.bme.aut.android.sporttracker.ui.screens.menu.MenuScreen
@@ -33,6 +32,7 @@ import hu.bme.aut.android.sporttracker.ui.sign_in.GoogleAuthUiClient
 import hu.bme.aut.android.sporttracker.ui.sign_in.SignInScreen
 import hu.bme.aut.android.sporttracker.ui.sign_in.SignInViewModel
 import hu.bme.aut.android.sporttracker.ui.viewModels.LocationViewmodel
+import hu.bme.aut.android.sporttracker.ui.viewModels.RoutePlannerViewModel
 import hu.bme.aut.android.sporttracker.ui.viewModels.SettingsViewModel
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourSettingsViewModel
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourStartedSettingsViewModel
@@ -48,6 +48,7 @@ fun NavGraph(
     tourStartedSettingsViewModel: TourStartedSettingsViewModel,
     locationViewmodel: LocationViewmodel,
     signInViewModel: SignInViewModel,
+    routePlannerViewModel: RoutePlannerViewModel,
     settingsViewModel: SettingsViewModel,
     googleAuthUiClient: GoogleAuthUiClient
 ) {
@@ -118,6 +119,7 @@ fun NavGraph(
                 tourSettingsViewModel = tourSettingsViewModel,
                 tourStartedSettingsViewModel = tourStartedSettingsViewModel,
                 locationViewmodel = locationViewmodel,
+                routePlannerViewModel = routePlannerViewModel,
                 drawerState = drawerState,
                 onMenuclick = { navController.navigate(Screen.Menu.route) },
                 onToursClick = { navController.navigate(Screen.Tours.route) },
