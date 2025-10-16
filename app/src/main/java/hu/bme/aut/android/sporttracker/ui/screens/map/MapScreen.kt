@@ -195,49 +195,9 @@ fun MapScreen(
                     onFromChange = { fromText = it },
                     onToChange = { toText = it },
                     onClick = {
-                        // TODO: Implement route planner logic, make a function
                         if (fromMarker != null && toMarker != null) {
-                            val lat1 = fromMarker!!.latitude
-                            val lon1 = fromMarker!!.longitude
-                            val lat2 = toMarker!!.latitude
-                            val lon2 = toMarker!!.longitude
-
-                            // Calculate center
-                            val centerLat = (lat1 + lat2) / 2
-                            val centerLon = (lon1 + lon2) / 2
-
-                            // Calculate distance between points in meters (Haversine formula)
-                            val earthRadius = 6371000.0
-                            val dLat = Math.toRadians(lat2 - lat1)
-                            val dLon = Math.toRadians(lon2 - lon1)
-                            val a = sin(dLat / 2).pow(2.0) + cos(Math.toRadians(lat1)) * cos(
-                                Math.toRadians(lat2)
-                            ) * sin(dLon / 2).pow(2.0)
-                            val c = 2 * atan2(sqrt(a), sqrt(1 - a))
-                            val distance = earthRadius * c
-
-                            // Width: half the distance, Height: 1.5x the distance
-                            val width = distance / 2
-                            val height = distance * 1.5
-
-                            // Convert meters to degrees
-                            val latOffset = (height / 2) / 111320.0 // 1 deg latitude ~ 111.32 km
-                            val lonOffset =
-                                (width / 2) / (111320.0 * cos(Math.toRadians(centerLat)))
-
-                            val minLat = centerLat - latOffset
-                            val maxLat = centerLat + latOffset
-                            val minLon = centerLon - lonOffset
-                            val maxLon = centerLon + lonOffset
-
-                            routePlannerViewModel.loadGraphForArea(minLat, maxLat, minLon, maxLon)
-
-//                            routePlannerViewModel.graph.value?.nodes?.values?.take(1000)?.forEach { node ->
-//                                Marker(
-//                                    state = rememberUpdatedMarkerState(position = LatLng(node.lat, node.lon)),
-//                                    title = "Node"
-//                                )
-//                            }
+                            val boundingBox = routePlannerViewModel.calculateBoundingBox(fromMarker!!, toMarker!!)
+                            routePlannerViewModel.loadGraphForArea(boundingBox.minLat, boundingBox.maxLat, boundingBox.minLon, boundingBox.maxLon)
                         }
                     }
                 )

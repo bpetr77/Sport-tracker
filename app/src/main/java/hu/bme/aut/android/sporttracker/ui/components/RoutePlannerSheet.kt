@@ -23,7 +23,7 @@ fun RoutePlannerSheet(
     toText: String,
     onFromChange: (String) -> Unit,
     onToChange: (String) -> Unit,
-    onClick: @Composable () -> Unit
+    onClick: () -> Unit
 ) {
     Column(modifier = Modifier.padding(16.dp, 60.dp, 16.dp, 0.dp)) {
         OutlinedTextField(
@@ -43,7 +43,7 @@ fun RoutePlannerSheet(
         )
         Spacer(modifier = Modifier.height(8.dp))
         Button(
-            onClick = { onClick },
+            onClick = onClick,
             modifier = Modifier.align(Alignment.End),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(210, 210, 210, 255)

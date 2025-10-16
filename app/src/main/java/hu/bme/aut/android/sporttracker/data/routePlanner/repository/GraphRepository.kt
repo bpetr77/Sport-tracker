@@ -7,13 +7,11 @@ import hu.bme.aut.android.sporttracker.data.local.graph.model.NodeEntity
 import hu.bme.aut.android.sporttracker.data.routePlanner.model.Graph
 import hu.bme.aut.android.sporttracker.data.routePlanner.model.RouteSegment
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import kotlin.math.cos
 import kotlin.math.sqrt
 
 class GraphRepository(private val db: GraphDatabase) {
-
     suspend fun loadSubGraph(
         minLat: Double, maxLat: Double,
         minLon: Double, maxLon: Double

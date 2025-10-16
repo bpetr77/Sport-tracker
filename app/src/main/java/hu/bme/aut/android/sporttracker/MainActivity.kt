@@ -48,7 +48,6 @@ class MainActivity : ComponentActivity() {
     private val userLocation = mutableStateOf<LatLng?>(null)
     private lateinit var locationRepository: LocationRepository
     private lateinit var routeRepository: OSMRepository
-    private val TourUseCase = TourUseCase()
 
     private val tourSettingsViewModel: TourSettingsViewModel by viewModels()
 //    private val tourStartedSettingsViewModel: TourStartedSettingsViewModel by viewModels {
