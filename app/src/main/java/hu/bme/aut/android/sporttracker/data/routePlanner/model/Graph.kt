@@ -56,7 +56,7 @@ class Graph {
         adjacency.computeIfAbsent(fromId) { mutableListOf() }.add(Pair(toId, weight))
     }
 
-    fun buildFromEntities(nodes: List<NodeEntity>, edges: List<EdgeEntity>) {
+    fun buildFromEntities2(nodes: List<NodeEntity>, edges: List<EdgeEntity>) {
         // Nodes létrehozása
         nodes.forEach { getOrCreateNodeId(it.lat, it.lon) }
 
@@ -65,6 +65,21 @@ class Graph {
             addDirectedEdge(edge.fromId, edge.toId, edge.weight)
             if (!edge.oneway) {
                 // kétirányú: add visszafelé is
+                addDirectedEdge(edge.toId, edge.fromId, edge.weight)
+            }
+        }
+    }
+    fun buildFromEntities(nodes: List<NodeEntity>, edges: List<EdgeEntity>) {
+        // Töltsd be a node-okat az adatbázisban lévő ID-kkal
+        nodes.forEach { node ->
+            this.nodes[node.id] = Node(node.lat, node.lon)
+            adjacency.computeIfAbsent(node.id) { mutableListOf() }
+        }
+
+        // Az élek összekötése a már ismert ID-k alapján
+        edges.forEach { edge ->
+            addDirectedEdge(edge.fromId, edge.toId, edge.weight)
+            if (!edge.oneway) {
                 addDirectedEdge(edge.toId, edge.fromId, edge.weight)
             }
         }

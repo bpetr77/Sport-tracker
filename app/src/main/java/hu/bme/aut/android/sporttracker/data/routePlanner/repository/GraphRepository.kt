@@ -1,9 +1,11 @@
 package hu.bme.aut.android.sporttracker.data.routePlanner.repository
 
 import android.util.Log
+import com.google.android.gms.maps.model.LatLng
 import hu.bme.aut.android.sporttracker.data.local.graph.database.GraphDatabase
 import hu.bme.aut.android.sporttracker.data.local.graph.model.EdgeEntity
 import hu.bme.aut.android.sporttracker.data.local.graph.model.NodeEntity
+import hu.bme.aut.android.sporttracker.data.model.BoundingBox
 import hu.bme.aut.android.sporttracker.data.routePlanner.model.Graph
 import hu.bme.aut.android.sporttracker.data.routePlanner.model.RouteSegment
 import kotlinx.coroutines.Dispatchers
@@ -12,11 +14,41 @@ import kotlin.math.cos
 import kotlin.math.sqrt
 
 class GraphRepository(private val db: GraphDatabase) {
+
+    suspend fun getNodesInRotatedBox(bbox: BoundingBox): List<NodeEntity> {
+        val roughNodes = db.nodeDao().getNodesInBoundingBox(
+            minLat = bbox.minLat,
+            maxLat = bbox.maxLat,
+            minLon = bbox.minLon,
+            maxLon = bbox.maxLon
+        )
+
+        return roughNodes.filter { node ->
+            pointInPolygon(node.lat, node.lon, bbox.corners)
+        }
+    }
+
+    fun pointInPolygon(lat: Double, lon: Double, polygon: List<LatLng>): Boolean {
+        var inside = false
+        val n = polygon.size
+        for (i in 0 until n) {
+            val j = (i + 1) % n
+            val xi = polygon[i].longitude
+            val yi = polygon[i].latitude
+            val xj = polygon[j].longitude
+            val yj = polygon[j].latitude
+
+            val intersects = ((yi > lat) != (yj > lat)) &&
+                    (lon < (xj - xi) * (lat - yi) / ((yj - yi) + 1e-9) + xi)
+            if (intersects) inside = !inside
+        }
+        return inside
+    }
+
     suspend fun loadSubGraph(
-        minLat: Double, maxLat: Double,
-        minLon: Double, maxLon: Double
+        boundingBox: BoundingBox
     ): Graph {
-        val nodes = db.nodeDao().getNodesInBoundingBox(minLat, maxLat, minLon, maxLon)
+        val nodes = getNodesInRotatedBox(boundingBox)
         val edges = db.edgeDao().getEdgesForNodes(nodes.map { it.id })
 
         val graph = Graph()

@@ -9,6 +9,7 @@ import hu.bme.aut.android.sporttracker.data.routePlanner.model.Graph
 import hu.bme.aut.android.sporttracker.data.routePlanner.model.RouteSegment
 import hu.bme.aut.android.sporttracker.data.routePlanner.repository.GraphRepository
 import hu.bme.aut.android.sporttracker.data.routePlanner.repository.OSMRepository
+import hu.bme.aut.android.sporttracker.domain.routePlanner.ShortestPath
 import hu.bme.aut.android.sporttracker.domain.usecase.RoutePlannerUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,6 +27,9 @@ class RoutePlannerViewModel(
 
     private val _graph = MutableStateFlow<Graph?>(null)
     val graph: StateFlow<Graph?> = _graph
+
+    private val _routePoints = MutableStateFlow<List<LatLng>>(emptyList())
+    val routePoints: StateFlow<List<LatLng>> = _routePoints
 
     init {
         viewModelScope.launch {
@@ -47,10 +51,33 @@ class RoutePlannerViewModel(
         return boundingBox
     }
 
-    fun loadGraphForArea(minLat: Double, maxLat: Double, minLon: Double, maxLon: Double) {
+    suspend fun loadGraphForArea(boundingBox: BoundingBox) {
+        val subGraph = graphRepository.loadSubGraph(boundingBox)
+        _graph.value = subGraph
+    }
+
+    fun planRoute(fromLat: Double, fromLon: Double, toLat: Double, toLon: Double) {
+        viewModelScope.launch(Dispatchers.Default) {
+            val g = _graph.value ?: return@launch
+            val sp = ShortestPath(g)
+
+            val startId = sp.findNearestNodeId(fromLat, fromLon) ?: return@launch
+            val goalId = sp.findNearestNodeId(toLat, toLon) ?: return@launch
+
+            val pathIds = sp.findShortestPathIds(startId, goalId)
+            val pathCoords = sp.idsToLatLon(pathIds)
+
+            withContext(Dispatchers.Main) {
+                _routePoints.value = pathCoords.map { LatLng(it.first, it.second) }
+            }
+        }
+    }
+
+    fun prepareAndPlanRoute(from: LatLng, to: LatLng) {
         viewModelScope.launch {
-            val subGraph = graphRepository.loadSubGraph(minLat, maxLat, minLon, maxLon)
-            _graph.value = subGraph
+            val boundingBox = calculateBoundingBox(from, to)
+            loadGraphForArea(boundingBox)
+            planRoute(from.latitude, from.longitude, to.latitude, to.longitude)
         }
     }
 }
