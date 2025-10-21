@@ -52,8 +52,11 @@ class RoutePlannerViewModel(
     }
 
     suspend fun loadGraphForArea(boundingBox: BoundingBox) {
+        Log.d("RoutePlannerViewModel", "1.1")
         val subGraph = graphRepository.loadSubGraph(boundingBox)
+        Log.d("RoutePlannerViewModel", "1.2")
         _graph.value = subGraph
+        Log.d("RoutePlannerViewModel", "1.3")
     }
 
     fun planRoute(fromLat: Double, fromLon: Double, toLat: Double, toLon: Double) {
@@ -75,9 +78,14 @@ class RoutePlannerViewModel(
 
     fun prepareAndPlanRoute(from: LatLng, to: LatLng) {
         viewModelScope.launch {
+            Log.d("RoutePlannerViewModel", "Preparing and planning route...")
             val boundingBox = calculateBoundingBox(from, to)
+            Log.d("RoutePlannerViewModel", "Calculated bounding box: $boundingBox")
             loadGraphForArea(boundingBox)
+            Log.d("RoutePlannerViewModel", "Graph loaded")
             planRoute(from.latitude, from.longitude, to.latitude, to.longitude)
+            Log.d("RoutePlannerViewModel", "Route planned")
+
         }
     }
 }

@@ -17,4 +17,10 @@ interface EdgeDao {
 
     @Query("DELETE FROM edges")
     suspend fun deleteAll()
+
+    @Query("SELECT * FROM edges WHERE fromId IN (:nodeIds)")
+    suspend fun getEdgesFromNodes(nodeIds: List<Long>): List<EdgeEntity>
+
+    @Query("SELECT * FROM edges WHERE toId IN (:nodeIds)")
+    suspend fun getEdgesToNodes(nodeIds: List<Long>): List<EdgeEntity>
 }

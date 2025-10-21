@@ -9,6 +9,9 @@ import hu.bme.aut.android.sporttracker.data.model.BoundingBox
 import hu.bme.aut.android.sporttracker.data.routePlanner.model.Graph
 import hu.bme.aut.android.sporttracker.data.routePlanner.model.RouteSegment
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import kotlin.math.cos
 import kotlin.math.sqrt
@@ -45,7 +48,7 @@ class GraphRepository(private val db: GraphDatabase) {
         return inside
     }
 
-    suspend fun loadSubGraph(
+    suspend fun loadSubGraph2(
         boundingBox: BoundingBox
     ): Graph {
         val nodes = getNodesInRotatedBox(boundingBox)
@@ -56,7 +59,41 @@ class GraphRepository(private val db: GraphDatabase) {
         return graph
     }
 
-    // --- Ellenőrizni, hogy van-e már graph a DB-ben
+    suspend fun loadSubGraph(boundingBox: BoundingBox): Graph {
+        Log.d("GraphRepository", "1")
+        val nodes = getNodesInRotatedBox(boundingBox)
+        Log.d("GraphRepository", "2")
+
+        val nodeIds = nodes.map { it.id }
+        Log.d("GraphRepository", "3")
+
+        val edges = getEdgesForNodesChunked(nodeIds)
+        Log.d("GraphRepository", "4")
+
+        val graph = Graph()
+        Log.d("GraphRepository", "5")
+
+        graph.buildFromEntities(nodes, edges)
+        Log.d("GraphRepository", "6")
+
+        return graph
+    }
+
+    suspend fun getEdgesForNodesChunked(
+        nodeIds: List<Long>,
+        chunkSize: Int = 999
+    ): List<EdgeEntity> = coroutineScope {
+        if (nodeIds.isEmpty()) return@coroutineScope emptyList()
+
+        nodeIds.chunked(chunkSize)
+            .map { chunk ->
+                async(Dispatchers.IO) { db.edgeDao().getEdgesForNodes(chunk) }
+            }
+            .awaitAll()
+            .flatten()
+            .distinctBy { it.id }
+    }
+
     suspend fun countNodes(): Int {
         return db.nodeDao().getCount()
     }
