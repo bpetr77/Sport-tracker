@@ -23,4 +23,7 @@ interface EdgeDao {
 
     @Query("SELECT * FROM edges WHERE toId IN (:nodeIds)")
     suspend fun getEdgesToNodes(nodeIds: List<Long>): List<EdgeEntity>
+
+    @Query("SELECT DISTINCT highwayType FROM edges")
+    suspend fun getAllUniqueEdgeTypes(): List<String>
 }
