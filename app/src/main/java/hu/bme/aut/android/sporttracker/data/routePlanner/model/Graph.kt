@@ -69,6 +69,8 @@ class Graph {
             }
         }
     }
+
+    // TODO: ADJUST THE WEIGHTS AND FIND THE COMBINATIONS BETWEEN ROADS AND CYCLELANSES
     fun adjustedWeight(edge: EdgeEntity): Double {
         var w = edge.weight
 
