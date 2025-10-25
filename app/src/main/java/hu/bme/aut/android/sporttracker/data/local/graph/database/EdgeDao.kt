@@ -26,4 +26,7 @@ interface EdgeDao {
 
     @Query("SELECT DISTINCT highwayType FROM edges")
     suspend fun getAllUniqueEdgeTypes(): List<String>
+
+    @Query("SELECT DISTINCT cycleLane FROM edges")
+    suspend fun getAllUniqueEdgeCycleLaneTypes(): List<String>
 }

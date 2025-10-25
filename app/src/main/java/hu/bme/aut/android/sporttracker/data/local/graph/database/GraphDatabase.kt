@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import hu.bme.aut.android.sporttracker.data.local.graph.model.EdgeEntity
 import hu.bme.aut.android.sporttracker.data.local.graph.model.NodeEntity
 
-@Database(entities = [NodeEntity::class, EdgeEntity::class], version = 3)
+@Database(entities = [NodeEntity::class, EdgeEntity::class], version = 4)
 abstract class GraphDatabase : RoomDatabase() {
     abstract fun nodeDao(): NodeDao
     abstract fun edgeDao(): EdgeDao

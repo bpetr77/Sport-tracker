@@ -15,5 +15,6 @@ data class EdgeEntity(
     val toId: Long,
     val weight: Double,
     val oneway: Boolean,
-    val highwayType: String? = null
+    val highwayType: String? = null,
+    val cycleLane: String? = null
 )

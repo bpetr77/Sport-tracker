@@ -69,6 +69,47 @@ class Graph {
             }
         }
     }
+    fun adjustedWeight(edge: EdgeEntity): Double {
+        var w = edge.weight
+
+        // 1️⃣ Cycleway preferencia
+        w *= when (edge.cycleLane) {
+            "track" -> 0.3      // teljesen elkülönített bringaút
+            "lane" -> 0.3       // kijelölt bringasáv az úton
+            "shared_lane" -> 0.6 // autókkal közös, de jelölt
+            "shared" -> 0.9
+            "shared_busway" -> 0.6 // buszsávval közös
+            "sidewalk" -> 0.8   // járdán engedett – nem ideális
+            "crossing" -> 0.9   // gyalogátkelő – lassít
+            "opposite_lane" -> 0.9 // szembeforgalom – kockázatos
+            "opposite" -> 1.3
+            "designated" -> 0.45 // kijelölt, de nem feltétlen sáv
+            "traffic_island" -> 1.1
+            "no" -> 1.0
+            "proposed" -> 1.5
+            null -> 1.0
+            else -> 1.0
+        }
+
+        // 2️⃣ Highway típus súlyozása (forgalom + biztonság)
+        w *= when (edge.highwayType) {
+            "cycleway" -> 0.1
+            "motorway", "motorway_link", "trunk", "trunk_link" -> 2.0 // bringával tiltott vagy veszélyes
+            "primary", "primary_link" -> 1.5
+            "secondary", "secondary_link" -> 1.3
+            "tertiary", "tertiary_link" -> 1.2
+            "residential", "living_street", "unclassified" -> 1.0
+            "service", "pedestrian", "footway", "track", "bridleway" -> 0.8
+            "path" -> 0.9
+            "steps", "ladder" -> 3.0 // kizárt vagy extrém nehéz
+            "construction", "proposed" -> 5.0
+            "corridor", "platform", "bus_stop" -> 2.0
+            "raceway" -> 1.5
+            else -> 1.0
+        }
+
+        return w
+    }
     fun buildFromEntities(nodes: List<NodeEntity>, edges: List<EdgeEntity>) {
         // Töltsd be a node-okat az adatbázisban lévő ID-kkal
         nodes.forEach { node ->
@@ -78,9 +119,9 @@ class Graph {
 
         // Az élek összekötése a már ismert ID-k alapján
         edges.forEach { edge ->
-            addDirectedEdge(edge.fromId, edge.toId, edge.weight)
+            addDirectedEdge(edge.fromId, edge.toId, adjustedWeight(edge))
             if (!edge.oneway) {
-                addDirectedEdge(edge.toId, edge.fromId, edge.weight)
+                addDirectedEdge(edge.toId, edge.fromId, adjustedWeight(edge))
             }
         }
     }

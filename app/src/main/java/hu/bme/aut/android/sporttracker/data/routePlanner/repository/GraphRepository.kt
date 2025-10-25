@@ -113,6 +113,7 @@ class GraphRepository(private val db: GraphDatabase) {
                 val oneway = seg.o
                 val forwardOneWay = (oneway == "y" || oneway == "yes")
                 val reverseOneWay = (oneway == "-" || oneway == "-1")
+                val cycleLane = seg.b
 
                 for (i in 0 until coords.size - 1) {
                     val (latA, lonA) = Pair(coords[i][0], coords[i][1])
@@ -132,7 +133,8 @@ class GraphRepository(private val db: GraphDatabase) {
                                 toId = toId,
                                 weight = dist,
                                 oneway = true,
-                                highwayType = highwayType
+                                highwayType = highwayType,
+                                cycleLane = cycleLane
                             )
                         )
 
@@ -142,7 +144,8 @@ class GraphRepository(private val db: GraphDatabase) {
                                 toId = fromId,
                                 weight = dist,
                                 oneway = true,
-                                highwayType = highwayType
+                                highwayType = highwayType,
+                                cycleLane = cycleLane
                             )
                         )
 
@@ -153,7 +156,8 @@ class GraphRepository(private val db: GraphDatabase) {
                                     toId = toId,
                                     weight = dist,
                                     oneway = false,
-                                    highwayType = highwayType
+                                    highwayType = highwayType,
+                                    cycleLane = cycleLane
                                 )
                             )
                             edges.add(
@@ -162,7 +166,8 @@ class GraphRepository(private val db: GraphDatabase) {
                                     toId = fromId,
                                     weight = dist,
                                     oneway = false,
-                                    highwayType = highwayType
+                                    highwayType = highwayType,
+                                    cycleLane = cycleLane
                                 )
                             )
                         }
