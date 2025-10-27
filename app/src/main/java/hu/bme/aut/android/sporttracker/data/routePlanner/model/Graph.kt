@@ -73,19 +73,15 @@ class Graph {
     // TODO: ADJUST THE WEIGHTS AND FIND THE COMBINATIONS BETWEEN ROADS AND CYCLELANSES
     fun adjustedWeight(edge: EdgeEntity): Double {
         var w = edge.weight
-
-        // 1️⃣ Cycleway preferencia
         w *= when (edge.cycleLane) {
-            "track" -> 0.3      // teljesen elkülönített bringaút
-            "lane" -> 0.3       // kijelölt bringasáv az úton
-            "shared_lane" -> 0.6 // autókkal közös, de jelölt
-            "shared" -> 0.9
-            "shared_busway" -> 0.6 // buszsávval közös
-            "sidewalk" -> 0.8   // járdán engedett – nem ideális
-            "crossing" -> 0.9   // gyalogátkelő – lassít
-            "opposite_lane" -> 0.9 // szembeforgalom – kockázatos
-            "opposite" -> 1.3
-            "designated" -> 0.45 // kijelölt, de nem feltétlen sáv
+            "track" -> 0.2
+            "lane" -> 0.4
+            "shared_lane" -> 0.8
+            "shared_busway" -> 0.6
+            "crossing" -> 0.9
+            "opposite_lane" -> 0.9
+            "opposite" -> 0.9
+            "designated" -> 0.45
             "traffic_island" -> 1.1
             "no" -> 1.0
             "proposed" -> 1.5
@@ -93,20 +89,15 @@ class Graph {
             else -> 1.0
         }
 
-        // 2️⃣ Highway típus súlyozása (forgalom + biztonság)
         w *= when (edge.highwayType) {
             "cycleway" -> 0.1
-            "motorway", "motorway_link", "trunk", "trunk_link" -> 2.0 // bringával tiltott vagy veszélyes
-            "primary", "primary_link" -> 1.5
-            "secondary", "secondary_link" -> 1.3
-            "tertiary", "tertiary_link" -> 1.2
-            "residential", "living_street", "unclassified" -> 1.0
-            "service", "pedestrian", "footway", "track", "bridleway" -> 0.8
-            "path" -> 0.9
-            "steps", "ladder" -> 3.0 // kizárt vagy extrém nehéz
+            "motorway", "motorway_link", "trunk", "trunk_link", "primary", "primary_link", "bus_guideway", "escape", "road" -> 100.0 // bringával tiltott vagy veszélyes
+            "secondary", "secondary_link", "busway", "bridleway", "steps", "corridor", "path" -> 1.8
+            "tertiary", "tertiary_link", "footway", "track" -> 1.4
+            "residential", "living_street", "unclassified" -> 0.8
+            "service", "pedestrian" -> 1.1
             "construction", "proposed" -> 5.0
-            "corridor", "platform", "bus_stop" -> 2.0
-            "raceway" -> 1.5
+            "platform", "bus_stop" -> 2.0
             else -> 1.0
         }
 

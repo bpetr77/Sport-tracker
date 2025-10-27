@@ -121,22 +121,23 @@ fun MapScreen(
         ) {
             //TODO: maybe consider this logic, because it is not as stable as it should be
             val locations by locationRepository.locations.collectAsState()
-            val isPaused by tourStartedSettingsViewModel.isPaused.collectAsState()
 
             val segments = mutableListOf<MutableList<LatLng>>()
             var currentSegment = mutableListOf<LatLng>()
 
-            fromMarker?.let {
-                Marker(
-                    state = rememberUpdatedMarkerState(position = it),
-                    title = "From"
-                )
-            }
-            toMarker?.let {
-                Marker(
-                    state = rememberUpdatedMarkerState(position = it),
-                    title = "To"
-                )
+            if(showRoutePlanner) {
+                fromMarker?.let {
+                    Marker(
+                        state = rememberUpdatedMarkerState(position = it),
+                        title = "From"
+                    )
+                }
+                toMarker?.let {
+                    Marker(
+                        state = rememberUpdatedMarkerState(position = it),
+                        title = "To"
+                    )
+                }
             }
             boundingBoxPoints?.let { points ->
                 if (points.size >= 2) {
@@ -220,9 +221,8 @@ fun MapScreen(
                     onToChange = { toText = it },
                     onClick = {
                         if (fromMarker != null && toMarker != null) {
-//                            val boundingBox = routePlannerViewModel.calculateBoundingBox(fromMarker!!, toMarker!!)
-//                            routePlannerViewModel.loadGraphForArea(boundingBox)
-//                            boundingBoxPoints = boundingBox.corners + boundingBox.corners.first()
+                            val boundingBox = routePlannerViewModel.calculateBoundingBox(fromMarker!!, toMarker!!)
+                            boundingBoxPoints = boundingBox.corners + boundingBox.corners.first()
 //                            routePlannerViewModel.planRoute(fromMarker!!.latitude, fromMarker!!.longitude, toMarker!!.latitude, toMarker!!.longitude)
 //                            Log.d("MapScreen", "Route planned")
 //                            Log.d("MapScreen", "Route: ${routePoints}")

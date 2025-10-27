@@ -41,7 +41,7 @@ class RoutePlannerUseCase {
         val height = distance * 1.5
 
         // Lokális síkbeli vektor komponensei (méterben)
-        val dxMeters = (lon2 - lon1) * 111320.0 * kotlin.math.cos(Math.toRadians(centerLat))
+        val dxMeters = (lon2 - lon1) * 111320.0 * cos(Math.toRadians(centerLat))
         val dyMeters = (lat2 - lat1) * 111320.0
 
         // alap irányszög (a két pont közti vektor szöge)
@@ -73,7 +73,7 @@ class RoutePlannerUseCase {
             val yRot = xMeters * sinR + yMeters * cosR
 
             val latRot = centerLat + (yRot / 111320.0)
-            val lonRot = centerLon + (xRot / (111320.0 * kotlin.math.cos(Math.toRadians(centerLat))))
+            val lonRot = centerLon + (xRot / (111320.0 * cos(Math.toRadians(centerLat))))
 
             Pair(latRot, lonRot)
         }
