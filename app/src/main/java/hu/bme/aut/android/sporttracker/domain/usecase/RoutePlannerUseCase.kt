@@ -25,6 +25,16 @@ class RoutePlannerUseCase {
         return (R * c).toFloat()
     }
 
+    private val SMALL_DISTANCE = 500.0
+
+    private val MEDIUM_DISTANCE = 4000.0
+
+    private val LARGE_DISTANCE = 12000.0
+
+    /**
+     * Kiszámol egy elforgatott határoló dobozt (Bounding Box) két pont között,
+     * dinamikusan változó méretekkel a távolság függvényében.
+     */
     fun calculateBoundingBox(from: LatLng, to: LatLng): BoundingBox {
         val lat1 = from.latitude
         val lon1 = from.longitude
@@ -34,29 +44,45 @@ class RoutePlannerUseCase {
         val centerLat = (lat1 + lat2) / 2.0
         val centerLon = (lon1 + lon2) / 2.0
 
-        // távolság méterben
         val distance = haversineDistance(lat1, lon1, lat2, lon2).toDouble()
 
-        val width = distance / 2.0
-        val height = distance * 1.5
+        val height: Double
+        val width: Double
+
+        when {
+            distance <= SMALL_DISTANCE -> {
+                height = distance * 2
+                width = distance * 2
+            }
+            distance <= MEDIUM_DISTANCE && distance > SMALL_DISTANCE -> {
+                height = distance * 1.3
+                width = distance / 1.8
+            }
+            else -> {
+                height = distance * 1.1
+                width = distance / 2
+            }
+        }
+
+        // Kiszámolja az elforgatáshoz szükséges szöget és a sarokpontokat.
 
         // Lokális síkbeli vektor komponensei (méterben)
         val dxMeters = (lon2 - lon1) * 111320.0 * cos(Math.toRadians(centerLat))
         val dyMeters = (lat2 - lat1) * 111320.0
 
         // alap irányszög (a két pont közti vektor szöge)
-        val theta = kotlin.math.atan2(dyMeters, dxMeters)
+        val theta = atan2(dyMeters, dxMeters)
 
-        // Ha a téglalap hosszabb oldala a Y irányban van (halfH > halfW),
-        // és mi szeretnénk, hogy a hosszú oldal párhuzamos legyen a célvektorral,
-        // akkor a forgatás legyen theta - PI/2 (vagy theta + PI/2).
+        // A téglalap hosszabb oldala (height) lesz párhuzamos a (from -> to) vektorral.
+        // Az alap téglalapunk Y-tengellyel párhuzamos, ezért PI/2-t (90 fokot) kell
+        // kivonni a cél szögéből.
         val rotation = theta - Math.PI / 2.0
 
         // Téglalap félméretek (méterben)
-        val halfW = width / 2.0   // eredetileg x-irány "fél szélesség"
-        val halfH = height / 2.0  // eredetileg y-irány "fél magasság"
+        val halfW = width / 2.0
+        val halfH = height / 2.0
 
-        // Sarokpontok középponthoz viszonyítva (itt Y a hosszabb oldal)
+        // Sarokpontok középponthoz viszonyítva
         val cornersLocal = listOf(
             Pair(-halfW, -halfH), // bal-alsó (x,y) méterben
             Pair(halfW, -halfH),  // jobb-alsó
@@ -64,8 +90,8 @@ class RoutePlannerUseCase {
             Pair(-halfW, halfH)   // bal-felső
         )
 
-        val cosR = kotlin.math.cos(rotation)
-        val sinR = kotlin.math.sin(rotation)
+        val cosR = cos(rotation)
+        val sinR = sin(rotation)
 
         // Forgatás lokális síkon (méterben), majd vissza lat/lon-ba
         val rotatedLatLon = cornersLocal.map { (xMeters, yMeters) ->

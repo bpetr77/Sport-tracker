@@ -45,21 +45,20 @@ class RoutePlannerViewModel(
             }
         }
     }
-
+    fun clearPoints(){
+        _routePoints.value = emptyList()
+    }
     fun calculateBoundingBox(from: LatLng, to: LatLng): BoundingBox {
         val boundingBox = routePlannerUseCase.calculateBoundingBox(from, to)
         return boundingBox
     }
 
     suspend fun loadGraphForArea(boundingBox: BoundingBox) {
-        Log.d("RoutePlannerViewModel", "1.1")
         val subGraph = graphRepository.loadSubGraph(boundingBox)
-        Log.d("RoutePlannerViewModel", "1.2")
         _graph.value = subGraph
-        Log.d("RoutePlannerViewModel", "1.3")
     }
 
-    fun planRoute(fromLat: Double, fromLon: Double, toLat: Double, toLon: Double) {
+    fun planRoute(fromLat: Double, fromLon: Double, toLat: Double, toLon: Double){
         viewModelScope.launch(Dispatchers.Default) {
             val g = _graph.value ?: return@launch
             val sp = ShortestPath(g)
@@ -76,7 +75,7 @@ class RoutePlannerViewModel(
         }
     }
 
-    fun prepareAndPlanRoute(from: LatLng, to: LatLng) {
+    fun prepareAndPlanRoute(from: LatLng, to: LatLng){
         viewModelScope.launch {
             Log.d("RoutePlannerViewModel", "Preparing and planning route...")
             val boundingBox = calculateBoundingBox(from, to)

@@ -43,6 +43,7 @@ import com.google.maps.android.compose.rememberUpdatedMarkerState
 import com.google.maps.android.compose.widgets.DisappearingScaleBar
 import hu.bme.aut.android.sporttracker.MainActivity
 import hu.bme.aut.android.sporttracker.R
+import hu.bme.aut.android.sporttracker.data.constans.PredefinedObjects
 import hu.bme.aut.android.sporttracker.data.local.phoneData.getScreenSize
 import hu.bme.aut.android.sporttracker.data.repository.location.LocationRepository
 import hu.bme.aut.android.sporttracker.data.repository.location.getLastKnownLocation
@@ -75,6 +76,7 @@ fun MapScreen(
     val sheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
     var showRoutePlanner by remember { mutableStateOf(false) }
+    var showCancelButton by remember { mutableStateOf(false) }
 
     // TODO: viewmodel
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -138,16 +140,22 @@ fun MapScreen(
                         title = "To"
                     )
                 }
-            }
-            boundingBoxPoints?.let { points ->
-                if (points.size >= 2) {
-                    Polyline(
-                        points = points,
-                        color = Color.Red,
-                        width = 4f
-                    )
+                Polyline(
+                    points = PredefinedObjects.BUDAPEST_COORDINATES,
+                    color = Color.Magenta,
+                    width = 8f
+                )
+                boundingBoxPoints?.let { points ->
+                    if (points.size >= 2) {
+                        Polyline(
+                            points = points,
+                            color = Color.Red,
+                            width = 4f
+                        )
+                    }
                 }
             }
+
 
             routePoints.let { points ->
                 if (points.size >= 2) {
@@ -223,13 +231,9 @@ fun MapScreen(
                         if (fromMarker != null && toMarker != null) {
                             val boundingBox = routePlannerViewModel.calculateBoundingBox(fromMarker!!, toMarker!!)
                             boundingBoxPoints = boundingBox.corners + boundingBox.corners.first()
-//                            routePlannerViewModel.planRoute(fromMarker!!.latitude, fromMarker!!.longitude, toMarker!!.latitude, toMarker!!.longitude)
-//                            Log.d("MapScreen", "Route planned")
-//                            Log.d("MapScreen", "Route: ${routePoints}")
 
                             routePlannerViewModel.prepareAndPlanRoute(fromMarker!!, toMarker!!)
                             Log.d("MapScreen", "Route planned")
-                            Log.d("MapScreen", "Route: ${routePoints}")
                         }
                     }
                 )
@@ -237,7 +241,15 @@ fun MapScreen(
         }
         FloatingActionButton(
             onClick = {
-                showRoutePlanner = !showRoutePlanner
+                if(showCancelButton){
+                    routePlannerViewModel.clearPoints()
+                    showCancelButton = false
+                }else {
+                    showRoutePlanner = !showRoutePlanner
+                }
+                if (!showRoutePlanner && routePlannerViewModel.routePoints.value.isNotEmpty()){
+                    showCancelButton = true
+                }
             },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -246,7 +258,7 @@ fun MapScreen(
             shape = CircleShape
         ) {
             Image(
-                painter = painterResource(id = R.drawable.outline_map_search_24),
+                painter = if(!showCancelButton)painterResource(id = R.drawable.outline_map_search_24)else(painterResource(id = R.drawable.outline_cancel_24)),
                 contentDescription = "Location icon",
                 modifier = Modifier.size(26.dp)
             )
