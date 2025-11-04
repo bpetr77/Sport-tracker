@@ -24,11 +24,14 @@ import hu.bme.aut.android.sporttracker.data.local.tour.di.provideTourDao
 import hu.bme.aut.android.sporttracker.data.remote.firebase.di.provideFirebaseAuth
 import hu.bme.aut.android.sporttracker.data.remote.firebase.di.provideFirestore
 import hu.bme.aut.android.sporttracker.data.repository.impl.TourRepositoryImpl
-import hu.bme.aut.android.sporttracker.data.repository.location.LocationRepository
+import hu.bme.aut.android.sporttracker.data.repository.impl.LocationRepositoryImpl
 import hu.bme.aut.android.sporttracker.data.repository.location.getLastKnownLocation
-import hu.bme.aut.android.sporttracker.data.routePlanner.repository.GraphRepository
-import hu.bme.aut.android.sporttracker.data.routePlanner.repository.OSMRepository
+import hu.bme.aut.android.sporttracker.data.repository.impl.GraphRepositoryImpl
+import hu.bme.aut.android.sporttracker.data.repository.impl.OSMRepositoryImpl
 import hu.bme.aut.android.sporttracker.data.service.LocationService
+import hu.bme.aut.android.sporttracker.domain.repository.GraphRepository
+import hu.bme.aut.android.sporttracker.domain.repository.OSMRepository
+import hu.bme.aut.android.sporttracker.domain.repository.TourRepository
 import hu.bme.aut.android.sporttracker.domain.usecase.TourUseCase
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourSettingsViewModel
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourStartedSettingsViewModel
@@ -46,8 +49,8 @@ import hu.bme.aut.android.sporttracker.ui.viewModels.SettingsViewModel
 class MainActivity : ComponentActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val userLocation = mutableStateOf<LatLng?>(null)
-    private lateinit var locationRepository: LocationRepository
-    private lateinit var routeRepository: OSMRepository
+    private lateinit var locationRepositoryImpl: LocationRepositoryImpl
+    //private lateinit var routeRepository: OSMRepositoryImpl
 
     private val tourSettingsViewModel: TourSettingsViewModel by viewModels()
 //    private val tourStartedSettingsViewModel: TourStartedSettingsViewModel by viewModels {
@@ -95,13 +98,18 @@ class MainActivity : ComponentActivity() {
         FirebaseApp.initializeApp(this)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        locationRepository = LocationRepository(fusedLocationClient, this)
-        routeRepository = OSMRepository(context = applicationContext)
+        // TODO: get ride of the impl
+        locationRepositoryImpl = LocationRepositoryImpl(fusedLocationClient, this)
+
         val graphDb = GraphDatabaseProvider.getDatabase(applicationContext)
-        val graphRepository = GraphRepository(graphDb)
+
+
+
+        val graphRepository: GraphRepository = GraphRepositoryImpl(graphDb)
+        val osmRepository: OSMRepository = OSMRepositoryImpl(context = applicationContext)
 
         // tourRepositoryImpl példányosítás
-        val tourRepositoryImpl = TourRepositoryImpl(
+        val tourRepositoryImpl: TourRepository = TourRepositoryImpl(
             dao = provideTourDao(context = applicationContext),
             firestore = provideFirestore(),
             auth = provideFirebaseAuth()
@@ -109,10 +117,10 @@ class MainActivity : ComponentActivity() {
 
         // ViewModel factory
         val tourStartedSettingsViewModel: TourStartedSettingsViewModel by viewModels {
-            TourStartedSettingsViewModelFactory(locationRepository, TourUseCase(), tourRepositoryImpl)
+            TourStartedSettingsViewModelFactory(locationRepositoryImpl, TourUseCase(), tourRepositoryImpl)
         }
 
-        val routePlannerViewModel = RoutePlannerViewModel(routeRepository, graphRepository)
+        val routePlannerViewModel = RoutePlannerViewModel(osmRepository, graphRepository)
 
         handleLocationPermission()
         setContent {
@@ -121,7 +129,7 @@ class MainActivity : ComponentActivity() {
                     NavGraph(
                         activity = this,
                         fusedLocationClient = fusedLocationClient,
-                        locationRepository = locationRepository,
+                        locationRepositoryImpl = locationRepositoryImpl,
                         tourSettingsViewModel = tourSettingsViewModel,
                         tourStartedSettingsViewModel = tourStartedSettingsViewModel,
                         routePlannerViewModel = routePlannerViewModel,
@@ -180,6 +188,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        locationRepository.stopLocationUpdates()
+        locationRepositoryImpl.stopLocationUpdates()
     }
 }

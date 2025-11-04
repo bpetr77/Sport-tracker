@@ -26,7 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import hu.bme.aut.android.sporttracker.R
 import hu.bme.aut.android.sporttracker.data.local.tour.database.DatabaseProvider
-import hu.bme.aut.android.sporttracker.data.repository.location.TourRepository
+import hu.bme.aut.android.sporttracker.data.repository.location.LocationTourDataSource
 import hu.bme.aut.android.sporttracker.ui.components.SpeedChart
 import hu.bme.aut.android.sporttracker.ui.screens.tour.TourSummaryScreen
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourSettingsViewModel
@@ -54,7 +54,7 @@ fun TourStartedSettingsScreen(
     // TODO: move this to a repository or a provider or somewhere else
     val context = LocalContext.current
     val database = DatabaseProvider.getDatabase(context)
-    val tourRepository = TourRepository(database.tourDao())
+    val locationTourDataSource = LocationTourDataSource(database.tourDao())
 
     Column(
         modifier = Modifier

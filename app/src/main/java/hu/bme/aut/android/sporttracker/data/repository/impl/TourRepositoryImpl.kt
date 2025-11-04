@@ -8,14 +8,15 @@ import hu.bme.aut.android.sporttracker.data.local.tour.model.TourEntity
 import hu.bme.aut.android.sporttracker.data.mappers.toEntity
 import hu.bme.aut.android.sporttracker.data.mappers.toFirebase
 import hu.bme.aut.android.sporttracker.data.remote.firebase.model.FirebaseTour
+import hu.bme.aut.android.sporttracker.domain.repository.TourRepository
 import kotlinx.coroutines.tasks.await
 
 class TourRepositoryImpl(
     private val dao: TourDao,
     private val firestore: FirebaseFirestore,
     private val auth: FirebaseAuth
-) {
-    suspend fun addTour(tour: TourEntity) {
+): TourRepository {
+    override suspend fun addTour(tour: TourEntity) {
         val currentUser = auth.currentUser ?: return
         val userId = currentUser.uid
 
@@ -38,7 +39,7 @@ class TourRepositoryImpl(
         }
     }
 
-    suspend fun getUserTours(userId: String): List<TourEntity> {
+    override suspend fun getUserTours(userId: String): List<TourEntity> {
         val firestore = FirebaseFirestore.getInstance()
         return try {
             val snapshot = firestore
@@ -66,7 +67,7 @@ class TourRepositoryImpl(
             dao.getToursByUser(userId)
         }
     }
-    suspend fun getTourById(id: Long): TourEntity? {
+    override suspend fun getTourById(id: Long): TourEntity? {
         // Attempt to fetch the tour from the local database
         val localTour = dao.getTourById(id)
         if (localTour != null) {
@@ -94,7 +95,7 @@ class TourRepositoryImpl(
         return null
     }
 
-    suspend fun updateTour(tour: TourEntity) {
+    override suspend fun updateTour(tour: TourEntity) {
         dao.updateTour(tour)
 
         auth.currentUser?.uid?.let { uid ->
@@ -108,7 +109,7 @@ class TourRepositoryImpl(
         }
     }
 
-    suspend fun deleteAllTours() {
+    override suspend fun deleteAllTours() {
         dao.deleteAllTours()
 
         auth.currentUser?.uid?.let { uid ->
@@ -122,7 +123,7 @@ class TourRepositoryImpl(
         }
     }
 
-    suspend fun deleteTourById(id: Long) {
+    override suspend fun deleteTourById(id: Long) {
         val tour = dao.getTourById(id)
         tour?.let {
             dao.deleteTourById(id)

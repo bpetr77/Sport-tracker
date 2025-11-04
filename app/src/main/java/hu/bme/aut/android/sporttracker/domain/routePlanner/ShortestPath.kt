@@ -1,8 +1,8 @@
 package hu.bme.aut.android.sporttracker.domain.routePlanner
 
 import android.util.Log
-import hu.bme.aut.android.sporttracker.data.routePlanner.model.Graph
-import hu.bme.aut.android.sporttracker.data.routePlanner.model.Node
+import hu.bme.aut.android.sporttracker.domain.model.routePlanner.Graph
+import hu.bme.aut.android.sporttracker.domain.model.routePlanner.Node
 import kotlin.math.*
 
 class ShortestPath(private val graph: Graph) {

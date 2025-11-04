@@ -3,7 +3,7 @@ package hu.bme.aut.android.sporttracker.data.converters
 import androidx.room.TypeConverter
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
-import hu.bme.aut.android.sporttracker.data.model.LocationPoint
+import hu.bme.aut.android.sporttracker.domain.model.tour.LocationPoint
 
 class Converters {
     @TypeConverter

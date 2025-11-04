@@ -1,7 +1,9 @@
-package hu.bme.aut.android.sporttracker.data.routePlanner.model
+package hu.bme.aut.android.sporttracker.domain.model.routePlanner
 
 import hu.bme.aut.android.sporttracker.data.local.graph.model.EdgeEntity
 import hu.bme.aut.android.sporttracker.data.local.graph.model.NodeEntity
+import hu.bme.aut.android.sporttracker.domain.model.routePlanner.Node
+import hu.bme.aut.android.sporttracker.domain.model.routePlanner.RouteSegment
 import kotlin.math.cos
 import kotlin.math.roundToLong
 import kotlin.math.sqrt

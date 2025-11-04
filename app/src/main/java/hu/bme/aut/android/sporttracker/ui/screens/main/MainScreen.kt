@@ -5,7 +5,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import com.google.android.gms.location.FusedLocationProviderClient
 import hu.bme.aut.android.sporttracker.MainActivity
-import hu.bme.aut.android.sporttracker.data.repository.location.LocationRepository
+import hu.bme.aut.android.sporttracker.data.repository.impl.LocationRepositoryImpl
 import hu.bme.aut.android.sporttracker.ui.screens.map.MapScreen
 import hu.bme.aut.android.sporttracker.ui.sign_in.UserData
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourSettingsViewModel
@@ -18,7 +18,7 @@ import hu.bme.aut.android.sporttracker.ui.viewModels.RoutePlannerViewModel
 fun MainScreen(
     activity: MainActivity,
     fusedLocationClient: FusedLocationProviderClient,
-    locationRepository: LocationRepository,
+    locationRepositoryImpl: LocationRepositoryImpl,
     tourSettingsViewModel: TourSettingsViewModel,
     tourStartedSettingsViewModel: TourStartedSettingsViewModel,
     locationViewmodel: LocationViewmodel,
@@ -46,7 +46,7 @@ fun MainScreen(
             fusedLocationClient = fusedLocationClient,
             userLocation = remember { mutableStateOf(null) },
             locationPermissionGranted = locationViewmodel.locationPermissionGranted,
-            locationRepository = locationRepository,
+            locationRepositoryImpl = locationRepositoryImpl,
             tourSettingsViewModel = tourSettingsViewModel,
             tourStartedSettingsViewModel = tourStartedSettingsViewModel,
             routePlannerViewModel = routePlannerViewModel

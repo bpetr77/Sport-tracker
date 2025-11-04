@@ -1,4 +1,4 @@
-package hu.bme.aut.android.sporttracker.data.model
+package hu.bme.aut.android.sporttracker.domain.model.tour
 
 data class LocationPoint(
     val latitude: Double,

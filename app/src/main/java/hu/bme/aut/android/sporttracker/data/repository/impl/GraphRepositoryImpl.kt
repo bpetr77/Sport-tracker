@@ -1,13 +1,13 @@
-package hu.bme.aut.android.sporttracker.data.routePlanner.repository
+package hu.bme.aut.android.sporttracker.data.repository.impl
 
-import android.util.Log
 import com.google.android.gms.maps.model.LatLng
 import hu.bme.aut.android.sporttracker.data.local.graph.database.GraphDatabase
 import hu.bme.aut.android.sporttracker.data.local.graph.model.EdgeEntity
 import hu.bme.aut.android.sporttracker.data.local.graph.model.NodeEntity
-import hu.bme.aut.android.sporttracker.data.model.BoundingBox
-import hu.bme.aut.android.sporttracker.data.routePlanner.model.Graph
-import hu.bme.aut.android.sporttracker.data.routePlanner.model.RouteSegment
+import hu.bme.aut.android.sporttracker.domain.model.routePlanner.BoundingBox
+import hu.bme.aut.android.sporttracker.domain.model.routePlanner.Graph
+import hu.bme.aut.android.sporttracker.domain.model.routePlanner.RouteSegment
+import hu.bme.aut.android.sporttracker.domain.repository.GraphRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -16,9 +16,9 @@ import kotlinx.coroutines.withContext
 import kotlin.math.cos
 import kotlin.math.sqrt
 
-class GraphRepository(private val db: GraphDatabase) {
+class GraphRepositoryImpl(private val db: GraphDatabase) : GraphRepository {
 
-    suspend fun getNodesInRotatedBox(bbox: BoundingBox): List<NodeEntity> {
+    override suspend fun getNodesInRotatedBox(bbox: BoundingBox): List<NodeEntity> {
         val roughNodes = db.nodeDao().getNodesInBoundingBox(
             minLat = bbox.minLat,
             maxLat = bbox.maxLat,
@@ -31,7 +31,7 @@ class GraphRepository(private val db: GraphDatabase) {
         }
     }
 
-    fun pointInPolygon(lat: Double, lon: Double, polygon: List<LatLng>): Boolean {
+    override fun pointInPolygon(lat: Double, lon: Double, polygon: List<LatLng>): Boolean {
         var inside = false
         val n = polygon.size
         for (i in 0 until n) {
@@ -48,33 +48,13 @@ class GraphRepository(private val db: GraphDatabase) {
         return inside
     }
 
-    suspend fun loadSubGraph2(
-        boundingBox: BoundingBox
-    ): Graph {
+    override suspend fun loadSubGraph(boundingBox: BoundingBox): Graph {
         val nodes = getNodesInRotatedBox(boundingBox)
-        val edges = db.edgeDao().getEdgesForNodes(nodes.map { it.id })
-
-        val graph = Graph()
-        graph.buildFromEntities(nodes, edges)
-        return graph
-    }
-
-    suspend fun loadSubGraph(boundingBox: BoundingBox): Graph {
-        Log.d("GraphRepository", "1")
-        val nodes = getNodesInRotatedBox(boundingBox)
-        Log.d("GraphRepository", "2")
-
         val nodeIds = nodes.map { it.id }
-        Log.d("GraphRepository", "3")
-
         val edges = getEdgesForNodesChunked(nodeIds)
-        Log.d("GraphRepository", "4")
-
         val graph = Graph()
-        Log.d("GraphRepository", "5")
 
         graph.buildFromEntities(nodes, edges)
-        Log.d("GraphRepository", "6")
 
         return graph
     }
@@ -94,14 +74,14 @@ class GraphRepository(private val db: GraphDatabase) {
             .distinctBy { it.id }
     }
 
-    suspend fun countNodes(): Int {
+    override suspend fun countNodes(): Int {
         return db.nodeDao().getCount()
     }
 
-    suspend fun saveGraphFromSegments(segments: List<RouteSegment>, batchSize: Int = 50) {
+    override suspend fun saveGraphFromSegments(segments: List<RouteSegment>, batchSize: Int) {
         val graph = Graph()
 
-        segments.chunked(batchSize).forEach {batch ->
+        segments.chunked(batchSize).forEach { batch ->
             val nodes = mutableListOf<NodeEntity>()
             val edges = mutableListOf<EdgeEntity>()
 
@@ -118,7 +98,7 @@ class GraphRepository(private val db: GraphDatabase) {
                 for (i in 0 until coords.size - 1) {
                     val (latA, lonA) = Pair(coords[i][0], coords[i][1])
                     val (latB, lonB) = Pair(coords[i + 1][0], coords[i + 1][1])
-                    val dist = Graph.planarDistance(latA, lonA, latB, lonB)
+                    val dist = Graph.Companion.planarDistance(latA, lonA, latB, lonB)
 
                     val fromId = graph.getOrCreateNodeId(latA, lonA)
                     val toId = graph.getOrCreateNodeId(latB, lonB)
@@ -181,7 +161,7 @@ class GraphRepository(private val db: GraphDatabase) {
         }
     }
 
-    suspend fun clearGraphData() {
+    override suspend fun clearGraphData() {
         withContext(Dispatchers.IO) {
             db.edgeDao().deleteAll()
             db.nodeDao().deleteAll()
@@ -200,4 +180,3 @@ class GraphRepository(private val db: GraphDatabase) {
     }
 
 }
-

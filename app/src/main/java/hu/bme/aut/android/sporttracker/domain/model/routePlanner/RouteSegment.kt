@@ -1,4 +1,4 @@
-package hu.bme.aut.android.sporttracker.data.routePlanner.model
+package hu.bme.aut.android.sporttracker.domain.model.routePlanner
 
 data class RouteSegment(
     val t: String, // type: secondary, tertiary, stb.

@@ -1,4 +1,4 @@
-package hu.bme.aut.android.sporttracker.data.model
+package hu.bme.aut.android.sporttracker.domain.model.routePlanner
 
 import com.google.android.gms.maps.model.LatLng
 

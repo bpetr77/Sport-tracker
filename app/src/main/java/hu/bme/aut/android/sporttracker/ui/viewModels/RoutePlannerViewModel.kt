@@ -4,11 +4,12 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
-import hu.bme.aut.android.sporttracker.data.model.BoundingBox
-import hu.bme.aut.android.sporttracker.data.routePlanner.model.Graph
-import hu.bme.aut.android.sporttracker.data.routePlanner.model.RouteSegment
-import hu.bme.aut.android.sporttracker.data.routePlanner.repository.GraphRepository
-import hu.bme.aut.android.sporttracker.data.routePlanner.repository.OSMRepository
+import hu.bme.aut.android.sporttracker.domain.model.routePlanner.BoundingBox
+import hu.bme.aut.android.sporttracker.domain.model.routePlanner.Graph
+import hu.bme.aut.android.sporttracker.domain.model.routePlanner.RouteSegment
+import hu.bme.aut.android.sporttracker.data.repository.impl.OSMRepositoryImpl
+import hu.bme.aut.android.sporttracker.domain.repository.GraphRepository
+import hu.bme.aut.android.sporttracker.domain.repository.OSMRepository
 import hu.bme.aut.android.sporttracker.domain.routePlanner.ShortestPath
 import hu.bme.aut.android.sporttracker.domain.usecase.RoutePlannerUseCase
 import kotlinx.coroutines.Dispatchers
@@ -84,7 +85,6 @@ class RoutePlannerViewModel(
             Log.d("RoutePlannerViewModel", "Graph loaded")
             planRoute(from.latitude, from.longitude, to.latitude, to.longitude)
             Log.d("RoutePlannerViewModel", "Route planned")
-
         }
     }
 }

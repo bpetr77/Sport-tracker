@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.Color
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Polyline
-import hu.bme.aut.android.sporttracker.data.repository.location.TourRepository
+import hu.bme.aut.android.sporttracker.data.repository.location.LocationTourDataSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.DrawerState
 import androidx.compose.runtime.produceState
@@ -23,7 +23,7 @@ import hu.bme.aut.android.sporttracker.ui.sign_in.UserData
 
 @Composable
 fun AllToursScreen(
-    tourRepository: TourRepository,
+    locationTourDataSource: LocationTourDataSource,
     drawerState: DrawerState,
     onMenuClick: () -> Unit,
     onToursClick: () -> Unit,
@@ -34,7 +34,7 @@ fun AllToursScreen(
 ) {
     // Fetch all tours asynchronously
     val tours = produceState<List<TourEntity>>(initialValue = emptyList()) {
-        value = tourRepository.getAllTours()
+        value = locationTourDataSource.getAllTours()
     }.value
 
     // Combine all locations from all tours

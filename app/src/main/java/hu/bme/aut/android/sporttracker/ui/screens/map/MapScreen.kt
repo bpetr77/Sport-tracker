@@ -45,7 +45,7 @@ import hu.bme.aut.android.sporttracker.MainActivity
 import hu.bme.aut.android.sporttracker.R
 import hu.bme.aut.android.sporttracker.data.constans.PredefinedObjects
 import hu.bme.aut.android.sporttracker.data.local.phoneData.getScreenSize
-import hu.bme.aut.android.sporttracker.data.repository.location.LocationRepository
+import hu.bme.aut.android.sporttracker.data.repository.impl.LocationRepositoryImpl
 import hu.bme.aut.android.sporttracker.data.repository.location.getLastKnownLocation
 import hu.bme.aut.android.sporttracker.ui.components.RoutePlannerSheet
 import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourSettingsScreen
@@ -64,7 +64,7 @@ fun MapScreen(
     fusedLocationClient: FusedLocationProviderClient,
     userLocation: MutableState<LatLng?>,
     locationPermissionGranted: MutableState<Boolean>,
-    locationRepository: LocationRepository,
+    locationRepositoryImpl: LocationRepositoryImpl,
     tourSettingsViewModel: TourSettingsViewModel,
     tourStartedSettingsViewModel: TourStartedSettingsViewModel,
     routePlannerViewModel: RoutePlannerViewModel
@@ -122,7 +122,7 @@ fun MapScreen(
             }
         ) {
             //TODO: maybe consider this logic, because it is not as stable as it should be
-            val locations by locationRepository.locations.collectAsState()
+            val locations by locationRepositoryImpl.locations.collectAsState()
 
             val segments = mutableListOf<MutableList<LatLng>>()
             var currentSegment = mutableListOf<LatLng>()
@@ -318,7 +318,7 @@ fun MapScreen(
         ) {
             if (!isTourStarted) {
                 TourSettingsScreen(
-                    locationRepository = locationRepository,
+                    locationRepositoryImpl = locationRepositoryImpl,
                     tourSettingsViewModel = tourSettingsViewModel,
                     onStartTour = {
                         Log.d("MapScreen", "Túra indítása...")
@@ -330,11 +330,11 @@ fun MapScreen(
             } else {
                 TourStartedSettingsScreen(
                     stopLocationUpdates = {
-                        locationRepository.stopLocationUpdates()
+                        locationRepositoryImpl.stopLocationUpdates()
                         tourSettingsViewModel.toggleTourState()
                     },
-                    pauseLocationUpdates = { locationRepository.pauseLocationUpdates() },
-                    resumeLocationUpdates = { locationRepository.resumeLocationUpdates() },
+                    pauseLocationUpdates = { locationRepositoryImpl.pauseLocationUpdates() },
+                    resumeLocationUpdates = { locationRepositoryImpl.resumeLocationUpdates() },
                     tourStartedSettingsViewModel = tourStartedSettingsViewModel,
                     tourSettingsViewModel = tourSettingsViewModel
                 )

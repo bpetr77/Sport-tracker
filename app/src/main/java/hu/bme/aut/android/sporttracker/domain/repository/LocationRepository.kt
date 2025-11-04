@@ -1,9 +1,9 @@
-package hu.bme.aut.android.sporttracker.domain.location
+package hu.bme.aut.android.sporttracker.domain.repository
 
-import hu.bme.aut.android.sporttracker.data.model.LocationPoint
+import hu.bme.aut.android.sporttracker.domain.model.tour.LocationPoint
 import kotlinx.coroutines.flow.StateFlow
 
-interface LocationTracker {
+interface LocationRepository {
     val locations: StateFlow<List<LocationPoint>>
     fun startLocationUpdates()
     fun stopLocationUpdates()

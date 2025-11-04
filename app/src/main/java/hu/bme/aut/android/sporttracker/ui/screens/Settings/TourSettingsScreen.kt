@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import hu.bme.aut.android.sporttracker.R
-import hu.bme.aut.android.sporttracker.data.repository.location.LocationRepository
+import hu.bme.aut.android.sporttracker.data.repository.impl.LocationRepositoryImpl
 import hu.bme.aut.android.sporttracker.ui.components.RadioButtonSingleSelection
 import hu.bme.aut.android.sporttracker.ui.components.TransportButton
 import hu.bme.aut.android.sporttracker.ui.components.UserInputTextField
@@ -29,7 +29,7 @@ import hu.bme.aut.android.sporttracker.ui.viewModels.TourSettingsViewModel
 
 @Composable
 fun TourSettingsScreen(
-    locationRepository: LocationRepository,
+    locationRepositoryImpl: LocationRepositoryImpl, // TODO: remove that its not even a vm
     tourSettingsViewModel: TourSettingsViewModel,
     onStartTour: (String) -> Unit,
     onStopTour: () -> Unit
@@ -85,11 +85,11 @@ fun TourSettingsScreen(
         Button(
             onClick = {
                 if (isTourStarted) {
-                    locationRepository.stopLocationUpdates()
+                    locationRepositoryImpl.stopLocationUpdates()
                     onStopTour()
                 } else {
                     if (selectedTransportMode != null) {
-                        locationRepository.startLocationUpdates()
+                        locationRepositoryImpl.startLocationUpdates()
                         onStartTour(selectedTransportMode!!)
                     } else {
                         Log.w("TourSettingsScreen", "Transport mode not selected")

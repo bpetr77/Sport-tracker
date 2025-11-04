@@ -15,7 +15,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.util.Log
 import hu.bme.aut.android.sporttracker.R
-import hu.bme.aut.android.sporttracker.data.repository.location.LocationRepository
+import hu.bme.aut.android.sporttracker.data.repository.impl.LocationRepositoryImpl
 
 class LocationService() : Service() {
 
@@ -73,6 +73,6 @@ class LocationService() : Service() {
     override fun onDestroy() {
         super.onDestroy()
         // Stop location updates
-        LocationRepository(fusedLocationClient, this).stopLocationUpdates()
+        LocationRepositoryImpl(fusedLocationClient, this).stopLocationUpdates()
     }
 }

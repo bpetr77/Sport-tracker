@@ -1,7 +1,7 @@
 package hu.bme.aut.android.sporttracker.domain.usecase
 
 import com.google.android.gms.maps.model.LatLng
-import hu.bme.aut.android.sporttracker.data.model.BoundingBox
+import hu.bme.aut.android.sporttracker.domain.model.routePlanner.BoundingBox
 import kotlin.math.abs
 import kotlin.math.asin
 import kotlin.math.atan2

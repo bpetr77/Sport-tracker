@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.sp
 import hu.bme.aut.android.sporttracker.R
 import hu.bme.aut.android.sporttracker.data.local.tour.database.DatabaseProvider
 import hu.bme.aut.android.sporttracker.data.local.tour.model.TourEntity
-import hu.bme.aut.android.sporttracker.data.repository.location.TourRepository
+import hu.bme.aut.android.sporttracker.data.repository.location.LocationTourDataSource
 import hu.bme.aut.android.sporttracker.ui.components.TourElement
 import hu.bme.aut.android.sporttracker.ui.screens.main.MainLayout
 import hu.bme.aut.android.sporttracker.ui.sign_in.UserData
@@ -67,7 +67,7 @@ fun TourMenuScreen(
 
         // TODO: Move this to a repository or a provider or somewhere else
         val database = DatabaseProvider.getDatabase(LocalContext.current)
-        val tourRepository = TourRepository(database.tourDao())
+        val locationTourDataSource = LocationTourDataSource(database.tourDao())
 
         LaunchedEffect(user) {
             //userTours = tourViewModel.getAllToursById(user)

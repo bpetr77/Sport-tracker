@@ -3,9 +3,9 @@ package hu.bme.aut.android.sporttracker.ui.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import hu.bme.aut.android.sporttracker.data.local.tour.model.TourEntity
-import hu.bme.aut.android.sporttracker.data.model.LocationPoint
-import hu.bme.aut.android.sporttracker.data.repository.impl.TourRepositoryImpl
-import hu.bme.aut.android.sporttracker.data.repository.location.LocationRepository
+import hu.bme.aut.android.sporttracker.domain.model.tour.LocationPoint
+import hu.bme.aut.android.sporttracker.domain.repository.LocationRepository
+import hu.bme.aut.android.sporttracker.domain.repository.TourRepository
 import hu.bme.aut.android.sporttracker.domain.usecase.TourUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,9 +13,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class TourStartedSettingsViewModel(
-    private val locationRepository: LocationRepository,
+    private val locationRepositoryImpl: LocationRepository,
     private val tourUseCase: TourUseCase,
-    private val tourRepository: TourRepositoryImpl,
+    private val tourRepository: TourRepository,
 ) : ViewModel() {
 
     private val _locationHistory = MutableStateFlow<List<LocationPoint>>(emptyList())
@@ -38,7 +38,7 @@ class TourStartedSettingsViewModel(
 
     init {
         viewModelScope.launch {
-            locationRepository.locations.collect { locations ->
+            locationRepositoryImpl.locations.collect { locations ->
                 _locationHistory.value = locations
                 _totalDistance.value = tourUseCase.calculateTotalDistance(locations)
                 _currentSpeed.value = tourUseCase.getCurrentSpeedInKmH(locations)

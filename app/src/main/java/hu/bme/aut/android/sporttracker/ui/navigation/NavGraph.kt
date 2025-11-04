@@ -20,9 +20,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.android.gms.location.FusedLocationProviderClient
 import hu.bme.aut.android.sporttracker.MainActivity
-import hu.bme.aut.android.sporttracker.data.repository.location.LocationRepository
+import hu.bme.aut.android.sporttracker.data.repository.impl.LocationRepositoryImpl
 import hu.bme.aut.android.sporttracker.data.local.tour.database.DatabaseProvider
-import hu.bme.aut.android.sporttracker.data.repository.location.TourRepository
+import hu.bme.aut.android.sporttracker.data.repository.location.LocationTourDataSource
 import hu.bme.aut.android.sporttracker.ui.screens.main.MainScreen
 import hu.bme.aut.android.sporttracker.ui.screens.menu.MenuScreen
 import hu.bme.aut.android.sporttracker.ui.screens.menu.TourMenuScreen
@@ -43,7 +43,7 @@ fun NavGraph(
     navController: NavHostController = rememberNavController(),
     activity: MainActivity,
     fusedLocationClient: FusedLocationProviderClient,
-    locationRepository: LocationRepository,
+    locationRepositoryImpl: LocationRepositoryImpl,
     tourSettingsViewModel: TourSettingsViewModel,
     tourStartedSettingsViewModel: TourStartedSettingsViewModel,
     locationViewmodel: LocationViewmodel,
@@ -74,18 +74,6 @@ fun NavGraph(
                     }
                 }
             )
-//            LaunchedEffect(key1 = state.isSignInSuccessful) {
-//                if (state.isSignInSuccessful) {
-//                    Toast.makeText(
-//                        activity.applicationContext,
-//                        "Sign in successful",
-//                        Toast.LENGTH_LONG
-//                    ).show()
-//                }
-//                if (googleAuthUiClient.getSignedInUser() != null) {
-//                    navController.navigate("main")
-//                }
-//            }
             LaunchedEffect(key1 = state.isSignInSuccessful) {
                 val signedInUser = googleAuthUiClient.getSignedInUser()
                 if (state.isSignInSuccessful && signedInUser != null) {
@@ -115,7 +103,7 @@ fun NavGraph(
             MainScreen(
                 activity = activity,
                 fusedLocationClient = fusedLocationClient,
-                locationRepository = locationRepository,
+                locationRepositoryImpl = locationRepositoryImpl,
                 tourSettingsViewModel = tourSettingsViewModel,
                 tourStartedSettingsViewModel = tourStartedSettingsViewModel,
                 locationViewmodel = locationViewmodel,
@@ -185,7 +173,7 @@ fun NavGraph(
 
         // TODO: Move this to a repository or a provider or somewhere else
         val database = DatabaseProvider.getDatabase(activity)
-        val tourRepository = TourRepository(database.tourDao())
+        val locationTourDataSource = LocationTourDataSource(database.tourDao())
 
         composable(
             route = Screen.TourDetails.route,
@@ -193,7 +181,7 @@ fun NavGraph(
         ) { backStackEntry ->
             val tourId = backStackEntry.arguments?.getLong("tourId") ?: return@composable
             TourDetailsScreen(tourId = tourId,
-                tourRepository = tourRepository,
+                locationTourDataSource = locationTourDataSource,
                 drawerState = drawerState,
                 onMenuClick = { navController.navigate(Screen.Menu.route) },
                 onToursClick = { navController.navigate(Screen.Tours.route) },
@@ -214,7 +202,7 @@ fun NavGraph(
 
         composable(Screen.AllTours.route) {
             AllToursScreen(
-                tourRepository = tourRepository,
+                locationTourDataSource = locationTourDataSource,
                 drawerState = drawerState,
                 onMenuClick = { navController.navigate(Screen.Menu.route) },
                 onToursClick = { navController.navigate(Screen.Tours.route) },

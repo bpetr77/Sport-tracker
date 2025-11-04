@@ -1,30 +1,30 @@
-package hu.bme.aut.android.sporttracker.data.repository.location
+package hu.bme.aut.android.sporttracker.data.repository.impl
 
+import android.Manifest
+import android.app.ActivityManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Looper
 import android.util.Log
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.Priority
+import hu.bme.aut.android.sporttracker.domain.model.tour.LocationPoint
+import hu.bme.aut.android.sporttracker.data.service.LocationService
+import hu.bme.aut.android.sporttracker.domain.repository.LocationRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import android.Manifest
-import android.app.ActivityManager
-import android.content.Intent
-import androidx.core.content.ContextCompat
-import hu.bme.aut.android.sporttracker.data.service.LocationService
-import hu.bme.aut.android.sporttracker.data.model.LocationPoint
-import hu.bme.aut.android.sporttracker.domain.location.LocationTracker
 
-class LocationRepository(
+class LocationRepositoryImpl(
     private val fusedLocationProviderClient: FusedLocationProviderClient,
     private val context: Context
-): LocationTracker {
+): LocationRepository {
     private val _locations = MutableStateFlow<List<LocationPoint>>(emptyList())
     override val locations: StateFlow<List<LocationPoint>> = _locations.asStateFlow()
     private var isUpdating = false
