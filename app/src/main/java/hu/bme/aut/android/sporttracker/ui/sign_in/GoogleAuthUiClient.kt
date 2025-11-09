@@ -59,15 +59,7 @@ class GoogleAuthUiClient(
             )
         }
     }
-    suspend fun signOut2() {
-        try {
-            oneTapClient.signOut().await()
-            auth.signOut()
-        }catch (e: Exception) {
-            e.printStackTrace()
-            if (e is CancellationException) throw e
-        }
-    }
+
 
     suspend fun signOut(context: Context) {
         try {

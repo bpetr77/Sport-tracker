@@ -15,8 +15,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.FirebaseApp
 import hu.bme.aut.android.sporttracker.data.local.graph.database.GraphDatabaseProvider
@@ -142,7 +146,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
+    // TODO: get this out of here
     fun handleLocationPermission() {
         Log.d("handleLocationPermission", "Checking location permissions...")
 
@@ -179,7 +183,29 @@ class MainActivity : ComponentActivity() {
             locationPermissionLauncher.launch(permissions.toTypedArray())
         }
     }
+    fun checkLocationEnabledAndRequestIfNeeded() {
+        val locationRequest = LocationRequest.Builder(
+            Priority.PRIORITY_HIGH_ACCURACY, 1000L
+        ).build()
 
+        val builder = LocationSettingsRequest.Builder()
+            .addLocationRequest(locationRequest)
+            .setAlwaysShow(true)
+
+        val settingsClient = LocationServices.getSettingsClient(this)
+        val task = settingsClient.checkLocationSettings(builder.build())
+
+        task.addOnFailureListener { exception ->
+            if (exception is ResolvableApiException) {
+                try {
+                    // Megjeleníti a rendszer dialógust, hogy a user bekapcsolja a helyet
+                    exception.startResolutionForResult(this, 1001)
+                } catch (sendEx: Exception) {
+                    Log.e("Location", "Failed to show enable location dialog: ${sendEx.message}")
+                }
+            }
+        }
+    }
 
     private fun startLocationService() {
         val serviceIntent = Intent(this, LocationService::class.java)

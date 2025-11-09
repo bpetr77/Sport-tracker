@@ -53,7 +53,6 @@ object MapsService {
 
         if (locations.isEmpty()) return ""
 
-        //val center = "${locations.first().first},${locations.first().second}"
         val center = if (locations.isNotEmpty()) {
             val middleIndex = locations.size / 2
             "${locations[middleIndex].first},${locations[middleIndex].second}"

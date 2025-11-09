@@ -3,6 +3,7 @@ package hu.bme.aut.android.sporttracker.domain.routePlanner
 import android.util.Log
 import hu.bme.aut.android.sporttracker.domain.model.routePlanner.Graph
 import hu.bme.aut.android.sporttracker.domain.model.routePlanner.Node
+import hu.bme.aut.android.sporttracker.domain.model.routePlanner.PathResult
 import kotlin.math.*
 
 class ShortestPath(private val graph: Graph) {
@@ -60,7 +61,7 @@ class ShortestPath(private val graph: Graph) {
     /**
      * A*-algoritmus a legrövidebb út kiszámítására a Graph-ban.
      */
-    fun findShortestPathIds(startId: Long, goalId: Long): List<Long> {
+    fun findShortestPathIds(startId: Long, goalId: Long): PathResult {
         val adjacency = graph.adjacencyMap()
         Log.d("AStar", "1")
 
@@ -73,10 +74,10 @@ class ShortestPath(private val graph: Graph) {
 
         if (startNode == null || goalNode == null) {
             Log.e("AStar", "Missing node(s): start=$startNode, goal=$goalNode, ids=($startId,$goalId)")
-            return emptyList()
+            return PathResult(emptyList(), Double.POSITIVE_INFINITY)
         }
 
-        if (startId == goalId) return listOf(startId)
+        if (startId == goalId) return PathResult(listOf(startId), 0.0)
 
         val gScore = mutableMapOf<Long, Double>().withDefault { Double.POSITIVE_INFINITY }
         val fScore = mutableMapOf<Long, Double>().withDefault { Double.POSITIVE_INFINITY }
@@ -99,8 +100,14 @@ class ShortestPath(private val graph: Graph) {
                     cur = prev[cur]
                 }
                 path.reverse()
-                Log.d("AStar", "Path found: length=${path.size}")
-                return path
+                var totalDistance = 0.0
+                for (i in 0 until path.size - 1) {
+                    val nodeA = nodes[path[i]]!!
+                    val nodeB = nodes[path[i+1]]!!
+                    totalDistance += heuristicDistance(nodeA, nodeB)
+                }
+                Log.d("AStar", "Path found: length=${path.size}, distance=$totalDistance")
+                return PathResult(path, totalDistance)
             }
 
             for ((neighborId, weight) in adjacency[currentId] ?: emptyList()) {
@@ -117,10 +124,10 @@ class ShortestPath(private val graph: Graph) {
         }
 
         Log.w("AStar", "No path found from $startId to $goalId")
-        return emptyList()
+        return PathResult(emptyList(), Double.POSITIVE_INFINITY)
     }
 
-    private fun heuristicDistance2(a: Node, b: Node): Double {
+    private fun heuristicDistance(a: Node, b: Node): Double {
         val R = 6371000.0 // Föld sugara méterben
         val dLat = Math.toRadians(b.lat - a.lat)
         val dLon = Math.toRadians(b.lon - a.lon)
@@ -132,18 +139,18 @@ class ShortestPath(private val graph: Graph) {
         return R * c
     }
 
-    private fun heuristicDistance(a: Node, b: Node): Double {
-        val dx = (a.lon - b.lon) * 111320 * cos(Math.toRadians((a.lat + b.lat) / 2))
-        val dy = (a.lat - b.lat) * 110540
-        return sqrt(dx * dx + dy * dy)
-    }
+//    private fun heuristicDistance2(a: Node, b: Node): Double {
+//        val dx = (a.lon - b.lon) * 111320 * cos(Math.toRadians((a.lat + b.lat) / 2))
+//        val dy = (a.lat - b.lat) * 110540
+//        return sqrt(dx * dx + dy * dy)
+//    }
 
     /**
      * Node ID lista -> (lat, lon) koordinátalistává alakítás.
      */
-    fun idsToLatLon(pathIds: List<Long>): List<Pair<Double, Double>> {
+    fun idsToLatLon(pathIds: PathResult): List<Pair<Double, Double>> {
         val nodes = graph.allNodes()
-        return pathIds.mapNotNull { id ->
+        return pathIds.pathIds.mapNotNull { id ->
             nodes[id]?.let { node -> node.lat to node.lon }
         }
     }
@@ -165,6 +172,7 @@ class ShortestPath(private val graph: Graph) {
         return bestId
     }
 
+    // TODO: same function as heuristicDistance
     private fun planarDistanceMeters(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
         val dx = (lon2 - lon1) * 111320.0 * cos(Math.toRadians((lat1 + lat2) / 2.0))
         val dy = (lat2 - lat1) * 110540.0

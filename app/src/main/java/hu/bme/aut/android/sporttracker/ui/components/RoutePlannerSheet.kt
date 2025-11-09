@@ -31,7 +31,8 @@ fun RoutePlannerSheet(
             onValueChange = onFromChange,
             label = { Text("From", color = Color.White) },
             modifier = Modifier.fillMaxWidth(),
-            textStyle = TextStyle(color = Color.White)
+            textStyle = TextStyle(color = Color.White),
+            readOnly = true
         )
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
@@ -39,15 +40,23 @@ fun RoutePlannerSheet(
             onValueChange = onToChange,
             label = { Text("To", color = Color.White) },
             modifier = Modifier.fillMaxWidth(),
-            textStyle = TextStyle(color = Color.White)
+            textStyle = TextStyle(color = Color.White),
+            readOnly = true
         )
         Spacer(modifier = Modifier.height(8.dp))
         Button(
             onClick = onClick,
+            enabled = fromText.isNotEmpty() && toText.isNotEmpty(),
             modifier = Modifier.align(Alignment.End),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(210, 210, 210, 255)
-            )
+            colors = if (fromText.isNotEmpty() && toText.isNotEmpty()) {
+                ButtonDefaults.buttonColors(
+                    containerColor = Color(210, 210, 210, 255)
+                )
+            } else {
+                ButtonDefaults.buttonColors(
+                    containerColor = Color(210, 210, 210, 155)
+                )
+            }
         ) {
             Text("Útvonal tervezés", color = Color.Black)
         }

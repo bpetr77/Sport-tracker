@@ -102,7 +102,6 @@ class Graph {
             "platform", "bus_stop" -> 2.0
             else -> 1.0
         }
-
         return w
     }
     fun buildFromEntities(nodes: List<NodeEntity>, edges: List<EdgeEntity>) {

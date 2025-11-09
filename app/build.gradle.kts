@@ -119,8 +119,7 @@ dependencies {
 
     implementation ("com.google.maps.android:maps-compose:6.6.0")
 
-    // Optionally, you can include the Compose utils library for Clustering,
-    // Street View metadata checks, etc.
+
     implementation ("com.google.maps.android:maps-compose-utils:6.6.0")
 
     // Optionally, you can include the widgets library for ScaleBar, etc.
@@ -131,6 +130,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.1")
     implementation("io.coil-kt:coil-compose:2.4.0")
+//    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+//    implementation("com.squareup.retrofit2:converter-moshi:2.11.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

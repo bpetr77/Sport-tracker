@@ -1,6 +1,11 @@
 package hu.bme.aut.android.sporttracker.ui.screens.map
 
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.location.LocationManager
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,6 +21,8 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
@@ -47,6 +55,8 @@ import hu.bme.aut.android.sporttracker.data.constans.PredefinedObjects
 import hu.bme.aut.android.sporttracker.data.local.phoneData.getScreenSize
 import hu.bme.aut.android.sporttracker.data.repository.impl.LocationRepositoryImpl
 import hu.bme.aut.android.sporttracker.data.repository.location.getLastKnownLocation
+import hu.bme.aut.android.sporttracker.domain.util.location.getAddressFromLatLng
+import hu.bme.aut.android.sporttracker.domain.util.location.isLocationEnabled
 import hu.bme.aut.android.sporttracker.ui.components.RoutePlannerSheet
 import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourSettingsScreen
 import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourStartedSettingsScreen
@@ -69,6 +79,24 @@ fun MapScreen(
     tourStartedSettingsViewModel: TourStartedSettingsViewModel,
     routePlannerViewModel: RoutePlannerViewModel
 ) {
+    val context = LocalContext.current
+    // TODO: GET THIS CODE TO STATES AND VIEWMODELS
+    var isLocationEnabled by remember { mutableStateOf(isLocationEnabled(context)) }
+
+    DisposableEffect(Unit) {
+        val filter = IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION)
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(ctx: Context?, intent: Intent?) {
+                isLocationEnabled = isLocationEnabled(context)
+            }
+        }
+        context.registerReceiver(receiver, filter)
+
+        onDispose {
+            context.unregisterReceiver(receiver)
+        }
+    }
+
     val defaultLocation = LatLng(47.497913, 19.040236) // Budapest
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(userLocation.value ?: defaultLocation, 15f)
@@ -112,10 +140,10 @@ fun MapScreen(
                 if (showRoutePlanner) {
                     if (clickCount % 2 == 0) {
                         fromMarker = latLng
-                        fromText = "${latLng.latitude}, ${latLng.longitude}"
+                        fromText = getAddressFromLatLng(activity, latLng)
                     } else {
                         toMarker = latLng
-                        toText = "${latLng.latitude}, ${latLng.longitude}"
+                        toText = getAddressFromLatLng(activity, latLng)
                     }
                     clickCount++
                 }
@@ -154,6 +182,12 @@ fun MapScreen(
                         )
                     }
                 }
+            }else{
+                fromMarker = null
+                toMarker = null
+                toText = ""
+                fromText = ""
+                clickCount = 0
             }
 
 
@@ -268,6 +302,7 @@ fun MapScreen(
             onClick = {
                 activity.handleLocationPermission()
                 if (locationPermissionGranted.value) {
+                    activity.checkLocationEnabledAndRequestIfNeeded()
                     activity.lifecycleScope.launch {
                         val newLocation = getLastKnownLocation(activity, fusedLocationClient)
                         userLocation.value = newLocation
@@ -286,7 +321,7 @@ fun MapScreen(
             shape = CircleShape
         ) {
             Image(
-                painter = painterResource(id = R.drawable.baseline_my_location_24),
+                painter = if(isLocationEnabled){painterResource(id = R.drawable.baseline_my_location_24)}else(painterResource(id = R.drawable.baseline_location_searching_24)),
                 contentDescription = "Location icon",
                 modifier = Modifier.size(26.dp)
             )
