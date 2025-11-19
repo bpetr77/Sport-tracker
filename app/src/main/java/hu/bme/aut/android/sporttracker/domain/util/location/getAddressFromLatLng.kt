@@ -6,7 +6,8 @@ import android.util.Log
 import com.google.android.gms.maps.model.LatLng
 import java.util.Locale
 
-fun getAddressFromLatLng(context: Context, latLng: LatLng): String {
+fun getAddressFromLatLng(context: Context, latLng: LatLng?): String {
+    if (latLng == null){return ""}
     return try {
         val geocoder = Geocoder(context, Locale.getDefault())
         val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)

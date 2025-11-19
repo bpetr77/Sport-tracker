@@ -155,7 +155,7 @@ fun MapScreen(
             val segments = mutableListOf<MutableList<LatLng>>()
             var currentSegment = mutableListOf<LatLng>()
 
-            if(showRoutePlanner) {
+            if (showRoutePlanner) {
                 fromMarker?.let {
                     Marker(
                         state = rememberUpdatedMarkerState(position = it),
@@ -182,7 +182,7 @@ fun MapScreen(
                         )
                     }
                 }
-            }else{
+            } else {
                 fromMarker = null
                 toMarker = null
                 toText = ""
@@ -247,7 +247,6 @@ fun MapScreen(
                 .align(Alignment.BottomStart),
             cameraPositionState = cameraPositionState
         )
-
         if (showRoutePlanner) {
             Box(
                 modifier = Modifier
@@ -269,6 +268,35 @@ fun MapScreen(
                             routePlannerViewModel.prepareAndPlanRoute(fromMarker!!, toMarker!!)
                             Log.d("MapScreen", "Route planned")
                         }
+                    },
+                    onUseCurrentLocation = {
+                        activity.handleLocationPermission()
+                        if (locationPermissionGranted.value) {
+                            activity.checkLocationEnabledAndRequestIfNeeded()
+                            activity.lifecycleScope.launch {
+                                val newLocation = getLastKnownLocation(activity, fusedLocationClient)
+                                userLocation.value = newLocation
+                                newLocation?.let {
+                                    cameraPositionState.animate(CameraUpdateFactory.newLatLngZoom(it, 15f))
+                                }
+                                fromMarker = newLocation
+                                fromText = getAddressFromLatLng(activity, newLocation)
+                                clickCount = 1
+                            }
+                        } else {
+                            Log.w("MapScreen", "Location permission not granted")
+                        }
+                    },
+                    onSwap = {
+                        val tempMarker = fromMarker
+                        fromMarker = toMarker
+                        toMarker = tempMarker
+
+                        val tempText = fromText
+                        fromText = toText
+                        toText = tempText
+
+                        clickCount = 0
                     }
                 )
             }

@@ -68,13 +68,11 @@ class TourRepositoryImpl(
         }
     }
     override suspend fun getTourById(id: Long): TourEntity? {
-        // Attempt to fetch the tour from the local database
         val localTour = dao.getTourById(id)
         if (localTour != null) {
             return localTour
         }
 
-        // If not found locally, fetch from Firebase
         auth.currentUser?.uid?.let { uid ->
             val snapshot = firestore.collection("users")
                 .document(uid)
@@ -85,7 +83,6 @@ class TourRepositoryImpl(
 
             val firebaseTour = snapshot.documents.firstOrNull()?.toObject(FirebaseTour::class.java)?.toEntity()
             if (firebaseTour != null) {
-                // Cache the fetched tour locally
                 dao.insertTour(firebaseTour)
             }
             return firebaseTour
