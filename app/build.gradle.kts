@@ -133,6 +133,9 @@ dependencies {
 //    implementation("com.squareup.retrofit2:retrofit:2.11.0")
 //    implementation("com.squareup.retrofit2:converter-moshi:2.11.0")
 
+
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.6.8")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.8")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -140,4 +143,10 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+}
+
+tasks.configureEach {
+    if (name == "connectedDebugAndroidTest") {
+        doNotTrackState("Temporarily disabling state tracking for known Gradle 8.7 issue.")
+    }
 }

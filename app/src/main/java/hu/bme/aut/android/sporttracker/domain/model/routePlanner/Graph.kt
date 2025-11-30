@@ -20,8 +20,8 @@ class Graph {
     val nodes: MutableMap<Long, Node> = mutableMapOf()
 
     // adjacency list: fromId -> list of Pairs(toId, weight)
-    private val adjacency: MutableMap<Long, MutableList<Pair<Long, Double>>> = mutableMapOf()
-
+    private val adjacency: MutableMap<Long, MutableList<GraphEdge>> = mutableMapOf()
+    //private val adjacency: MutableMap<Long, MutableList<Pair<Long, Double>>> = mutableMapOf()
     // coordinate -> nodeId (deduplication). Round coords to avoid tiny FP mismatches.
     private val coordToId: MutableMap<Pair<Long, Long>, Long> = mutableMapOf()
 
@@ -54,24 +54,13 @@ class Graph {
     fun getNode(id: Long): Node? = nodes[id]
 
     /** Add a directed edge from fromId -> toId with given weight (meters). */
-    fun addDirectedEdge(fromId: Long, toId: Long, weight: Double) {
-        adjacency.computeIfAbsent(fromId) { mutableListOf() }.add(Pair(toId, weight))
+//    fun addDirectedEdge(fromId: Long, toId: Long, weight: Double) {
+//        adjacency.computeIfAbsent(fromId) { mutableListOf() }.add(Pair(toId, weight))
+//    }
+    fun addDirectedEdge(fromId: Long, toId: Long, weight: Double, type: String) {
+        adjacency.computeIfAbsent(fromId) { mutableListOf() }
+            .add(GraphEdge(toId, weight, type))
     }
-
-    fun buildFromEntities2(nodes: List<NodeEntity>, edges: List<EdgeEntity>) {
-        // Nodes létrehozása
-        nodes.forEach { getOrCreateNodeId(it.lat, it.lon) }
-
-        // Edge-ek létrehozása a DB-ben tárolt oneway flag alapján
-        edges.forEach { edge ->
-            addDirectedEdge(edge.fromId, edge.toId, edge.weight)
-            if (!edge.oneway) {
-                // kétirányú: add visszafelé is
-                addDirectedEdge(edge.toId, edge.fromId, edge.weight)
-            }
-        }
-    }
-
     // TODO: ADJUST THE WEIGHTS AND FIND THE COMBINATIONS BETWEEN ROADS AND CYCLELANSES
     fun adjustedWeight(edge: EdgeEntity): Double {
         var w = edge.weight
@@ -104,6 +93,7 @@ class Graph {
         }
         return w
     }
+
     fun buildFromEntities(nodes: List<NodeEntity>, edges: List<EdgeEntity>) {
         // Töltsd be a node-okat az adatbázisban lévő ID-kkal
         nodes.forEach { node ->
@@ -112,29 +102,40 @@ class Graph {
         }
 
         // Az élek összekötése a már ismert ID-k alapján
+//        edges.forEach { edge ->
+//            addDirectedEdge(edge.fromId, edge.toId, adjustedWeight(edge))
+//            if (!edge.oneway) {
+//                addDirectedEdge(edge.toId, edge.fromId, adjustedWeight(edge))
+//            }
+//        }
         edges.forEach { edge ->
-            addDirectedEdge(edge.fromId, edge.toId, adjustedWeight(edge))
+            val weight = adjustedWeight(edge)
+            // Itt vesszük ki a típust az adatbázisból!
+            val type = edge.highwayType ?: "unknown"
+
+            addDirectedEdge(edge.fromId, edge.toId, weight, type)
+
             if (!edge.oneway) {
-                addDirectedEdge(edge.toId, edge.fromId, adjustedWeight(edge))
+                addDirectedEdge(edge.toId, edge.fromId, weight, type)
             }
         }
     }
     /** Add edge using Node coordinates; optionally bidirectional. */
-    fun addEdge(
-        fromLat: Double,
-        fromLon: Double,
-        toLat: Double,
-        toLon: Double,
-        weight: Double,
-        bidirectional: Boolean = true
-    ) {
-        val fromId = getOrCreateNodeId(fromLat, fromLon)
-        val toId = getOrCreateNodeId(toLat, toLon)
-        addDirectedEdge(fromId, toId, weight)
-        if (bidirectional) {
-            addDirectedEdge(toId, fromId, weight)
-        }
-    }
+//    fun addEdge(
+//        fromLat: Double,
+//        fromLon: Double,
+//        toLat: Double,
+//        toLon: Double,
+//        weight: Double,
+//        bidirectional: Boolean = true
+//    ) {
+//        val fromId = getOrCreateNodeId(fromLat, fromLon)
+//        val toId = getOrCreateNodeId(toLat, toLon)
+//        addDirectedEdge(fromId, toId, weight)
+//        if (bidirectional) {
+//            addDirectedEdge(toId, fromId, weight)
+//        }
+//    }
 
     /** Convenience: get neighbors as Edge objects for a Node (lat/lon deduped) */
     fun neighborsOf(node: Node): List<Edge> {
@@ -148,56 +149,57 @@ class Graph {
     fun allNodes(): Map<Long, Node> = nodes.toMap()
 
     /** Get adjacency map (read-only copy) as id -> list of (toId, weight) */
-    fun adjacencyMap(): Map<Long, List<Pair<Long, Double>>> =
-        adjacency.mapValues { it.value.toList() }
+//    fun adjacencyMap(): Map<Long, List<Pair<Long, Double>>> =
+//        adjacency.mapValues { it.value.toList() }
 
+    fun adjacencyMap(): Map<Long, List<GraphEdge>> = adjacency
     /** Build graph from RouteSegment list and honnor 'o' flag:
      *  o == "y"  -> one-way following coordinates order (only forward)
      *  o == "-"  -> one-way reverse of coordinates order (only backward)
      *  o == null -> bidirectional (default)
      */
-    fun buildFromSegments(segments: List<RouteSegment>) {
-        // reset
-        nodes.clear()
-        adjacency.clear()
-        coordToId.clear()
-        nextId = 1L
-        var count = 0
-        for (seg in segments) {
-            if (count > 1000) break
-            val coords = seg.c
-            if (coords.size < 2) continue
-            count++
-            // interpret oneway flag (our compact format)
-            val oneway = seg.o
-            val forwardOneWay = (oneway == "y" || oneway == "yes")
-            val reverseOneWay = (oneway == "-" || oneway == "-1")
-
-            // iterate consecutive pairs
-            for (i in 0 until coords.size - 1) {
-                val (latA, lonA) = Pair(coords[i][0], coords[i][1])
-                val (latB, lonB) = Pair(coords[i + 1][0], coords[i + 1][1])
-                val dist = planarDistance(latA, lonA, latB, lonB)
-
-                when {
-                    forwardOneWay -> {
-                        // only A -> B
-                        addEdge(latA, lonA, latB, lonB, dist, bidirectional = false)
-                    }
-
-                    reverseOneWay -> {
-                        // only B -> A (reverse)
-                        addEdge(latB, lonB, latA, lonA, dist, bidirectional = false)
-                    }
-
-                    else -> {
-                        // default: two-way
-                        addEdge(latA, lonA, latB, lonB, dist, bidirectional = true)
-                    }
-                }
-            }
-        }
-    }
+//    fun buildFromSegments(segments: List<RouteSegment>) {
+//        // reset
+//        nodes.clear()
+//        adjacency.clear()
+//        coordToId.clear()
+//        nextId = 1L
+//        var count = 0
+//        for (seg in segments) {
+//            if (count > 1000) break
+//            val coords = seg.c
+//            if (coords.size < 2) continue
+//            count++
+//            // interpret oneway flag (our compact format)
+//            val oneway = seg.o
+//            val forwardOneWay = (oneway == "y" || oneway == "yes")
+//            val reverseOneWay = (oneway == "-" || oneway == "-1")
+//
+//            // iterate consecutive pairs
+//            for (i in 0 until coords.size - 1) {
+//                val (latA, lonA) = Pair(coords[i][0], coords[i][1])
+//                val (latB, lonB) = Pair(coords[i + 1][0], coords[i + 1][1])
+//                val dist = planarDistance(latA, lonA, latB, lonB)
+//
+//                when {
+//                    forwardOneWay -> {
+//                        // only A -> B
+//                        addEdge(latA, lonA, latB, lonB, dist, bidirectional = false)
+//                    }
+//
+//                    reverseOneWay -> {
+//                        // only B -> A (reverse)
+//                        addEdge(latB, lonB, latA, lonA, dist, bidirectional = false)
+//                    }
+//
+//                    else -> {
+//                        // default: two-way
+//                        addEdge(latA, lonA, latB, lonB, dist, bidirectional = true)
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     fun planarDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
         val dx = (lon2 - lon1) * 111_320 * cos(Math.toRadians(lat1))
@@ -207,3 +209,9 @@ class Graph {
 
     companion object
 }
+
+data class GraphEdge(
+    val toId: Long,
+    val weight: Double,
+    val type: String
+)

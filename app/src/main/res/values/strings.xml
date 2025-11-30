@@ -6,8 +6,8 @@
     <string name="menu_completed_tours">Teljesített túrák</string>
     <string name="menu_all_tours_map">Öszesített térkép</string>
     <string name="menu_settings">Beállítások</string>
-    <string name="menu_sign_out" tools:ignore="MissingTranslation">Kilépés</string>
-    <string name="menu_sign_in" tools:ignore="MissingTranslation">Bejelentkezés</string>
+    <string name="menu_sign_out">Kilépés</string>
+    <string name="menu_sign_in">Bejelentkezés</string>
 
     <!-- Tour Settings -->
     <string name="tour_settings_title">Túra beállításai</string>
@@ -35,5 +35,27 @@
 
     <!-- Settings -->
     <string name="web_client_id" translatable="false">588641888331-he9igoj5nlv74724fthmkugb1oab1kg8.apps.googleusercontent.com</string>
+
+    <!-- Error messages -->
+    <string name="no_route_found">Nincs találat!</string>
+
+    <!-- Legend -->
+    <string name="legend_title">Térkép jelmagyarázat</string>
+    <string name="legend_cycleway">Kerékpárút</string>
+    <string name="legend_footway">Gyalogút / Ösvény</string>
+    <string name="legend_residential">Lakóövezet / Kis forgalom</string>
+    <string name="legend_tertiary">Mellékutak / Szervizút</string>
+    <string name="legend_secondary">Másodrendű utak</string>
+    <string name="legend_primary">Főutak</string>
+    <string name="legend_trunk">Kiemelt főutak</string>
+    <string name="legend_motorway">Autópálya</string>
+    <string name="legend_steps">Lépcső</string>
+    <string name="legend_unknown">Ismeretlen útburkolat</string>
+
+    <!-- Tour Settings -->
+    <string name="from">Kiindulás</string>
+    <string name="to">Cél</string>
+    <string name="route_plan">Útvonal tervezés</string>
+
 
 </resources>

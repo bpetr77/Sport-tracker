@@ -34,6 +34,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import hu.bme.aut.android.sporttracker.R
+import hu.bme.aut.android.sporttracker.ui.components.RouteLegend
 import hu.bme.aut.android.sporttracker.ui.screens.main.MainLayout
 import hu.bme.aut.android.sporttracker.ui.sign_in.UserData
 import hu.bme.aut.android.sporttracker.ui.viewModels.SettingsViewModel
@@ -116,6 +117,9 @@ fun MenuScreen(
                     }
                 }
             }
+            Spacer(modifier = Modifier.height(16.dp))
+
+            RouteLegend()
         }
     }
 }

@@ -8,6 +8,7 @@ import hu.bme.aut.android.sporttracker.domain.model.routePlanner.BoundingBox
 import hu.bme.aut.android.sporttracker.domain.model.routePlanner.Graph
 import hu.bme.aut.android.sporttracker.domain.model.routePlanner.RouteSegment
 import hu.bme.aut.android.sporttracker.data.repository.impl.OSMRepositoryImpl
+import hu.bme.aut.android.sporttracker.domain.model.routePlanner.PathResult
 import hu.bme.aut.android.sporttracker.domain.repository.GraphRepository
 import hu.bme.aut.android.sporttracker.domain.repository.OSMRepository
 import hu.bme.aut.android.sporttracker.domain.routePlanner.ShortestPath
@@ -32,6 +33,12 @@ class RoutePlannerViewModel(
     private val _routePoints = MutableStateFlow<List<LatLng>>(emptyList())
     val routePoints: StateFlow<List<LatLng>> = _routePoints
 
+    private val _distance = MutableStateFlow(0L)
+    val distance: StateFlow<Long> = _distance
+
+    private val _laneTypes = MutableStateFlow<List<String>>(emptyList())
+    val laneTypes: StateFlow<List<String>> = _laneTypes
+
     init {
         viewModelScope.launch {
             //graphRepository.clearGraphData()
@@ -46,9 +53,13 @@ class RoutePlannerViewModel(
             }
         }
     }
-    fun clearPoints(){
+
+    fun clearPoints() {
         _routePoints.value = emptyList()
+        _distance.value = 0L
+
     }
+
     fun calculateBoundingBox(from: LatLng, to: LatLng): BoundingBox {
         val boundingBox = routePlannerUseCase.calculateBoundingBox(from, to)
         return boundingBox
@@ -59,7 +70,7 @@ class RoutePlannerViewModel(
         _graph.value = subGraph
     }
 
-    fun planRoute(fromLat: Double, fromLon: Double, toLat: Double, toLon: Double){
+    fun planRoute(fromLat: Double, fromLon: Double, toLat: Double, toLon: Double) {
         viewModelScope.launch(Dispatchers.Default) {
             val g = _graph.value ?: return@launch
             val sp = ShortestPath(g)
@@ -68,7 +79,10 @@ class RoutePlannerViewModel(
             val goalId = sp.findNearestNodeId(toLat, toLon) ?: return@launch
 
             val pathIds = sp.findShortestPathIds(startId, goalId)
+            _distance.value = pathIds.totalDistance.toLong()
+            _laneTypes.value = pathIds.edgeTypes
             val pathCoords = sp.idsToLatLon(pathIds)
+
 
             withContext(Dispatchers.Main) {
                 _routePoints.value = pathCoords.map { LatLng(it.first, it.second) }
@@ -76,14 +90,20 @@ class RoutePlannerViewModel(
         }
     }
 
-    fun prepareAndPlanRoute(from: LatLng, to: LatLng){
+    fun prepareAndPlanRoute(from: LatLng, to: LatLng) {
         viewModelScope.launch {
             Log.d("RoutePlannerViewModel", "Preparing and planning route...")
+
             val boundingBox = calculateBoundingBox(from, to)
+
             Log.d("RoutePlannerViewModel", "Calculated bounding box: $boundingBox")
+
             loadGraphForArea(boundingBox)
+
             Log.d("RoutePlannerViewModel", "Graph loaded")
+
             planRoute(from.latitude, from.longitude, to.latitude, to.longitude)
+
             Log.d("RoutePlannerViewModel", "Route planned")
         }
     }

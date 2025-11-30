@@ -22,7 +22,6 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -32,9 +31,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -45,6 +46,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberUpdatedMarkerState
@@ -60,6 +62,7 @@ import hu.bme.aut.android.sporttracker.domain.util.location.isLocationEnabled
 import hu.bme.aut.android.sporttracker.ui.components.RoutePlannerSheet
 import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourSettingsScreen
 import hu.bme.aut.android.sporttracker.ui.screens.Settings.TourStartedSettingsScreen
+import hu.bme.aut.android.sporttracker.ui.util.bitmapDescriptorFromVector
 import hu.bme.aut.android.sporttracker.ui.viewModels.RoutePlannerViewModel
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourSettingsViewModel
 import hu.bme.aut.android.sporttracker.ui.viewModels.TourStartedSettingsViewModel
@@ -115,6 +118,8 @@ fun MapScreen(
     var boundingBoxPoints by remember { mutableStateOf<List<LatLng>?>(null) }
 
     val routePoints by routePlannerViewModel.routePoints.collectAsState()
+    val distance by routePlannerViewModel.distance.collectAsState()
+    val laneTypes by routePlannerViewModel.laneTypes.collectAsState()
 
     var fromMarker by remember { mutableStateOf<LatLng?>(null) }
     var toMarker by remember { mutableStateOf<LatLng?>(null) }
@@ -155,17 +160,23 @@ fun MapScreen(
             val segments = mutableListOf<MutableList<LatLng>>()
             var currentSegment = mutableListOf<LatLng>()
 
+            val stairsIcon = remember(context) {
+                bitmapDescriptorFromVector(context, R.drawable.ic_round_stairs)
+            }
+
+            val zoomLevel = cameraPositionState.position.zoom
+
             if (showRoutePlanner) {
                 fromMarker?.let {
                     Marker(
                         state = rememberUpdatedMarkerState(position = it),
-                        title = "From"
+                        title = stringResource(R.string.from)
                     )
                 }
                 toMarker?.let {
                     Marker(
                         state = rememberUpdatedMarkerState(position = it),
-                        title = "To"
+                        title = stringResource(R.string.to)
                     )
                 }
                 Polyline(
@@ -192,7 +203,44 @@ fun MapScreen(
 
 
             routePoints.let { points ->
-                if (points.size >= 2) {
+                if (points.size >= 2 && laneTypes.isNotEmpty()) {
+
+                    val safeLimit = minOf(points.size - 1, laneTypes.size)
+                    var startIndex = 0
+
+                    for (i in 0 until safeLimit) {
+                        val currentType = laneTypes[i]
+                        val nextType = if (i + 1 < safeLimit) laneTypes[i + 1] else null
+
+                        if (currentType != nextType || i == safeLimit - 1) {
+                            val segmentPoints = points.subList(startIndex, i + 2)
+
+                            Polyline(
+                                points = segmentPoints,
+                                color = getPolylineColor(currentType),
+                                width = 12f,
+                                zIndex = 1f
+                            )
+
+                            if (currentType == "steps" && zoomLevel > 14f) {
+
+                                // Megkeressük a szakasz "közepét" (vizuálisan kb. jó a lista közepe)
+                                val middleIndex = segmentPoints.size / 2
+                                val middlePoint = segmentPoints[middleIndex]
+
+                                Marker(
+                                    state = MarkerState(position = middlePoint),
+                                    icon = stairsIcon,
+                                    zIndex = 2f,
+                                    anchor = Offset(0.5f, 0.5f)
+                                )
+                            }
+
+                            startIndex = i + 1
+                        }
+                    }
+                } else if (points.size >= 2) {
+                    // Fallback
                     Polyline(
                         points = points,
                         color = Color.Red,
@@ -262,8 +310,8 @@ fun MapScreen(
                     onToChange = { toText = it },
                     onClick = {
                         if (fromMarker != null && toMarker != null) {
-                            val boundingBox = routePlannerViewModel.calculateBoundingBox(fromMarker!!, toMarker!!)
-                            boundingBoxPoints = boundingBox.corners + boundingBox.corners.first()
+//                            val boundingBox = routePlannerViewModel.calculateBoundingBox(fromMarker!!, toMarker!!)
+//                            boundingBoxPoints = boundingBox.corners + boundingBox.corners.first()
 
                             routePlannerViewModel.prepareAndPlanRoute(fromMarker!!, toMarker!!)
                             Log.d("MapScreen", "Route planned")
@@ -297,7 +345,8 @@ fun MapScreen(
                         toText = tempText
 
                         clickCount = 0
-                    }
+                    },
+                    distance = distance
                 )
             }
         }
@@ -405,5 +454,3 @@ fun MapScreen(
         }
     }
 }
-
-

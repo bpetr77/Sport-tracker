@@ -20,7 +20,6 @@ class TourRepositoryImpl(
         val currentUser = auth.currentUser ?: return
         val userId = currentUser.uid
 
-        // TODO: lehet ki kéne szervezni ezt a createTour-ba
         val tourWithUser = tour.copy(userId = userId)
         dao.insertTour(tourWithUser)
 

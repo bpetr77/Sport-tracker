@@ -7,6 +7,8 @@
     <string name="menu_completed_tours">Tours completados</string>
     <string name="menu_all_tours_map">Mapa de todos los tours</string>
     <string name="menu_settings">Configuración</string>
+    <string name="menu_sign_out">Cerrar sesión</string>
+    <string name="menu_sign_in">Iniciar sesión</string>
 
     <!-- Tour Settings -->
     <string name="tour_settings_title">Configuración del tour</string>
@@ -32,4 +34,25 @@
     <string name="transport_mode_description">Modo de transporte seleccionado: %1$s</string>
 
     <string name="language">Idioma</string>
+
+    <!-- Error messages -->
+    <string name="no_route_found">No ruta!</string>
+
+    <!-- Legend -->
+    <string name="legend_title">Leyenda del mapa</string>
+    <string name="legend_cycleway">Carril bici</string>
+    <string name="legend_footway">Camino peatonal / Sendero</string>
+    <string name="legend_residential">Zona residencial / Poco tráfico</string>
+    <string name="legend_tertiary">Carretera terciaria / Vía de servicio</string>
+    <string name="legend_secondary">Carretera secundaria</string>
+    <string name="legend_primary">Carretera principal</string>
+    <string name="legend_trunk">Vía rápida / Autovía</string>
+    <string name="legend_motorway">Autopista</string>
+    <string name="legend_steps">Escaleras</string>
+    <string name="legend_unknown">Superficie desconocida</string>
+
+    <!-- Tour Settings -->
+    <string name="from">Origen</string>
+    <string name="to">Destino</string>
+    <string name="route_plan">Planificación de ruta</string>
 </resources>
