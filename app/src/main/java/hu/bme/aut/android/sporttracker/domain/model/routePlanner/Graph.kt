@@ -61,35 +61,34 @@ class Graph {
         adjacency.computeIfAbsent(fromId) { mutableListOf() }
             .add(GraphEdge(toId, weight, type))
     }
-    // TODO: ADJUST THE WEIGHTS AND FIND THE COMBINATIONS BETWEEN ROADS AND CYCLELANSES
     fun adjustedWeight(edge: EdgeEntity): Double {
         var w = edge.weight
         w *= when (edge.cycleLane) {
-            "track" -> 0.2
-            "lane" -> 0.4
-            "shared_lane" -> 0.8
-            "shared_busway" -> 0.6
-            "crossing" -> 0.9
-            "opposite_lane" -> 0.9
-            "opposite" -> 0.9
-            "designated" -> 0.45
-            "traffic_island" -> 1.1
-            "no" -> 1.0
-            "proposed" -> 1.5
+            "track" -> 1.0
+            "lane" -> 1.2
+            "shared_lane" -> 1.5
+            "shared_busway" -> 1.3
+            "crossing" -> 1.9
+            "opposite_lane" -> 1.8
+            "opposite" -> 1.8
+            "designated" -> 1.45
+            "traffic_island" -> 1.6
+            "no" -> 1.8
+            "proposed" -> 1.8
             null -> 1.0
             else -> 1.0
         }
 
         w *= when (edge.highwayType) {
-            "cycleway" -> 0.1
+            "cycleway" -> 1.0
             "motorway", "motorway_link", "trunk", "trunk_link", "primary", "primary_link", "bus_guideway", "escape", "road" -> 100.0 // bringával tiltott vagy veszélyes
-            "secondary", "secondary_link", "busway", "bridleway", "steps", "corridor", "path" -> 1.8
-            "tertiary", "tertiary_link", "footway", "track" -> 1.4
-            "residential", "living_street", "unclassified" -> 0.8
-            "service", "pedestrian" -> 1.1
-            "construction", "proposed" -> 5.0
-            "platform", "bus_stop" -> 2.0
-            else -> 1.0
+            "secondary", "secondary_link", "busway", "bridleway", "steps", "corridor", "path" -> 3.4
+            "tertiary", "tertiary_link", "footway", "track" -> 2.3
+            "residential", "living_street", "unclassified" -> 2.2
+            "service", "pedestrian" -> 2.2
+            "construction", "proposed" -> 10.0
+            "platform", "bus_stop" -> 3.0
+            else -> 2.0
         }
         return w
     }
